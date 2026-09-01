@@ -1,0 +1,138 @@
+# Design systems inventory — the page 2 table on the CV.
+#
+# `lead: true` marks a system she built from scratch and owned end to end; the
+# table renders those differently. `include_in` picks consumers ([cv, web]).
+#
+# Product names are anonymised with domain descriptors. `client` describes the
+# industry context; `description` carries the full project description for the
+# website. The mapping from these descriptors to the original product names is
+# maintained offline.
+
+- product: Precision agriculture app
+  client: US ag-tech company
+  description: >-
+    Flutter mobile application for a platform combining substrate sensor
+    hardware with precision irrigation and controlled-environment crop
+    management software, focused on making dense sensor and irrigation data
+    readable and actionable in the field.
+  scope: Owned, from scratch
+  stack: Figma → Flutter
+  lead: true
+
+- product: Photo-ID compliance app
+  client: Biometric photo-ID provider
+  description: >-
+    iPad application using AI image detection to evaluate captured photographs
+    against passport-photo compliance requirements and surface the optimal
+    compliant shot, built to assist professional photographers at the point of
+    capture. Part of a suite including a self-service kiosk for unassisted
+    customer capture and a web back-office.
+  scope: Owned, from scratch
+  stack: Figma
+  lead: true
+
+- product: Freight logistics cockpit
+  client: Multinational freight forwarding and 3PL provider
+  description: >-
+    Warehouse location-detection application for a global logistics operator's
+    distribution network spanning approximately 39 countries.
+  scope: Owned, from scratch
+  stack: Figma
+  lead: true
+
+- product: Mining-site tool platform
+  client: Australian industrial tooling and consumables supplier
+  description: >-
+    Web, mobile and kiosk application managing the lending of tools and
+    consumables from relocatable container-based stores on remote mining,
+    energy and construction worksites, including unattended self-service
+    checkout.
+  scope: Extended, 4 modules
+  stack: Figma → React, React Material, Sass
+  lead: false
+
+- product: Branch operations platform
+  client: US banking software provider
+  description: >-
+    Customer appointment scheduling, lobby queue management and branch staff
+    scheduling for a workforce management platform sold exclusively to
+    financial institutions.
+  scope: Extended
+  stack: Adobe XD → Kendo UI, React, Sass
+  lead: false
+
+- product: Manufacturing warehouse app
+  client: Listed multinational manufacturer with multi-country production sites
+  description: >-
+    Web and mobile warehouse management application spanning the client's
+    manufacturing and distribution operations.
+  scope: Extended
+  stack: Figma → React, Ant Design, SCSS
+  lead: false
+
+- product: Photo-ID back-office
+  client: Biometric photo-ID provider
+  description: >-
+    Web application forming the back-office counterpart to the photo-ID
+    capture suite.
+  scope: Extended
+  stack: Figma
+  lead: false
+
+- product: Warehouse management platform
+  client: In-house product
+  description: >-
+    Configurable warehouse management platform (web and mobile), built as a
+    productised offering deployable across different warehouse operations
+    rather than forked per client.
+  scope: Extended
+  stack: Figma
+  lead: false
+
+- product: RFID inventory tracker
+  client: In-house product
+  description: >-
+    RFID-based asset and inventory tracking solution (web and mobile),
+    extending the warehouse platform to real-time item-level visibility
+    across operations.
+  scope: Contributed
+  stack: Figma → React, Material UI
+  lead: false
+
+- product: Consumer banking app
+  client: Listed Sri Lankan commercial bank
+  description: >-
+    Customer-facing banking application for a bank operating a national branch
+    network with a predominantly digital transaction base.
+  scope: Extended
+  stack: Figma
+  lead: false
+
+- product: Consumer delivery platform
+  client: Sri Lankan digital platform company
+  description: >-
+    Consumer application design covering on-demand food delivery and
+    ride-hailing services.
+  scope: UX and accessibility research
+  stack: Figma
+  lead: false
+
+- product: Salon management app
+  client: Singapore-based salon and spa management software provider
+  description: >-
+    Appointment and treatment management application for a platform serving
+    multi-outlet spa and salon operators across several Southeast Asian
+    markets.
+  scope: UI improvements
+  stack: Usability and visual refinement
+  lead: false
+
+- product: Moisture-analysis reporting
+  client: US ag-tech company
+  description: >-
+    PDF reporting layer for a moisture-analysis and food-safety product line,
+    delivering laboratory-grade report layouts within the constraints of a
+    limited PDF generation library.
+  scope: Targeted design fixes
+  stack: Within PDF-library constraints
+  lead: false

@@ -1,0 +1,14 @@
+---
+import Layout from "@/layouts/Layout.astro"
+import { href } from "@/lib/url"
+---
+
+<Layout title="Not found" description="That page does not exist.">
+    <section class="hero wrap">
+        <span class="eyebrow hero__eyebrow">Error 404</span>
+        <h1 class="display hero__title">Nothing <em>here</em>.</h1>
+        <p class="lede measure">
+            The page you asked for does not exist. <a href={href("/")}>Back to the work</a>.
+        </p>
+    </section>
+</Layout>

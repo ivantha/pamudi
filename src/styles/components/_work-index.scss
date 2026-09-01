@@ -1,0 +1,122 @@
+.work-index {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rhythm);
+}
+
+.work-item {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    row-gap: 1.25rem;
+    text-decoration: none;
+
+    &__figure {
+        grid-column: 1 / -1;
+        position: relative;
+        overflow: hidden;
+        background: var(--paper-2);
+        border: 1px solid var(--rule);
+
+        img {
+            width: 100%;
+            transition: transform 900ms var(--ease);
+        }
+    }
+
+    &__body {
+        grid-column: 1 / -1;
+        align-self: end;
+    }
+
+    // Alternating sides on wide screens. The asymmetry is the layout — a
+    // symmetric two-up grid of screenshots is what every portfolio template
+    // already does.
+    @media (min-width: 60rem) {
+        align-items: end;
+        row-gap: 0;
+
+        &__figure {
+            grid-column: 1 / span 8;
+        }
+
+        &__body {
+            grid-column: 9 / -1;
+            padding-bottom: 0.5rem;
+        }
+
+        &:nth-child(even) {
+            .work-item__figure {
+                grid-column: 5 / -1;
+                grid-row: 1;
+            }
+
+            .work-item__body {
+                grid-column: 1 / span 4;
+                grid-row: 1;
+            }
+        }
+    }
+
+    &__num {
+        display: block;
+        margin-bottom: 0.75rem;
+        color: var(--accent);
+    }
+
+    &__title {
+        font-family: var(--font-display);
+        font-size: var(--step-3);
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        font-variation-settings:
+            "opsz" 72,
+            "SOFT" 16,
+            "WONK" 1;
+        margin-bottom: 0.6rem;
+        text-wrap: balance;
+    }
+
+    &__summary {
+        color: var(--muted);
+        max-width: 34ch;
+        margin-bottom: 1rem;
+    }
+
+    &__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem 1.1rem;
+        font-size: var(--step--1);
+        color: var(--muted);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    &__more {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-size: var(--step--1);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--accent);
+
+        &::after {
+            content: "\00a0\2192";
+            display: inline-block;
+            transition: transform var(--dur) var(--ease);
+        }
+    }
+
+    &:hover .work-item__figure img,
+    &:focus-visible .work-item__figure img {
+        transform: scale(1.03);
+    }
+
+    &:hover .work-item__more::after,
+    &:focus-visible .work-item__more::after {
+        transform: translateX(0.35em);
+    }
+}

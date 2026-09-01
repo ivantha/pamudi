@@ -1,0 +1,39 @@
+// Self-hosted, same-origin. See public/fonts/README.txt before touching these.
+
+// The `full` slice carries every Fraunces axis — opsz, SOFT and WONK are the
+// whole reason this family is here, so the wght-only slice would defeat the
+// point. Declared once with its real ranges so the browser can interpolate
+// rather than snapping to instances.
+@font-face {
+    font-family: "Fraunces Variable";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 100 900;
+    font-optical-sizing: auto;
+    src: url("../assets/fonts/fraunces-latin-full-normal.woff2") format("woff2-variations");
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+        U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: "Karla Variable";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 200 800;
+    src: url("../assets/fonts/karla-latin-wght-normal.woff2") format("woff2-variations");
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+        U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: "Karla Variable";
+    font-style: italic;
+    font-display: swap;
+    font-weight: 200 800;
+    src: url("../assets/fonts/karla-latin-wght-italic.woff2") format("woff2-variations");
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+        U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}

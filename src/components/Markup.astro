@@ -1,0 +1,21 @@
+---
+/**
+ * Renders a `data/*.yaml` string that carries Typst markup (`*strong*`,
+ * `_emphasis_`). Use this anywhere the CV and the site share a string, so the
+ * two stay legible from one source.
+ */
+import { renderMarkup } from "@/lib/markup"
+
+interface Props {
+    /** The raw string from `data/`. */
+    text: string
+    /** Element to render into. Defaults to a `<span>` so it can sit inline. */
+    as?: "span" | "p" | "div"
+    /** Class list for the rendered element. */
+    class?: string
+}
+
+const { text, as: Tag = "span", class: className } = Astro.props
+---
+
+<Tag class={className} set:html={renderMarkup(text)} />

@@ -1,0 +1,50 @@
+{
+    "name": "pamudi",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "description": "Source for Pamudi Dahanayake's portfolio site",
+    "author": "Pamudi Dahanayake",
+    "license": "MIT",
+    "engines": {
+        "node": ">=22"
+    },
+    "packageManager": "pnpm@11.21.0",
+    "scripts": {
+        "dev": "pnpm build:cv && astro dev",
+        "start": "pnpm dev",
+        "build": "pnpm build:cv && astro build",
+        "build:cv": "./cv/build.sh",
+        "check:cv:contrast": "python3 cv/tools/contrast.py",
+        "preview": "astro preview",
+        "lint": "astro check && eslint . && prettier --check . && node scripts/check-contrast.mjs",
+        "format": "prettier --write .",
+        "check:contrast": "node scripts/check-contrast.mjs",
+        "build:placeholders": "node scripts/make-placeholders.mjs"
+    },
+    "dependencies": {
+        "@astrojs/mdx": "^4.0.0",
+        "@astrojs/sitemap": "^3.7.3",
+        "astro": "^5.0.0",
+        "sharp": "^0.33.0",
+        "yaml": "^2.6.0"
+    },
+    "devDependencies": {
+        "@astrojs/check": "^0.9.0",
+        "@eslint/js": "^9.0.0",
+        "@fontsource-variable/archivo": "^5.3.0",
+        "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+        "@fontsource-variable/fraunces": "^5.3.0",
+        "@fontsource-variable/instrument-sans": "^5.3.0",
+        "@fontsource-variable/jetbrains-mono": "^5.3.0",
+        "@fontsource-variable/karla": "^5.3.0",
+        "eslint": "^9.0.0",
+        "eslint-plugin-astro": "^1.0.0",
+        "globals": "^17.11.0",
+        "prettier": "^3.0.0",
+        "prettier-plugin-astro": "^0.14.0",
+        "sass": "^1.80.0",
+        "typescript": "^5.6.0",
+        "typescript-eslint": "^8.0.0"
+    }
+}

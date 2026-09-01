@@ -1,0 +1,41 @@
+// The site's single theme. One value per role — see CLAUDE.md.
+//
+// Direction "Annual": paper-and-ink editorial. Distinctiveness comes from a
+// five-axis variable serif at display sizes against a quirky grotesque at text
+// sizes, not from ornament. Measured: L* range across the four surfaces is
+// 92.2. Contrast is checked, not eyeballed — every pair below is recorded in
+// scripts/check-contrast.mjs and the lint step fails if one regresses.
+
+:root {
+    // ---- Colour -------------------------------------------------------------
+    --paper: #fbf9f4; // L* 98.0
+    --paper-2: #f1ede4; // L* 93.8 — inset panels, image mats
+    --ink: #16120d; // L*  5.7 — 17.72:1 on paper
+    --muted: #6b6357; //          5.63:1 on paper
+    --rule: #e4ddd0; // hairlines only, never text
+    --accent: #b8341a; //          5.63:1 on paper, and paper sits on it at the same
+
+    // ---- Type ---------------------------------------------------------------
+    --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+    --font-text: "Karla Variable", "Helvetica Neue", Arial, sans-serif;
+
+    // Fluid scale, 320px → 1440px. The jump from --step-3 up is deliberately
+    // steep: the display sizes are the design, the text sizes are the plumbing.
+    --step--1: clamp(0.79rem, 0.77rem + 0.09vw, 0.84rem);
+    --step-0: clamp(1rem, 0.96rem + 0.18vw, 1.13rem);
+    --step-1: clamp(1.27rem, 1.19rem + 0.36vw, 1.51rem);
+    --step-2: clamp(1.6rem, 1.46rem + 0.68vw, 2.03rem);
+    --step-3: clamp(2.03rem, 1.78rem + 1.2vw, 2.72rem);
+    --step-4: clamp(2.57rem, 2.16rem + 2vw, 3.65rem);
+    --step-5: clamp(3.25rem, 2.6rem + 3.2vw, 4.9rem);
+    --step-6: clamp(4.11rem, 3.09rem + 5.05vw, 7.45rem);
+
+    // ---- Space --------------------------------------------------------------
+    --gutter: clamp(1.25rem, 0.85rem + 2vw, 3rem);
+    --measure: 62ch;
+    --rhythm: clamp(4rem, 2.6rem + 7vw, 9rem); // between major sections
+
+    // ---- Motion -------------------------------------------------------------
+    --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+    --dur: 420ms;
+}

@@ -1,0 +1,50 @@
+// The four verified figures from the CV masthead, carried onto the home page.
+//
+// Geometry follows cv/theme.typ's `stat-band`: figure over label, laid out as
+// two rows so the numerals share a baseline rather than being bottom-aligned
+// inside a fixed box.
+.stat-band {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 1rem + 2vw, 2.5rem) var(--gutter);
+    padding-block: clamp(2rem, 1.4rem + 2.4vw, 3.5rem);
+    border-block: 1px solid var(--rule);
+    // The band closes with a rule, so it owns the space between that rule and
+    // whatever follows it — otherwise the next heading sits on the hairline.
+    margin-bottom: clamp(2.5rem, 1.8rem + 3vw, 4.5rem);
+
+    @media (min-width: 48rem) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.stat {
+    // Source order is `dt` then `dd`, which is the only order a `dl` allows.
+    // The figure has to read first, so the column is reversed here rather than
+    // the markup being bent to suit the design.
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: start;
+    gap: 0.4rem;
+
+    &__value {
+        font-size: var(--step-4);
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--accent);
+        font-variant-numeric: tabular-nums;
+        font-variation-settings:
+            "opsz" 96,
+            "SOFT" 20,
+            "WONK" 1;
+    }
+
+    &__label {
+        font-size: var(--step--1);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-wrap: balance;
+    }
+}

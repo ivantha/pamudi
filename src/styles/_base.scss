@@ -1,0 +1,147 @@
+// The theme is pinned here: an explicit background AND a matching
+// `color-scheme`. Without the pair, dark-mode browsers paint their own canvas
+// under this page and the ink lands on it at roughly 1.5:1. Keep these in sync
+// with the theme-color meta tag in src/layouts/Layout.astro and with
+// public/manifest.json.
+html {
+    background-color: var(--paper);
+    color-scheme: light;
+}
+
+body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-text);
+    font-size: var(--step-0);
+    font-weight: 400;
+    line-height: 1.55;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+::selection {
+    background: var(--accent);
+    color: var(--paper);
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 1px;
+}
+
+a {
+    color: inherit;
+    text-decoration-color: var(--rule);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    transition: text-decoration-color var(--dur) var(--ease);
+
+    &:hover {
+        text-decoration-color: var(--accent);
+    }
+}
+
+// ---- Layout primitives ------------------------------------------------------
+
+.wrap {
+    width: 100%;
+    max-width: 84rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+}
+
+.measure {
+    max-width: var(--measure);
+}
+
+.rule {
+    border: 0;
+    border-top: 1px solid var(--rule);
+}
+
+// ---- Type primitives --------------------------------------------------------
+
+.display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    // opsz is what stops a display serif looking like a body serif blown up;
+    // WONK swaps in the alternate letterforms that make Fraunces recognisable.
+    font-variation-settings:
+        "opsz" 120,
+        "SOFT" 24,
+        "WONK" 1;
+    text-wrap: balance;
+}
+
+.eyebrow {
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.lede {
+    font-size: var(--step-1);
+    line-height: 1.42;
+    text-wrap: pretty;
+}
+
+// ---- Entrance ---------------------------------------------------------------
+// One orchestrated load, staggered by --i. Cheaper and calmer than scattering
+// micro-interactions across the page, and it costs no JavaScript.
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.rise {
+    animation: rise 700ms var(--ease) backwards;
+    animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+// Off-screen until focused. The header is sticky, so the link has to sit above
+// it once it appears or it lands underneath.
+.skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    padding: 0.6rem 1rem;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transform: translateY(-200%);
+    transition: transform var(--dur) var(--ease);
+
+    &:focus-visible {
+        transform: none;
+    }
+}

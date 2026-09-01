@@ -1,0 +1,95 @@
+# Identity and contact. Read by both the website and the Typst CV.
+#
+# Fields used only by the CV: eyebrow.
+# Fields used only by the website: tagline, headline, intro, availability — all
+# optional, all hers to write. See the block below.
+# Read by both: specialisms, stats, summary and blog now render on the site as
+# well as in the PDF masthead.
+
+name: Pamudi Dahanayake
+role: Senior UI/UX Engineer
+location: Colombo, Sri Lanka
+
+# The masthead band's left-hand eyebrow on the PDF.
+eyebrow: Curriculum Vitae
+
+# ── Website copy ─────────────────────────────────────────────────────────
+# Three fields below are hers to write and hers alone — see CLAUDE.md, "Whose
+# site this is". They are now OPTIONAL in src/content.config.ts and absent from
+# this file, because a placeholder that ships is worse than a field that is not
+# there: every one of them has a verified fallback, so the live site carries
+# real material until she supplies her own.
+#
+#   tagline       one line under the site title. Absent → the meta description
+#                 is built from `role`, `location` and the first sentence of
+#                 `summary` below.
+#   intro         the hero lede and the About opening. Absent → `summary`, the
+#                 same Profile paragraph the CV prints.
+#   availability  a status line in the hero. Absent → the row is not rendered.
+#
+# Uncomment and fill in when she has written them. Do not invent replacements.
+#
+# tagline: …
+# intro:
+#   - …
+# availability: …
+
+# The hero headline, and the last placeholder left on the page. `accent` is the
+# single word that takes the accent colour. Pamudi writes the real line; this
+# one is a layout stand-in and makes no claim about her career.
+headline:
+  before: Interfaces that
+  accent: earn
+  after: their complexity.
+
+# ── CV masthead ──────────────────────────────────────────────────────────
+specialisms:
+  - Design systems
+  - Accessibility
+  - AI-assisted delivery
+  - Design-to-code
+
+stats:
+  - value: "24"
+    label: Products designed
+  - value: "3"
+    label: Systems from scratch
+  - value: "8"
+    label: Years in industry
+  - value: "8"
+    label: Product teams guided
+
+# The Profile paragraph on page 1. Typst markup; rendered as HTML on the web.
+summary: >-
+  Building and owning design systems at Zone24x7, across a dozen client
+  products. Token architecture, component libraries and prototypes in Figma and
+  Adobe XD, each specified for the consuming framework: Flutter, React, Kendo
+  UI, Ant Design. Accessibility built in from the first token. Equally at home
+  in the codebase, implementing design changes directly with Cursor and Claude
+  rather than waiting on a frontend handoff. MSc in Advanced Software
+  Engineering, University of Westminster, read alongside the full-time role.
+
+# Published writing. A verified credential, so it sits in the CV masthead
+# rather than in an appendix.
+blog:
+  title: "Your Beginning Doesn’t Define Your End"
+  title_cv: UX Design Blog
+  where: Zone24x7
+  url: https://zone24x7.com/ux-design-blog/your-beginning-doesnt-define-your-end/
+
+contact:
+  email: pamudi.dahanayake@gmail.com
+  # Phone lives in the gitignored data/private.yaml so it never enters this
+  # public repo. See data/private.example.yaml.
+  links:
+    # Verified 2026-09-02 against the live logged-in profile: this really is
+    # hers. The 2018 source turned out to be right.
+    - label: LinkedIn
+      url: https://www.linkedin.com/in/pamudi
+      display: linkedin.com/in/pamudi
+    # Verified 2026-09-02: behance.net/pamudi resolves to her portfolio, and
+    # it is the link she features on LinkedIn. NB the Behance bio still reads
+    # "Student in Colombo" — stale, and hers to update.
+    - label: Behance
+      url: https://www.behance.net/pamudi
+      display: behance.net/pamudi

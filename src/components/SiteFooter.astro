@@ -1,0 +1,28 @@
+---
+import { getEntry } from "astro:content"
+
+const personal = await getEntry("personal", "personal")!
+const { email, links } = personal.data.contact
+const year = new Date().getFullYear()
+---
+
+<footer class="site-footer">
+    <div class="wrap">
+        <div class="site-footer__inner">
+            <a class="site-footer__cta" href={`mailto:${email}`}>Start a conversation &rarr;</a>
+            <nav class="site-footer__links" aria-label="Elsewhere">
+                {
+                    links.map((link) => (
+                        <a href={link.url} rel="me noopener">
+                            {link.label}
+                        </a>
+                    ))
+                }
+            </nav>
+        </div>
+        <p class="site-footer__colophon">
+            &copy; {year}
+            {personal.data.name}. Set in Fraunces and Karla. Built with Astro.
+        </p>
+    </div>
+</footer>

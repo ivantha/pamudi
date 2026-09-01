@@ -1,0 +1,103 @@
+# Speaking, mentoring, event work, judging and competitions — the page 2
+# Community section. Grouped into a mapping because each list is a distinct
+# subsection with its own heading.
+#
+# `text` carries Typst markup (*strong*, _emphasis_), same as experience bullets.
+
+speaking:
+  - year: "2025"
+    text: UX session and workshop for undergraduates, *NSBM Green University*
+  - year: "2022"
+    text: Speaker, *RevolUX 2.0*
+  - year: "2020"
+    text: Talk on UI/UX foundations plus an Adobe XD workshop, *Creative Eye*
+
+mentoring:
+  - year: "2026"
+    text: >-
+      Mentor, *IEEE Young Protégé 2026* — twelve weeks from June, guiding two
+      mentees on industry practice and on improving user experience
+  - year: "2025"
+    text: >-
+      Knowledge Partner, *Young Protégé 2025* — guided a young professional
+      through a full UI/UX project lifecycle
+  - year: "2025"
+    text: >-
+      Internal mentoring at Zone24x7 — design reviews, skill-gap assessment,
+      curated learning paths
+  - year: "2023"
+    text: Knowledge-transfer sessions for two client project teams
+
+events:
+  - year: "2021—22"
+    text: Designer and Treasurer, *ClubZone* at Zone24x7
+  - year: "2021"
+    text: Designer, *IWM South Asia* and *Women Techmakers*
+  - year: "2019"
+    text: Designer, *DevFest Sri Lanka*
+  # Student-era office-holding, eight years back and three lines long. Off the
+  # PDF, kept on the site. Rows here honour include_in, same as everywhere else.
+  - year: "2017—18"
+    include_in: [web]
+    text: >-
+      Head of Designing, *IEEE Student Branch, UCSC*; Head of Marketing,
+      *Pahasara*; design lead across twelve student conferences including *IEEE
+      SLSYW Congress*.
+
+judging: >-
+  *Codescape* 2022 · *ReidCon* Ideathon and How Series 2021 · *Creative Eye* web
+  design contest 2020 · *Designathon* 2018
+
+# Trimmed to the current entry. The undergraduate placings — She Coderess, UVA
+# Hackathon 2017 and IEEE Xtreme 10.0, 2016 — are on the record here but off the
+# page: nine years on, they dilute rather than support the senior claim.
+competitions: Zone AI Hackathon 2025
+
+# ── Website only ─────────────────────────────────────────────────────────
+# Three sections the two-page CV has no room for. cv/cv.typ reads `speaking`,
+# `mentoring`, `events`, `judging` and `competitions` by name and ignores every
+# other key, so anything added below reaches the website alone.
+#
+# They stay separate keys rather than `include_in: [web]` rows in the lists
+# above because they are distinct subsections on the About page, not filtered-out
+# members of an existing one. (The lists above *are* filtered on `include_in`
+# now, on both sides — see `keep()` in cv/common/loaders.typ.)
+
+# Beyond the Zone24x7 UX blog post, which lives in personal.yaml under `blog`
+# because the CV masthead cites it. The site renders that one first.
+writing:
+  - text: Technology articles for *Windows Geek*
+  - text: Articles for *Pahasara*, the UCSC students’ blog
+
+# The student conferences behind the "twelve student conferences" line in
+# `events` above, named individually.
+student_events:
+  - year: "2018"
+    text: Designer, *IEEE SS12 — Age of Innovation*, IEEE Asia Pacific Region 10
+  - year: "2018"
+    text: Designer, *Google I/O Extended Sri Lanka* — GDG, Dialog and Ideamart
+  - year: "2017"
+    text: Design Lead, *IEEE SLSYW Congress*, IEEE Sri Lanka Section
+  - year: "2017"
+    text: Designer, *IEEE Techno Meetup*, IEEE Sri Lanka Section
+  - year: "2017"
+    text: Designer, *Shape Your Career*, IEEE WIE Sri Lanka Section
+  - year: "2017"
+    text: Designer, *CloudHack*, IEEE Student Branch UCSC
+  - year: "2017"
+    text: Designer, *ICS Meetup*, UCSC ISACA Student Group
+  - year: "2017"
+    text: Designer, *IEEE Xtreme 11.0*, IEEE Student Branch UCSC
+  - year: "2017"
+    text: Designer, *Foxepreneur*, UCSC Mozilla Club
+  - year: "2016—17"
+    text: Designer and logistics, *IEEE Day*, IEEE Student Branch UCSC
+  - year: "2016"
+    text: Logistics, *Reid Cyber Wars*, Compsoc UOC
+
+societies: >-
+  Designer — *IEEE Sri Lanka Section* · *UCSC WIE* · *UCSC ISACA Student Group*
+  · *UCSC Exploration Club* · *Compsoc Forum*, Compsoc UOC · *Codestudy* ·
+  Student Ambassador, *UCSC Mozilla Club* · Member, *IEEE Student Branch UCSC*
+  and *IEEE WIE UCSC* · Singer and keyboardist, *UCSC Music Circle* ·
+  University representative, *Anula Abhiman Educational Exhibition* 2016

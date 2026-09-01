@@ -1,0 +1,70 @@
+name: Deploy Astro site to Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+
+  build:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - uses: actions/configure-pages@v5
+
+      # The CV is Typst, compiled into public/cv/ before astro build sweeps
+      # public/ into dist/. pdfinfo (poppler) backs build.sh's two-page guard.
+      - uses: typst-community/setup-typst@v3
+        with:
+          typst-version: "0.15.1"
+      - run: sudo apt-get install -y --no-install-recommends poppler-utils
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # Palette audit for the CV. The site's own palette is gated in `pnpm lint`;
+      # this one reads cv/theme.typ and needs no Node.
+      - run: pnpm check:cv:contrast
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

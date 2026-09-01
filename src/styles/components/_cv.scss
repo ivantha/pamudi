@@ -1,0 +1,239 @@
+// The CV-derived blocks on the About page. Geometry echoes cv/theme.typ: an
+// italic display label in a left rail, content in the measure beside it. The
+// rail collapses to a stacked heading below the single breakpoint.
+
+.cv-section {
+    display: grid;
+    gap: 0.75rem var(--gutter);
+    padding-block: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+    border-top: 1px solid var(--rule);
+
+    @media (min-width: 900px) {
+        grid-template-columns: 9rem 1fr;
+        gap: var(--gutter);
+    }
+
+    &__title {
+        font-size: var(--step-1);
+        font-style: italic;
+        font-weight: 400;
+        margin: 0;
+    }
+
+    &__body {
+        min-width: 0;
+    }
+}
+
+// One role. Title and employer left, dates right, then the bullets.
+.role {
+    & + & {
+        margin-top: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+    }
+
+    &__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.35rem 0.75rem;
+    }
+
+    &__title {
+        font-size: var(--step-1);
+        font-weight: 600;
+        margin: 0;
+    }
+
+    &__org {
+        font-size: var(--step--1);
+        color: var(--muted);
+    }
+
+    &__dates {
+        margin-left: auto;
+        font-size: var(--step--1);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        white-space: nowrap;
+    }
+
+    &__items {
+        margin: 0.75rem 0 0;
+        padding: 0;
+        list-style: none;
+        max-width: var(--measure);
+
+        li + li {
+            margin-top: 0.6rem;
+        }
+    }
+
+    // What a project was built with. Only the earlier-projects block uses it —
+    // the Zone24x7 roles carry their stacks inside the prose.
+    &__stack {
+        margin-top: 0.6rem;
+        max-width: var(--measure);
+        font-size: var(--step--1);
+        color: var(--muted);
+    }
+}
+
+// Label/value rows: toolkit, professional training, community subsections.
+.kv {
+    display: grid;
+    gap: 0.2rem var(--gutter);
+    max-width: var(--measure);
+
+    @media (min-width: 900px) {
+        grid-template-columns: 8.5rem 1fr;
+        gap: 0.5rem var(--gutter);
+    }
+
+    & + & {
+        margin-top: 0.9rem;
+    }
+
+    &__label {
+        font-size: var(--step--1);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+
+    &__value {
+        margin: 0;
+    }
+}
+
+// Degrees, and the dated community lines.
+.entry {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.75rem;
+    max-width: var(--measure);
+
+    & + & {
+        margin-top: 0.65rem;
+    }
+
+    &__name {
+        font-family: var(--font-display);
+        font-size: var(--step-0);
+        font-weight: 600;
+    }
+
+    &__where {
+        font-size: var(--step--1);
+        color: var(--muted);
+    }
+
+    &__when {
+        margin-left: auto;
+        font-size: var(--step--1);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        white-space: nowrap;
+    }
+}
+
+.dated {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    gap: 0.5rem 0.75rem;
+    max-width: var(--measure);
+
+    &__year {
+        font-size: var(--step--1);
+        font-variant-numeric: tabular-nums;
+        color: var(--muted);
+    }
+
+    &__text {
+        margin: 0;
+    }
+}
+
+// The design-systems inventory. Scrolls inside its own box rather than
+// widening the page.
+.systems {
+    overflow-x: auto;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 34rem;
+    }
+
+    th {
+        font-size: var(--step--1);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 400;
+        color: var(--muted);
+        text-align: left;
+        padding: 0 1.5rem 0.5rem 0;
+        border-bottom: 1px solid var(--rule);
+    }
+
+    td {
+        padding: 0.45rem 1.5rem 0.45rem 0;
+        border-bottom: 1px solid var(--rule);
+        vertical-align: top;
+    }
+
+    &__product {
+        font-family: var(--font-display);
+        font-weight: 600;
+    }
+
+    &__client {
+        display: block;
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: var(--step--1);
+        color: var(--muted);
+    }
+
+    // Systems she built from scratch and owned end to end.
+    &__scope--lead {
+        color: var(--accent);
+    }
+
+    &__stack {
+        color: var(--muted);
+    }
+}
+
+// The Profile paragraph — the same text the CV sets on page 1, at the same
+// weight in the hierarchy.
+.profile {
+    max-width: var(--measure);
+}
+
+// The specialism line from the CV masthead. Set as a list rather than a
+// sentence so it scans, and left plain: this direction earns its distinctness
+// from type, not from pills and chips.
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+    max-width: var(--measure);
+    font-size: var(--step--1);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+// An unadorned list at the measure, for rows that are prose rather than
+// label/value pairs.
+.list-plain {
+    max-width: var(--measure);
+    margin-top: 0.9rem;
+
+    li + li {
+        margin-top: 0.5rem;
+    }
+}

@@ -1,0 +1,89 @@
+// MDX case-study body. Everything sits at the measure by default; figures and
+// pull quotes break out of it, which is what gives the page its rhythm.
+.prose {
+    display: grid;
+    // Text is flush left at the measure and figures break out to the right,
+    // rather than the text being centred — the case header above it is flush
+    // left, and a centred body under a left-flush header reads as a mistake.
+    grid-template-columns:
+        [full-start text-start] minmax(0, var(--measure)) [text-end]
+        minmax(0, 1fr) [full-end];
+
+    > * {
+        grid-column: text;
+    }
+
+    > figure,
+    > .full {
+        grid-column: full;
+        margin-block: clamp(2rem, 1.4rem + 3vw, 3.5rem);
+    }
+
+    > * + * {
+        margin-top: 1.15em;
+    }
+
+    h2 {
+        font-family: var(--font-display);
+        font-size: var(--step-3);
+        font-weight: 600;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        font-variation-settings:
+            "opsz" 60,
+            "SOFT" 12,
+            "WONK" 1;
+        margin-top: clamp(2.5rem, 1.8rem + 3vw, 4rem);
+        text-wrap: balance;
+    }
+
+    h3 {
+        font-size: var(--step-1);
+        font-weight: 700;
+        margin-top: 2.25rem;
+    }
+
+    p,
+    li {
+        text-wrap: pretty;
+    }
+
+    ul,
+    ol {
+        padding-left: 1.25em;
+    }
+
+    li + li {
+        margin-top: 0.5em;
+    }
+
+    blockquote {
+        border-left: 2px solid var(--accent);
+        padding-left: 1.25rem;
+        font-family: var(--font-display);
+        font-size: var(--step-2);
+        line-height: 1.2;
+        font-variation-settings:
+            "opsz" 40,
+            "SOFT" 20,
+            "WONK" 1;
+        margin-block: clamp(2rem, 1.4rem + 3vw, 3rem);
+    }
+
+    figure img {
+        width: 100%;
+        border: 1px solid var(--rule);
+        background: var(--paper-2);
+    }
+
+    figcaption {
+        margin-top: 0.75rem;
+        font-size: var(--step--1);
+        color: var(--muted);
+        max-width: var(--measure);
+    }
+
+    strong {
+        font-weight: 700;
+    }
+}

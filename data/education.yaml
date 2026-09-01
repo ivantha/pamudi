@@ -1,0 +1,41 @@
+# Degrees plus professional training. A mapping rather than a bare list, because
+# `training` is document-level prose that sits alongside the entries.
+
+training: >-
+  Zone24x7 internal programmes — Agentic AI, 2025: agent workflows, prompt
+  engineering and AI-assisted automation · Frontend Development, ongoing since
+  2024
+
+entries:
+  - degree: MSc in Advanced Software Engineering
+    institute: IIT Colombo · University of Westminster
+    dates: 2022 — 2025
+    # The site has room for the conferral date; the CV's date column does not.
+    # cv.typ reads `dates` directly rather than through `field()`, so a `_web`
+    # suffix here is invisible to the PDF by construction.
+    dates_web: Sep 2022 — Sep 2025 · conferred Nov 2025
+
+  - degree: BSc in Information Systems
+    institute: University of Colombo School of Computing
+    # End year verified 2026-09-02 from her LinkedIn profile: 2019, not the
+    # 2020 previously inferred from a four-year degree.
+    #
+    # ⚠ CONFLICT, unresolved — LinkedIn records this as "Bachelor of Science,
+    # Information Technology" at "University of Colombo". The 2018 CV, the
+    # source for the two lines above, says Information Systems at UCSC. One of
+    # them is wrong and only Pamudi can settle it. The 2018 CV is kept here
+    # pending her answer — do not silently switch to match LinkedIn.
+    dates: 2016 — 2019
+
+  # Pre-degree schooling under an MSc, six-plus years into the career, reads
+  # junior and costs page-2 space that the Community section needs. Kept on
+  # the site, dropped from the PDF. cv.typ honours include_in on these entries.
+  - degree: Diploma in Information Technology
+    institute: Pearson (UK) · ESoft Metro Campus, Matara
+    dates: 2015 — 2016
+    include_in: [web]
+
+  - degree: G.C.E. Advanced Level
+    institute: Sujatha Vidyalaya, Matara
+    dates: "2014"
+    include_in: [web]

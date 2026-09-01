@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pamudi.com/sitemap-index.xml

@@ -1,0 +1,71 @@
+---
+import { getEntry } from "astro:content"
+import SiteHeader from "@/components/SiteHeader.astro"
+import SiteFooter from "@/components/SiteFooter.astro"
+import { href } from "@/lib/url"
+import { plainMarkup } from "@/lib/markup"
+import displayFont from "@/assets/fonts/fraunces-latin-full-normal.woff2"
+import "@/styles/global.scss"
+
+interface Props {
+    /** Page title, without the site suffix. */
+    title?: string
+    /** Meta description; falls back to the site-wide one below. */
+    description?: string
+}
+
+const personal = await getEntry("personal", "personal")!
+const { role, location, summary, tagline } = personal.data
+
+// `tagline` is Pamudi's line to write and is absent until she does. Rather than
+// ship a placeholder into every page's <meta> and every link preview, the
+// fallback is assembled from verified fields: the role, the city, and the
+// opening sentence of the Profile paragraph the CV also prints.
+const opener = plainMarkup(summary).split(/(?<=\.)\s/)[0]
+const siteDescription = tagline ?? `${role} in ${location}. ${opener}`
+
+const { title, description = siteDescription } = Astro.props
+
+const pageTitle = title
+    ? `${title} — ${personal.data.name}`
+    : `${personal.data.name} — ${personal.data.role}`
+const canonical = new URL(Astro.url.pathname, Astro.site)
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{pageTitle}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+
+        <!-- Keep in sync with --paper in src/styles/_tokens.scss and with manifest.json. -->
+        <meta name="theme-color" content="#fbf9f4" />
+        <meta name="color-scheme" content="light" />
+
+        <!-- The display face renders the largest thing on every page, so it is
+             the one worth a preload; Karla is small enough to arrive with the
+             stylesheet. -->
+        <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+
+        <link rel="icon" href={href("/favicon.svg")} type="image/svg+xml" />
+        <link rel="manifest" href={href("/manifest.json")} />
+        <link rel="sitemap" href={href("/sitemap-index.xml")} />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta name="twitter:card" content="summary_large_image" />
+    </head>
+    <body>
+        <a class="skip-link" href="#main">Skip to content</a>
+        <SiteHeader />
+        <main id="main">
+            <slot />
+        </main>
+        <SiteFooter />
+    </body>
+</html>

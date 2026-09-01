@@ -1,0 +1,124 @@
+---
+import { getCollection, getEntry } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import WorkItem from "@/components/WorkItem.astro"
+import Markup from "@/components/Markup.astro"
+import { href } from "@/lib/url"
+import { isWebVisible } from "@/lib/variants"
+
+const personal = await getEntry("personal", "personal")!
+const { headline, intro, role, location, availability, specialisms, stats, summary } = personal.data
+
+// `order` is the editorial sequence; year only breaks ties so that adding a
+// study without setting `order` still lands somewhere sensible.
+const work = (await getCollection("work", ({ data }) => !data.draft)).sort(
+    (a, b) => a.data.order - b.data.order || b.data.year - a.data.year,
+)
+
+// Until the case studies exist, the work section carries the three systems she
+// built from scratch and owned end to end. Same file the About table reads, so
+// the two cannot drift, and it means the page never stands empty.
+const systems = (await getCollection("systems")).filter((s) => isWebVisible(s.data))
+const led = systems.filter((s) => s.data.lead)
+---
+
+<Layout>
+    <section class="hero wrap">
+        <span class="eyebrow hero__eyebrow rise" style="--i: 0">
+            {role} &nbsp;/&nbsp; {location}
+        </span>
+        <h1 class="display hero__title rise" style="--i: 1">
+            {headline.before}
+            <em>{headline.accent}</em>
+            {headline.after}
+        </h1>
+        <div class="hero__body">
+            <div class="hero__lede rise" style="--i: 2">
+                {
+                    // `intro` is Pamudi's to write. Until it exists the lede is
+                    // the Profile paragraph the CV prints — real, and already
+                    // hers, rather than a placeholder.
+                    intro ? (
+                        intro.map((line) => <p class="lede">{line}</p>)
+                    ) : (
+                        <Markup as="p" class="lede" text={summary} />
+                    )
+                }
+            </div>
+            <dl class="hero__meta rise" style="--i: 3">
+                <div>
+                    <dt>Currently</dt>
+                    <dd>{role}</dd>
+                </div>
+                <div>
+                    <dt>Based in</dt>
+                    <dd>{location}</dd>
+                </div>
+                <div>
+                    <dt>Focus</dt>
+                    <dd>{specialisms.join(" · ")}</dd>
+                </div>
+                {
+                    availability && (
+                        <div>
+                            <dt>Availability</dt>
+                            <dd>{availability}</dd>
+                        </div>
+                    )
+                }
+            </dl>
+        </div>
+    </section>
+
+    <section class="wrap" aria-label="The work in figures">
+        <dl class="stat-band">
+            {
+                stats.map((stat) => (
+                    // Label first, value second, so the `dl` stays valid; the
+                    // stylesheet reverses them so the figure reads on top.
+                    <div class="stat">
+                        <dt class="stat__label">{stat.label}</dt>
+                        <dd class="stat__value display">{stat.value}</dd>
+                    </div>
+                ))
+            }
+        </dl>
+    </section>
+
+    <section class="wrap" aria-labelledby="work-heading">
+        <h2 id="work-heading" class="eyebrow" style="margin-bottom: 2.5rem">Selected work</h2>
+        {
+            work.length > 0 ? (
+                <div class="work-index">
+                    {work.map((entry, i) => (
+                        <WorkItem entry={entry} index={i + 1} />
+                    ))}
+                </div>
+            ) : (
+                <div class="lead-systems">
+                    {led.map((system, i) => (
+                        <article class="lead-system">
+                            <span class="eyebrow lead-system__num">
+                                {String(i + 1).padStart(2, "0")}
+                            </span>
+                            <h3 class="lead-system__title display">{system.data.product}</h3>
+                            {system.data.description && (
+                                <Markup
+                                    as="p"
+                                    class="lead-system__desc"
+                                    text={system.data.description}
+                                />
+                            )}
+                            <p class="lead-system__scope">{system.data.scope}</p>
+                            <p class="lead-system__stack">{system.data.stack}</p>
+                        </article>
+                    ))}
+                    <p class="lead-systems__note">
+                        The full inventory — {systems.length} products, with the stack each was
+                        specified for — is <a href={href("/about")}>on the About page</a>.
+                    </p>
+                </div>
+            )
+        }
+    </section>
+</Layout>

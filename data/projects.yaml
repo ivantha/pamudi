@@ -1,0 +1,46 @@
+# Earlier project work — the three BSc projects at UCSC, 2017—2018.
+#
+# Web only, by construction: no Typst file reads this file. The CV omits these
+# deliberately for space (cv/CLAUDE.md, "Editorial decisions worth knowing"),
+# and the website has no two-page guard, so the record lives here in full.
+#
+# `bullets[].text` carries the same Typst markup subset as experience.yaml, so
+# the strings stay portable if the CV ever finds room for one of these.
+
+- id: patient-management-system
+  title: Patient Management System
+  context: National Cancer Hospital (Apeksha), Maharagama
+  dates: Jan 2017 — Jan 2018
+  stack: JavaFX · MySQL
+  bullets:
+    - text: >-
+        A stand-alone application for patient records management at the
+        hospital, built for the *BSc in Information Systems* at UCSC.
+    - text: >-
+        Designed interfaces that stayed easy to navigate while remaining
+        visually pleasing, and implemented part of the application's core
+        business logic in Java.
+
+- id: project-scheduling-staff-allocation
+  title: Project Scheduling and Staff Allocation
+  context: Software development companies · UCSC
+  dates: Feb 2018 — Jul 2018
+  stack: Angular · Express.js · Node.js · MongoDB
+  bullets:
+    - text: >-
+        A web-based system helping software development companies build optimal
+        project schedules and allocate staff to tasks effectively.
+    - text: Designed the flow and the interfaces of the scheduling and allocation system.
+
+- id: nutri-plus
+  title: Nutri Plus
+  context: Nutrition reference app · UCSC
+  dates: Feb 2018 — Jul 2018
+  stack: React Native · Node.js · MongoDB
+  bullets:
+    - text: >-
+        A mobile application giving people the nutritional values of foods and
+        recipes.
+    - text: >-
+        Built a stronger user experience by designing interfaces that stayed
+        simple while remaining appealing.

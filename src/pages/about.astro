@@ -1,0 +1,255 @@
+---
+import { getCollection, getEntry } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import CvSection from "@/components/CvSection.astro"
+import Markup from "@/components/Markup.astro"
+import { href } from "@/lib/url"
+import { isWebVisible, pickField } from "@/lib/variants"
+
+const personal = await getEntry("personal", "personal")!
+const { name, role, location, intro, summary, specialisms, blog, contact } = personal.data
+
+// Everything below comes from the same data/*.yaml the Typst CV reads, so the
+// page and the PDF cannot drift. `isWebVisible` honours `include_in`, which is
+// how the entries the two-page CV has no room for reach this page and only
+// this page.
+const experience = (await getCollection("experience")).filter((e) => isWebVisible(e.data))
+const skills = (await getCollection("skills")).filter((e) => isWebVisible(e.data))
+const systems = (await getCollection("systems")).filter((e) => isWebVisible(e.data))
+const projects = (await getCollection("projects")).filter((e) => isWebVisible(e.data))
+const education = await getEntry("education", "education")!
+const community = await getEntry("community", "community")!
+
+const degrees = education.data.entries.filter((e) => isWebVisible(e))
+const { writing, student_events: studentEvents, societies } = community.data
+---
+
+<Layout title="About" description={`About ${name}, ${role} based in ${location}.`}>
+    <section class="case__header wrap">
+        <h1 class="display case__title">About</h1>
+        {
+            // Her own introduction when she has written one; the Profile
+            // section below carries the record either way.
+            intro && (
+                <div class="prose">
+                    {intro.map((line) => (
+                        <p class="lede">{line}</p>
+                    ))}
+                </div>
+            )
+        }
+    </section>
+
+    <div class="wrap">
+        <CvSection title="Profile">
+            <Markup as="p" class="lede profile" text={summary} />
+        </CvSection>
+
+        <CvSection title="Focus">
+            <ul class="tags">
+                {specialisms.map((item) => <li>{item}</li>)}
+            </ul>
+        </CvSection>
+
+        <CvSection title="Experience">
+            {
+                experience.map((entry) => (
+                    <article class="role">
+                        <div class="role__head">
+                            <h3 class="role__title display">{pickField(entry.data, "role")}</h3>
+                            <span class="role__org">
+                                {entry.data.org}, {entry.data.place}
+                            </span>
+                            <span class="role__dates">{entry.data.dates}</span>
+                        </div>
+                        <ul class="role__items">
+                            {entry.data.bullets.filter(isWebVisible).map((bullet) => (
+                                <li>
+                                    <Markup text={pickField(bullet, "text") ?? ""} />
+                                </li>
+                            ))}
+                        </ul>
+                    </article>
+                ))
+            }
+        </CvSection>
+
+        {
+            systems.length > 0 && (
+                <CvSection title="Design systems">
+                    <div class="systems">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Scope</th>
+                                    <th scope="col">Design → implementation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {systems.map((s) => (
+                                    <tr>
+                                        <td class="systems__product">
+                                            {s.data.product}
+                                            {s.data.client && (
+                                                <span class="systems__client">{s.data.client}</span>
+                                            )}
+                                        </td>
+                                        <td
+                                            class:list={[
+                                                "systems__scope",
+                                                s.data.lead && "systems__scope--lead",
+                                            ]}
+                                        >
+                                            {s.data.scope}
+                                        </td>
+                                        <td class="systems__stack">{s.data.stack}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </CvSection>
+            )
+        }
+
+        <CvSection title="Toolkit">
+            {
+                skills.map((s) => (
+                    <div class="kv">
+                        <span class="kv__label">{s.data.category}</span>
+                        <Markup as="p" text={s.data.stack} />
+                    </div>
+                ))
+            }
+        </CvSection>
+
+        {
+            projects.length > 0 && (
+                <CvSection title="Earlier projects">
+                    {projects.map((project) => (
+                        <article class="role">
+                            <div class="role__head">
+                                <h3 class="role__title display">{project.data.title}</h3>
+                                <span class="role__org">{project.data.context}</span>
+                                <span class="role__dates">{project.data.dates}</span>
+                            </div>
+                            <ul class="role__items">
+                                {project.data.bullets.filter(isWebVisible).map((bullet) => (
+                                    <li>
+                                        <Markup text={bullet.text} />
+                                    </li>
+                                ))}
+                            </ul>
+                            <p class="role__stack">{project.data.stack}</p>
+                        </article>
+                    ))}
+                </CvSection>
+            )
+        }
+
+        <CvSection title="Education">
+            {
+                degrees.map((d) => (
+                    <div class="entry">
+                        <span class="entry__name">{d.degree}</span>
+                        <span class="entry__where">{d.institute}</span>
+                        <span class="entry__when">{pickField(d, "dates")}</span>
+                    </div>
+                ))
+            }
+            <div class="kv" style="margin-top: 1.25rem">
+                <span class="kv__label">Professional training</span>
+                <Markup as="p" text={education.data.training} />
+            </div>
+        </CvSection>
+
+        <CvSection title="Community">
+            {
+                (
+                    [
+                        ["Speaking", community.data.speaking],
+                        ["Mentoring", community.data.mentoring],
+                        ["Event and brand", community.data.events],
+                        ["Student events", studentEvents],
+                    ] as const
+                ).map(([label, rows]) => {
+                    // Filter first, then test: a list whose every row is
+                    // `include_in: [cv]` must not render an empty subsection.
+                    const visible = rows.filter(isWebVisible)
+                    return visible.length > 0 ? (
+                        <div class="kv">
+                            <span class="kv__label">{label}</span>
+                            <div>
+                                {visible.map((row) => (
+                                    <div class="dated">
+                                        <span class="dated__year">{row.year}</span>
+                                        <Markup as="p" text={row.text} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ) : null
+                })
+            }
+            <div class="kv">
+                <span class="kv__label">Judging panels</span>
+                <Markup as="p" text={community.data.judging} />
+            </div>
+            <div class="kv">
+                <span class="kv__label">Competitions</span>
+                <Markup as="p" text={community.data.competitions} />
+            </div>
+            {
+                societies && (
+                    <div class="kv">
+                        <span class="kv__label">Societies</span>
+                        <Markup as="p" text={societies} />
+                    </div>
+                )
+            }
+        </CvSection>
+
+        <CvSection title="Writing">
+            <div class="entry">
+                <a class="entry__name" href={blog.url} rel="noopener">{blog.title}</a>
+                <span class="entry__where">{blog.where}</span>
+            </div>
+            {
+                writing.length > 0 && (
+                    <ul class="list-plain">
+                        {writing.map((item) => (
+                            <li>
+                                {item.url ? (
+                                    <a href={item.url} rel="noopener">
+                                        <Markup text={item.text} />
+                                    </a>
+                                ) : (
+                                    <Markup text={item.text} />
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                )
+            }
+        </CvSection>
+
+        <CvSection title="Elsewhere">
+            <div class="prose">
+                <ul>
+                    <li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>
+                    {
+                        contact.links.map((link) => (
+                            <li>
+                                <a href={link.url} rel="me noopener">
+                                    {link.label}
+                                </a>
+                            </li>
+                        ))
+                    }
+                    <li><a href={href("/cv")}>Curriculum vitae</a></li>
+                </ul>
+            </div>
+        </CvSection>
+    </div>
+</Layout>

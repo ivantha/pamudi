@@ -1,0 +1,68 @@
+---
+import { getCollection, render } from "astro:content"
+import { Image } from "astro:assets"
+import Layout from "@/layouts/Layout.astro"
+import { href } from "@/lib/url"
+
+export async function getStaticPaths() {
+    const work = await getCollection("work", ({ data }) => !data.draft)
+    return work.map((entry) => ({ params: { slug: entry.id }, props: { entry } }))
+}
+
+const { entry } = Astro.props
+const { Content } = await render(entry)
+const { title, summary, year, role, context, disciplines, tools, cover, coverAlt } = entry.data
+---
+
+<Layout title={title} description={summary}>
+    <article>
+        <header class="case__header wrap">
+            <a class="case__back" href={href("/")}>All work</a>
+            <h1 class="display case__title">{title}</h1>
+            <p class="lede case__summary">{summary}</p>
+            <dl class="case__facts">
+                <div>
+                    <dt>Year</dt>
+                    <dd>{year}</dd>
+                </div>
+                <div>
+                    <dt>Role</dt>
+                    <dd>{role}</dd>
+                </div>
+                <div>
+                    <dt>Context</dt>
+                    <dd>{context}</dd>
+                </div>
+                <div>
+                    <dt>Disciplines</dt>
+                    <dd>{disciplines.join(", ")}</dd>
+                </div>
+                {
+                    tools.length > 0 && (
+                        <div>
+                            <dt>Tools</dt>
+                            <dd>{tools.join(", ")}</dd>
+                        </div>
+                    )
+                }
+            </dl>
+        </header>
+
+        <div class="wrap">
+            <Image
+                class="case__cover"
+                src={cover}
+                alt={coverAlt}
+                widths={[640, 1024, 1600]}
+                sizes="(min-width: 84rem) 78rem, 100vw"
+                loading="eager"
+            />
+        </div>
+
+        <div class="wrap case__body">
+            <div class="prose">
+                <Content />
+            </div>
+        </div>
+    </article>
+</Layout>

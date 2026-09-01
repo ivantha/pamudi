@@ -1,0 +1,66 @@
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--paper);
+    border-bottom: 1px solid var(--rule);
+
+    &__inner {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--gutter);
+        padding-block: 0.9rem;
+    }
+
+    &__mark {
+        font-family: var(--font-display);
+        font-size: var(--step-1);
+        font-weight: 600;
+        font-variation-settings:
+            "opsz" 40,
+            "WONK" 1;
+        letter-spacing: -0.015em;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    &__nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: clamp(0.9rem, 0.4rem + 1.6vw, 2rem);
+        font-size: var(--step--1);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    &__link {
+        text-decoration: none;
+        position: relative;
+        padding-block: 0.15rem;
+
+        // Drawn from the left on hover rather than faded in — a rule that
+        // builds reads as editorial, a colour swap reads as a button.
+        &::after {
+            content: "";
+            position: absolute;
+            inset-inline: 0;
+            bottom: -0.1rem;
+            height: 1px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform var(--dur) var(--ease);
+        }
+
+        &:hover::after,
+        &[aria-current="page"]::after {
+            transform: scaleX(1);
+        }
+
+        &[aria-current="page"] {
+            color: var(--accent);
+        }
+    }
+}

@@ -1,0 +1,35 @@
+---
+import { Image } from "astro:assets"
+import type { CollectionEntry } from "astro:content"
+import { href } from "@/lib/url"
+
+interface Props {
+    entry: CollectionEntry<"work">
+    /** 1-based position, printed as the index numeral. */
+    index: number
+}
+
+const { entry, index } = Astro.props
+const { title, summary, year, disciplines, cover, coverAlt } = entry.data
+---
+
+<a class="work-item" href={href(`/work/${entry.id}`)}>
+    <div class="work-item__figure">
+        <Image
+            src={cover}
+            alt={coverAlt}
+            widths={[480, 800, 1200, 1600]}
+            sizes="(min-width: 60rem) 62vw, 100vw"
+            loading={index === 1 ? "eager" : "lazy"}
+        />
+    </div>
+    <div class="work-item__body">
+        <span class="eyebrow work-item__num">{String(index).padStart(2, "0")} &mdash; {year}</span>
+        <h2 class="work-item__title">{title}</h2>
+        <p class="work-item__summary">{summary}</p>
+        <ul class="work-item__tags">
+            {disciplines.map((d) => <li>{d}</li>)}
+        </ul>
+        <span class="work-item__more">Read the case study</span>
+    </div>
+</a>

@@ -1,0 +1,53 @@
+---
+title: TODO — Case study three
+summary: TODO — one sentence on the problem and the outcome, written by Pamudi.
+year: 2024
+role: TODO — e.g. "Lead designer, research through handoff"
+context: TODO — team, company, or client
+disciplines: ["Product design", "Design systems"]
+tools: ["Figma", "Maze"]
+cover: "../../assets/work/placeholder-03.png"
+coverAlt: Placeholder artwork. Replace with a real screenshot and describe it here.
+order: 30
+# Held back from the site. The frontmatter and body below are a template
+# for Pamudi to fill in, not a case study — publishing them would put TODO
+# text and placeholder artwork on a public portfolio under her name. Flip
+# this to false (or delete the key) once the real copy and cover land.
+draft: true
+---
+
+import { Image } from "astro:assets"
+import shot from "@/assets/work/placeholder-03.png"
+
+> This file is scaffolding, not a case study. It is marked `draft: true`, so
+> it does not render on the site — fill it in and clear the flag, or delete
+> it once a real study replaces it.
+
+## The problem
+
+TODO — what was broken, for whom, and how you knew. A case study that opens with
+the solution has skipped the only part a hiring manager cannot infer.
+
+## What I did
+
+TODO — the decisions, in order, with the reasoning. Name the trade-offs and the
+things that did not work.
+
+<figure>
+  <Image
+    src={shot}
+    alt="TODO — describe what this image shows."
+    widths={[640, 960, 1400]}
+    sizes="(min-width: 60rem) 76rem, 100vw"
+  />
+  <figcaption>
+    Figures break out past the text measure. Import from `src/assets/work/` and render through
+    `astro:assets` so every image ships responsive AVIF/WebP — never a raw `img` with a hand-written
+    path.
+  </figcaption>
+</figure>
+
+## Outcome
+
+TODO — what changed. Numbers where you have them, honest qualifiers where you
+do not.

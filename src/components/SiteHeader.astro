@@ -1,0 +1,35 @@
+---
+import { getEntry } from "astro:content"
+import { href } from "@/lib/url"
+
+const personal = await getEntry("personal", "personal")!
+const path = Astro.url.pathname.replace(/\/$/, "")
+
+const NAV = [
+    { label: "Work", path: "/" },
+    { label: "About", path: "/about" },
+    { label: "CV", path: "/cv" },
+]
+
+/** True when `target` is the page currently being rendered. */
+const isCurrent = (target: string) => path === href(target).replace(/\/$/, "")
+---
+
+<header class="site-header">
+    <div class="wrap site-header__inner">
+        <a class="site-header__mark" href={href("/")}>{personal.data.name}</a>
+        <nav class="site-header__nav" aria-label="Primary">
+            {
+                NAV.map((item) => (
+                    <a
+                        class="site-header__link"
+                        href={href(item.path)}
+                        aria-current={isCurrent(item.path) ? "page" : undefined}
+                    >
+                        {item.label}
+                    </a>
+                ))
+            }
+        </nav>
+    </div>
+</header>

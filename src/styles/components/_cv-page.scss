@@ -1,0 +1,65 @@
+// The /cv page: the two rendered sheets of the PDF, shown as a spread.
+//
+// Images rather than an embedded PDF viewer, deliberately. A browser's PDF
+// chrome inside an <object> is off-brand on a designer's site, and on iOS it
+// frequently renders as a grey box; these are rendered from the same Typst
+// compile as the download and go through astro:assets like every other image
+// here, so they arrive as AVIF at the size the layout actually asks for.
+
+.cv-download {
+    display: inline-block;
+    margin-top: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+    padding: 0.7rem 1.5rem;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: background-color var(--dur) var(--ease);
+
+    &::after {
+        content: "\00a0\2193";
+    }
+
+    &:hover,
+    &:focus-visible {
+        background: var(--accent);
+    }
+}
+
+.cv-spread {
+    display: grid;
+    gap: var(--rhythm) var(--gutter);
+
+    // Two A4 portraits side by side is how the document is read; below this it
+    // would force each sheet too small to be worth showing.
+    @media (min-width: 60rem) {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--gutter);
+    }
+}
+
+.cv-sheet {
+    img {
+        width: 100%;
+        border: 1px solid var(--rule);
+        background: var(--paper-2);
+    }
+
+    &__folio {
+        display: block;
+        margin-top: 0.9rem;
+        color: var(--muted);
+    }
+}
+
+.cv-note {
+    max-width: var(--measure);
+    margin-top: var(--rhythm);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: var(--step--1);
+}

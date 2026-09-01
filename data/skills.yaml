@@ -1,0 +1,55 @@
+# Toolkit — the page 2 key/value block on the CV, and the skills list on the
+# website. `stack` carries Typst markup; `·` is the separator throughout.
+#
+# Rows tagged `include_in: [web]` are the ones the two-page CV has no room for.
+# cv/cv.typ filters this file on that key, so they reach the website only.
+
+- category: AI tooling
+  stack: >-
+    Cursor and Claude for frontend implementation · Visily.ai and Builder.ai for
+    wireframing and ideation · Figma AI in-file · generative tooling for custom
+    iconography
+
+- category: Generative tooling
+  # Named individually here; the CV keeps them under one "AI tooling" row.
+  include_in: [web]
+  stack: >-
+    Gemini Nano · Banana Pro · ChatGPT — custom iconography that would otherwise
+    have been illustrated by hand or bought in
+
+- category: Design
+  stack: Figma · Adobe XD · InVision · Illustrator · Photoshop
+
+- category: Design systems
+  stack: Tokens · component libraries · type scales · spacing and interaction specs
+
+- category: Frontend
+  stack: >-
+    React · Angular · React Native · JavaScript · Sass/SCSS · LESS — shipped UI
+    across four client products
+
+- category: Frontend delivery
+  # What shipped, per project, rather than the language list above.
+  include_in: [web]
+  stack: >-
+    Branch operations platform — Kendo UI, React, Sass · Manufacturing
+    warehouse app — React, Ant Design, SCSS, web and mobile · Mining-site tool
+    platform, four modules — React Material, React, Sass · RFID inventory
+    tracker — React, Material UI
+
+- category: Component libraries
+  stack: Material UI · Ant Design · Kendo UI · Angular Material · Bootstrap · NativeBase
+
+- category: Other platforms
+  include_in: [web]
+  stack: >-
+    WordPress · JavaFX · MySQL · Express.js · Node.js · MongoDB — from the 2018
+    record and the UCSC projects
+
+- category: Accessibility
+  stack: WCAG colour contrast · content sizing · readability, applied at token level
+
+- category: Practice
+  stack: >-
+    Design thinking · UX research · requirements-phase consultation ·
+    implementation alignment · knowledge transfer

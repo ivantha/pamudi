@@ -1,0 +1,7 @@
+# pnpm 11 gates postinstall scripts. These three are legitimate native builds
+# (image processing, the JS bundler, and the dev-server file watcher) and the
+# site cannot build without sharp.
+allowBuilds:
+  "@parcel/watcher": true
+  esbuild: true
+  sharp: true

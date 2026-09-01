@@ -1,0 +1,117 @@
+# Roles, newest first. Read by the Typst CV and the website's about page.
+#
+# `bullets[].text` carries Typst markup: *strong* and _emphasis_. Typst renders
+# it via `render-md` (eval, markup mode); the site converts the same tokens to
+# HTML. Keep both readers in mind when editing.
+#
+# `include_in` picks the consumers: [cv, web]. Omit the key to appear in both,
+# use [] to hide an entry everywhere without deleting it. Bullets tagged
+# `include_in: [web]` carry the detail the two-page CV compresses away — the
+# site has no page budget, so the full record lives there.
+#
+# Product and client names are anonymised with domain descriptors. The mapping
+# from these descriptors to the original names is maintained offline.
+
+- id: zone24x7-senior
+  role: Senior UI/UX Engineer
+  org: Zone24x7 (Pvt) Ltd
+  place: Colombo
+  dates: Apr 2022 — Present
+  bullets:
+    - text: >-
+        *Design system ownership.* Owned three systems end to end from scratch —
+        a precision agriculture app, a biometric photo-ID suite and a freight
+        logistics cockpit — building every component, screen and prototype.
+        Extended six more across banking, manufacturing, mining-site tooling,
+        biometric identity and warehouse management, and contributed to an RFID
+        inventory tracking system.
+    - text: >-
+        *Product and UI/UX leadership.* Guided eight product teams through the
+        full design-to-implementation lifecycle: UX direction during the
+        requirements phase, sole ownership of the Figma source of truth, and
+        hands-on support for developers through the build.
+    - text: >-
+        *AI-augmented practice.* Removed the dependency on dedicated frontend
+        support by implementing design changes directly, and moved
+        direction-setting earlier — wireframing and testing before committing
+        to production. Currently via Cursor, Claude, Visily.ai, Builder.ai
+        and Figma AI.
+    - text: >-
+        *Design-to-development alignment.* Specified each system for its target
+        stack, from Flutter-ready components on the ag-tech app to React with
+        Ant Design, Kendo UI and Material UI elsewhere, then implemented the
+        styling directly. The work was measured on minimising rework and UI
+        defects across every project touched.
+    - text: >-
+        *Accessibility.* Embedded WCAG colour-contrast and content-sizing
+        standards into the ag-tech, photo-ID and banking systems from the first
+        token, and ran a dedicated accessibility research pass for a consumer
+        delivery platform.
+    - text: >-
+        *Documentation.* Wrote self-contained style guides inside the Figma
+        files for ten products, covering component usage, tokens, spacing, type
+        scale, colour and interaction patterns. New developers onboard from the
+        design file itself.
+
+- id: zone24x7-early
+  # Verified 2026-09-02 against her own LinkedIn profile. The pre-2022 record is
+  # a three-step progression, consolidated into one entry here so the CV keeps
+  # its two-page guard; the steps are named in the web-only bullet below.
+  role: UI Engineer
+  org: Zone24x7 (Pvt) Ltd
+  place: Colombo
+  # Verified 2026-09-02: she joined Sep 2018, not the 2019 previously inferred,
+  # and moved to Senior in Apr 2022. Zone24x7 tenure is 8 years, not 7.
+  dates: Sep 2018 — Apr 2022
+  bullets:
+    - text: >-
+        Designed web, mobile and native product UI across ten products spanning
+        warehouse robotics, cross-border e-commerce, retail logistics and
+        emergency distribution.
+    - text: >-
+        Built mock-ups and production UI for a Fortune 500 retailer's
+        shopping-intent detection system: traffic analytics, anomaly monitoring,
+        loss prevention, store picker and configuration modules, alongside
+        wayfinding map assets sliced into tiles for zoom levels 17 to 22.
+    - text: >-
+        Held the in-house design function across four departments before moving
+        into product, covering brand, marketing, recruitment and event material,
+        and the corporate website.
+    - include_in: [web]
+      text: >-
+        *That design function, itemised.* Business Design Office — social
+        campaigns and milestone flyers, the corporate slide deck, brochures for
+        every service, product specifications and range documentation, plus the
+        vector artwork and the case-study series for the corporate website.
+        Human Resources — Slasscom Women's Day and the Slasscom cricket
+        tournament, the Colombo Flutter meetup, employee awards and service
+        milestones, recruitment adverts and the university engagement
+        programme. Systems — the internal awareness campaign, from access-card
+        redesigns to blood-donation drives. Alongside those, company sports
+        and charity events and internal knowledge-sharing sessions on Flutter,
+        Docker and Kubernetes, GDPR and C4 models.
+    - include_in: [web]
+      text: >-
+        *Robotic warehouse fulfilment system.* Built the ROI interface,
+        redesigned the device tiles and replaced the tabbed
+        configuration-review flow with a single-page view, alongside
+        scheduling configuration and a run of UI fixes across the
+        troubleshooter, the management portal and the configuration pages.
+    - include_in: [web]
+      text: >-
+        *The progression.* Joined in September 2018 as Trainee Associate UI
+        Engineer, became Associate UI Engineer in March 2019 and UI Engineer
+        that September, before the move to Senior UI/UX Engineer in April 2022.
+
+- id: soda-fresh-freelance
+  include_in: [web]
+  role: Freelance Designer
+  org: Indonesian consumer brand
+  place: remote
+  dates: Jan 2020 — Present
+  bullets:
+    - text: >-
+        Brand and print design — marketing collateral, product catalogues,
+        warranty documentation, outdoor banners and user manuals — on a rolling
+        freelance basis since January 2020 and running alongside the full-time
+        role throughout.

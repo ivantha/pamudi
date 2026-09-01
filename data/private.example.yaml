@@ -1,0 +1,9 @@
+# Contact details that must never enter this public repo.
+#
+# Copy to data/private.yaml (gitignored) and fill in the real values. cv/build.sh
+# seeds the copy automatically if it is missing, so CI builds a PDF with these
+# empty defaults while a local build picks up the real ones.
+#
+# An empty string means the field is omitted from the rendered CV.
+
+phone: ""
