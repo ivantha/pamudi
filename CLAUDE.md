@@ -70,8 +70,12 @@ plausible-sounding prose** — seven of the thirteen are deliberately in it. See
 "Whose site this is".
 
 **`groupSystems` in `src/lib/systems.ts` deliberately duplicates `system-groups`
-in `cv/common/loaders.typ`** — same tests, same order: `lead`, then an
-`"Extended"` prefix, then an exact `"Contributed"`, then everything else. A
+in `cv/common/loaders.typ`** — same tests, same order: `lead`, then an exact
+`"Personal project"`, then an `"Extended"` prefix, then an exact
+`"Contributed"`, then everything else. The personal branch is tested before the
+client bands and never fires in the PDF, because its one entry is
+`include_in: [web]`; it is present in both consumers so the derivations stay
+identical, which is the whole point of duplicating them. A
 `group:` key in `data/systems.yaml` that only the website read would let the
 PDF's grouping drift silently, which is the failure the shared-data arrangement
 exists to prevent. Change one branch, change the other in the same commit.
