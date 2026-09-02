@@ -1,0 +1,545 @@
+// ---- Hero -------------------------------------------------------------------
+// The one place the type is allowed to run to the full width of the frame. The
+// meta strip above it is set as one ruled line so the headline drops onto a
+// datum rather than into open space.
+
+.hero {
+    padding-block: calc(var(--section-y) * 1.1) var(--section-y);
+}
+
+.hero__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-bottom: 2.75rem;
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.hero__meta-accent {
+    color: var(--accent);
+}
+
+.hero__headline {
+    margin: 0;
+    font-size: var(--fs-hero);
+    font-weight: 600;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    max-width: 22ch;
+    text-wrap: pretty;
+}
+
+.hero__accent {
+    color: var(--accent-bright);
+}
+
+.hero__foot {
+    margin-top: 3.5rem;
+    row-gap: 2.5rem;
+    align-items: start;
+}
+
+.hero__lede {
+    grid-column: span 5;
+
+    p {
+        margin: 0;
+        font-size: var(--fs-lede);
+        line-height: 1.6;
+        color: var(--body);
+        text-wrap: pretty;
+    }
+
+    p + p {
+        margin-top: 1rem;
+    }
+}
+
+.hero__facts {
+    grid-column: 8 / span 5;
+    --facts-label: 5.5rem;
+}
+
+.hero__links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 64rem) {
+    .hero__lede,
+    .hero__facts {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 40rem) {
+    .hero__meta {
+        gap: 0.375rem 1.25rem;
+        justify-content: flex-start;
+    }
+}
+
+// ---- The headline figures ---------------------------------------------------
+// Four cells divided by vertical hairlines, closed by an ink rule. The rules
+// are what make it a band rather than four numbers in a row.
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-bottom: 1px solid var(--rule-strong);
+}
+
+.stats__cell {
+    padding: 2.25rem var(--pad-x);
+
+    &:not(:last-child) {
+        border-right: 1px solid var(--rule);
+    }
+}
+
+.stats__label {
+    margin: 0;
+    font-size: var(--fs-nav);
+    font-weight: 600;
+    letter-spacing: var(--tracking-micro);
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.stats__value {
+    margin: 1.25rem 0 0;
+    font-size: var(--fs-stat);
+    font-weight: 600;
+    line-height: 0.85;
+    letter-spacing: -0.045em;
+    color: var(--ink);
+}
+
+// The second cell is the one claim the page is really making, so it is the one
+// that takes the accent.
+.stats__cell:nth-child(2) .stats__value {
+    color: var(--accent-bright);
+}
+
+@media (max-width: 64rem) {
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stats__cell {
+        padding-block: 1.75rem;
+
+        &:nth-child(odd) {
+            border-right: 1px solid var(--rule);
+        }
+
+        &:nth-child(even) {
+            border-right: 0;
+        }
+
+        &:nth-child(-n + 2) {
+            border-bottom: 1px solid var(--rule);
+        }
+    }
+}
+
+@media (max-width: 30rem) {
+    .stats {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .stats__cell {
+        border-right: 0 !important;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid var(--rule);
+        }
+    }
+}
+
+// ---- The second-order figures ----------------------------------------------
+// One ruled line under the headline band. These are counts drawn out of the
+// experience bullets rather than headline claims, and they are set to read
+// that way.
+
+.figures {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin: 0;
+    padding-block: 1.125rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--fs-small);
+    color: var(--muted);
+
+    b {
+        font-weight: 600;
+        color: var(--accent);
+    }
+}
+
+.figures__item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.375rem;
+}
+
+.figures__sep {
+    width: 1px;
+    height: 0.75em;
+    margin-right: 1rem;
+    background: var(--rule);
+}
+
+@media (max-width: 40rem) {
+    .figures__sep {
+        display: none;
+    }
+}
+
+// ---- Practice ---------------------------------------------------------------
+// Four ruled cards on the paper side, the same pattern the system detail page
+// uses for "The system". Each is a claim plus its evidence.
+
+.practice {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2.5rem;
+}
+
+.practice__card {
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--rule);
+
+    &:nth-last-child(-n + 2) {
+        border-bottom: 1px solid var(--rule);
+    }
+}
+
+.practice__title {
+    margin: 0.5rem 0 0.5rem;
+    font-size: var(--fs-title-sm);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
+
+@media (max-width: 48rem) {
+    .practice {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .practice__card:nth-last-child(2) {
+        border-bottom: 0;
+    }
+}
+
+// ---- Selected work ----------------------------------------------------------
+
+.selected {
+    padding-top: var(--section-y);
+}
+
+.selected__head {
+    align-items: baseline;
+    padding-bottom: 2.25rem;
+    row-gap: 0.75rem;
+
+    .label {
+        grid-column: span 2;
+    }
+}
+
+.selected__lede {
+    grid-column: 3 / span 5;
+    margin: 0;
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    color: var(--body);
+}
+
+.selected__count {
+    grid-column: 11 / span 2;
+    text-align: right;
+}
+
+.selected__more {
+    margin: 1.5rem 0 0;
+    font-size: var(--fs-text);
+    line-height: 1.7;
+    color: var(--muted);
+}
+
+.work-item {
+    align-items: start;
+    padding-block: 2rem;
+    border-top: 1px solid var(--rule);
+    color: var(--ink);
+    transition: background-color var(--dur) var(--ease);
+
+    &:hover {
+        color: var(--ink);
+        background: var(--panel);
+    }
+}
+
+.work-item--first {
+    border-top-color: var(--rule-strong);
+}
+
+.work-item--last {
+    border-bottom: 1px solid var(--rule-strong);
+}
+
+.work-item__index {
+    grid-column: span 1;
+    font-size: var(--fs-nav);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+}
+
+.work-item__head {
+    grid-column: 2 / span 3;
+}
+
+.work-item__title {
+    display: block;
+    font-size: var(--fs-title-xl);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+}
+
+.work-item__context {
+    display: block;
+    margin-top: 0.625rem;
+}
+
+.work-item__text {
+    grid-column: 5 / span 4;
+    display: block;
+    font-size: var(--fs-body);
+    line-height: 1.65;
+    color: var(--body);
+    text-wrap: pretty;
+}
+
+.work-item__meta {
+    grid-column: 9 / span 2;
+    display: block;
+}
+
+.work-item__stack {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: var(--fs-small);
+    color: var(--muted);
+}
+
+// The thumbnail well holds its aspect ratio whether or not an image has landed
+// in it, so publishing a cover later does not reflow the row.
+.work-item__thumb {
+    grid-column: 11 / span 2;
+    display: block;
+    aspect-ratio: 4 / 3;
+    background-color: var(--panel);
+    background-image: repeating-linear-gradient(135deg, var(--rule) 0 1px, transparent 1px 8px);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+@media (max-width: 64rem) {
+    .selected__head .label {
+        grid-column: 1 / -1;
+    }
+
+    .selected__lede,
+    .selected__count {
+        grid-column: 1 / -1;
+        text-align: left;
+    }
+
+    .work-item {
+        row-gap: 0.75rem;
+    }
+
+    .work-item__index {
+        grid-column: 1 / -1;
+    }
+
+    .work-item__head,
+    .work-item__text,
+    .work-item__meta {
+        grid-column: 1 / -1;
+    }
+
+    .work-item__thumb {
+        grid-column: 1 / span 3;
+        margin-top: 0.5rem;
+    }
+}
+
+@media (max-width: 40rem) {
+    .work-item__thumb {
+        grid-column: 1 / -1;
+        max-width: 12rem;
+    }
+}
+
+// ---- How it runs ------------------------------------------------------------
+
+.process__head {
+    align-items: start;
+    row-gap: 1.5rem;
+}
+
+.process__label {
+    grid-column: span 2;
+    color: var(--on-dark-muted);
+}
+
+.process__lede {
+    grid-column: 3 / span 7;
+    margin: 0;
+    font-size: var(--fs-band-lede);
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.028em;
+    color: var(--on-dark);
+    text-wrap: pretty;
+}
+
+.process__steps {
+    list-style: none;
+    margin: 3.5rem 0 0;
+    padding-block: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: 2rem;
+}
+
+.process__step {
+    border-top: 2px solid var(--dark-rule);
+    padding-top: 1.125rem;
+
+    // The first step takes the accent rule: the sequence starts here, and on a
+    // five-across band that is the only cue that says so.
+    &:first-child {
+        border-top-color: var(--accent-bright);
+    }
+}
+
+.process__num {
+    display: block;
+    font-size: var(--fs-nav);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent-on-dark);
+}
+
+.process__title {
+    margin: 0.875rem 0 0;
+    font-size: var(--fs-body-lg);
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    color: var(--on-dark);
+}
+
+.process__text {
+    margin: 0.625rem 0 0;
+    font-size: var(--fs-text);
+    line-height: 1.65;
+    color: var(--on-dark-body);
+}
+
+@media (max-width: 64rem) {
+    .process__label,
+    .process__lede {
+        grid-column: 1 / -1;
+    }
+
+    .process__steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 40rem) {
+    .process__steps {
+        grid-template-columns: minmax(0, 1fr);
+        margin-top: 2.5rem;
+    }
+}
+
+// ---- Toolkit ----------------------------------------------------------------
+
+.toolkit {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2.5rem;
+}
+
+.toolkit__row {
+    padding-block: 1rem;
+    border-top: 1px solid var(--rule);
+
+    h3 {
+        margin-bottom: 0.375rem;
+    }
+}
+
+// The bottom rule is drawn under the last row of each column, whichever row
+// that turns out to be.
+.toolkit__row:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--rule);
+}
+
+@media (max-width: 48rem) {
+    .toolkit {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .toolkit__row:nth-last-child(2) {
+        border-bottom: 0;
+    }
+}
+
+// ---- Beyond the desk --------------------------------------------------------
+
+.counts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: 1.5rem;
+    padding-bottom: 2.5rem;
+}
+
+.counts__value {
+    margin: 0.875rem 0 0;
+    font-size: var(--fs-stat-md);
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+}
+
+@media (max-width: 40rem) {
+    .counts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

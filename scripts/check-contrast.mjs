@@ -13,33 +13,41 @@ import { readFile } from "node:fs/promises"
 /**
  * Foreground/background token pairs, each with the ratio it must clear.
  *
- * Both surfaces are listed. Half of this site is reversed out on `--dark`, and
- * the paper palette's `--muted` measures 3.10:1 there — the pairs below are
- * what stops that swap being made by hand and shipped.
+ * Both surfaces are listed. The bands and the footer are reversed out on
+ * `--dark`, where the paper palette's `--muted` measures 2.13:1 — the pairs
+ * below are what stops that swap being made by hand and shipped.
  *
- * Hairlines (`--rule`, `--rule-strong`, `--chip`) are absent on purpose. WCAG
- * 1.4.11 covers UI components and meaningful graphics; a decorative divider,
- * and a chip outline drawn around text that already clears 4.5:1 on its own,
- * are neither.
+ * `--accent-bright` is checked at 3:1, not 4.5:1, because it is a large-text
+ * and rule colour by definition: the hero accent word, the headline figures,
+ * the 404, hover on display-sized links, and 2px rules. Setting a label or a
+ * paragraph in it is the misuse this floor is documenting, not permitting —
+ * `--accent` is the text-sized rust on paper and `--accent-on-dark` on ink.
+ *
+ * Hairlines (`--rule`, `--dark-rule`) are absent on purpose. WCAG 1.4.11 covers
+ * UI components and meaningful graphics; a divider between two rows of text
+ * that each clear 4.5:1 on their own is neither.
  */
 const PAIRS = [
     // The paper side.
-    { fg: "ink", bg: "sheet", min: 7, note: "body text" },
-    { fg: "ink", bg: "ground", min: 7, note: "text on the outer ground" },
-    { fg: "ink", bg: "sheet-hover", min: 7, note: "text on a hovered row" },
-    { fg: "body", bg: "sheet", min: 4.5, note: "secondary paragraphs" },
-    { fg: "muted", bg: "sheet", min: 4.5, note: "labels and meta" },
-    { fg: "muted", bg: "sheet-hover", min: 4.5, note: "meta on a hovered row" },
-    { fg: "accent", bg: "sheet", min: 4.5, note: "accent text and links" },
-    { fg: "accent-strong", bg: "sheet", min: 4.5, note: "link hover" },
-    { fg: "sheet", bg: "accent", min: 4.5, note: "text reversed out of accent" },
+    { fg: "ink", bg: "page", min: 7, note: "headings and display" },
+    { fg: "ink", bg: "panel", min: 7, note: "text on a hovered row" },
+    { fg: "body", bg: "page", min: 4.5, note: "running text" },
+    { fg: "body", bg: "panel", min: 4.5, note: "running text on a hovered row" },
+    { fg: "muted", bg: "page", min: 4.5, note: "labels, meta and captions" },
+    { fg: "muted", bg: "panel", min: 4.5, note: "meta on a hovered row" },
+    { fg: "accent", bg: "page", min: 4.5, note: "links and section labels" },
+    { fg: "accent", bg: "panel", min: 4.5, note: "links on a hovered row" },
+    { fg: "accent-bright", bg: "page", min: 3, note: "display accent, large text only" },
+    { fg: "page", bg: "ink", min: 4.5, note: "the header contact button" },
+    { fg: "page", bg: "accent", min: 4.5, note: "that button, hovered" },
 
     // The ink side.
     { fg: "on-dark", bg: "dark", min: 7, note: "headings on the dark bands" },
-    { fg: "on-dark-soft", bg: "dark", min: 4.5, note: "ledes on the dark bands" },
-    { fg: "on-dark-muted", bg: "dark", min: 4.5, note: "labels on the dark bands" },
-    { fg: "mint", bg: "dark", min: 4.5, note: "the accent, reversed" },
-    { fg: "dark", bg: "mint", min: 4.5, note: "text reversed out of the accent" },
+    { fg: "on-dark-soft", bg: "dark", min: 4.5, note: "links in the footer contact list" },
+    { fg: "on-dark-body", bg: "dark", min: 4.5, note: "running text in the bands" },
+    { fg: "on-dark-muted", bg: "dark", min: 4.5, note: "labels and the colophon" },
+    { fg: "accent-on-dark", bg: "dark", min: 4.5, note: "the accent at label sizes, reversed" },
+    { fg: "accent-bright", bg: "dark", min: 3, note: "display accent on ink, large text only" },
 ]
 
 const source = await readFile(new URL("../src/styles/_tokens.scss", import.meta.url), "utf-8")

@@ -40,6 +40,41 @@ const work = defineCollection({
 })
 
 /**
+ * Long-form pages for entries in the design-systems inventory.
+ *
+ * Optional by construction: `src/pages/systems/[slug].astro` builds a page for
+ * every product in `data/systems.yaml` whether or not a file exists here, and
+ * an entry with no file renders the sourced facts alone. That is deliberate —
+ * the inventory is the record, and a product without a written page should
+ * still have a URL rather than a 404.
+ *
+ * `system` must match a `product` in `data/systems.yaml` exactly. It is matched
+ * on the name rather than on a slug so that the two files cannot drift apart
+ * silently: the page throws at build time when a file names a product the
+ * inventory does not have.
+ *
+ * The body is MDX because a project page is prose and images, not a list of
+ * fields — the same reasoning as `work` above.
+ */
+const systemPages = defineCollection({
+    loader: glob({ base: "./src/content/systems", pattern: "**/*.{md,mdx}" }),
+    schema: ({ image }) =>
+        z.object({
+            /** The `product` field of the inventory entry this page belongs to. */
+            system: z.string(),
+            /** One paragraph under the title, above the metadata list. */
+            standfirst: z.string().optional(),
+            /** Rows appended to the metadata list, beyond what the inventory carries. */
+            facts: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
+            cover: image().optional(),
+            coverAlt: z.string().optional(),
+            coverCaption: z.string().optional(),
+            /** A drafted page keeps its URL but renders the blank scaffold. */
+            draft: z.boolean().default(false),
+        }),
+})
+
+/**
  * Identity and contact, shared with the Typst CV.
  *
  * `eyebrow` is the only field here the website never reads; it is validated
@@ -247,6 +282,7 @@ const site = defineCollection({
 
 export const collections = {
     work,
+    systemPages,
     personal,
     site,
     experience,

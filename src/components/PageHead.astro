@@ -1,0 +1,39 @@
+---
+/**
+ * The masthead of an inner page: an eyebrow, the page title, and a lede or an
+ * action sitting in the right-hand columns, closed by an ink rule.
+ *
+ * Every page except the home page opens with one, which is what makes them read
+ * as sheets of the same document rather than as separate designs.
+ */
+interface Props {
+    /**
+     * The uppercase line above the title. Optional, and deliberately absent on
+     * detail pages: there the back link occupies that slot, and repeating the
+     * client above a title that already names the product only crowds it.
+     */
+    eyebrow?: string
+    /** The page title. */
+    title: string
+    /** Optional standfirst in the right-hand columns. */
+    lede?: string
+    /**
+     * `title` is the default. `detail` is the narrower setting used by system
+     * and case-study pages, where the title shares its column with a standfirst.
+     */
+    size?: "title" | "detail"
+    class?: string
+}
+
+const { eyebrow, title, lede, size = "title", class: className }: Props = Astro.props
+---
+
+<section class:list={["page-head", "grid", "pad", `page-head--${size}`, className]}>
+    <div class="page-head__main">
+        {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+        <h1 class="page-head__title">{title}</h1>
+        {size === "detail" && <slot name="standfirst" />}
+    </div>
+    {lede && <p class="page-head__lede">{lede}</p>}
+    <slot name="aside" />
+</section>

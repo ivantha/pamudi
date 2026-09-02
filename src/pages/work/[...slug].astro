@@ -1,16 +1,24 @@
 ---
 import { getCollection, render } from "astro:content"
-import { Image } from "astro:assets"
 import Layout from "@/layouts/Layout.astro"
-import Row from "@/components/Row.astro"
+import PageHead from "@/components/PageHead.astro"
+import PrevNext from "@/components/PrevNext.astro"
+import Figure from "@/components/Figure.astro"
 import { href } from "@/lib/url"
 
 export async function getStaticPaths() {
-    const work = await getCollection("work", ({ data }) => !data.draft)
-    return work.map((entry) => ({ params: { slug: entry.id }, props: { entry } }))
+    // `order` is the editorial sequence; year only breaks ties, matching the
+    // home page so prev/next walks the list in the order it is presented.
+    const work = (await getCollection("work", ({ data }) => !data.draft)).sort(
+        (a, b) => a.data.order - b.data.order || b.data.year - a.data.year,
+    )
+    return work.map((entry, i) => ({
+        params: { slug: entry.id },
+        props: { entry, prev: work[i - 1], next: work[i + 1] },
+    }))
 }
 
-const { entry } = Astro.props
+const { entry, prev, next } = Astro.props
 const { Content } = await render(entry)
 const { title, summary, year, role, context, disciplines, tools, cover, coverAlt } = entry.data
 
@@ -18,48 +26,52 @@ const FACTS = [
     ["Year", String(year)],
     ["Role", role],
     ["Context", context],
-    ["Disciplines", disciplines.join(", ")],
-    ...(tools.length > 0 ? [["Tools", tools.join(", ")] as const] : []),
+    ["Disciplines", disciplines.join(" · ")],
+    ...(tools.length > 0 ? [["Tools", tools.join(" · ")] as const] : []),
 ] as const
 ---
 
 <Layout title={title} description={summary}>
     <article>
-        <div class="page-head">
-            <div>
-                <p class="eyebrow page-head__eyebrow">
-                    <a href={href("/")}>Work</a><span class="page-head__sep">/</span>{year}
-                </p>
-                <h1 class="page-head__title">{title}</h1>
-            </div>
-            <p class="page-head__lede">{summary}</p>
+        <div class="status-bar pad">
+            <span class="status-bar__mark">Case study</span>
+            <span class="status-bar__note">{year} &nbsp;·&nbsp; {context}</span>
         </div>
 
-        <Row label="The brief" rule="strong">
-            <dl class="case-facts">
+        <PageHead title={title} size="detail">
+            <a slot="standfirst" class="page-head__back" href={href("/")}>&larr; Selected work</a>
+            <p slot="standfirst" class="page-head__standfirst">{summary}</p>
+            <dl slot="aside" class="page-head__facts facts">
                 {
                     FACTS.map(([term, value]) => (
-                        <>
+                        <div class="facts__row">
                             <dt>{term}</dt>
                             <dd>{value}</dd>
-                        </>
+                        </div>
                     ))
                 }
             </dl>
-        </Row>
+        </PageHead>
 
-        <div class="case-cover">
-            <Image
-                src={cover}
-                alt={coverAlt}
-                widths={[640, 1024, 1600, 2048]}
-                sizes="(min-width: 84rem) 71rem, 100vw"
-                loading="eager"
-            />
+        <div class="pad">
+            <Figure src={cover} alt={coverAlt} />
         </div>
 
-        <Row label="The work" flush>
-            <div class="prose"><Content /></div>
-        </Row>
+        <div class="case">
+            <Content />
+        </div>
+
+        <PrevNext
+            prev={prev
+                ? {
+                      href: href(`/work/${prev.id}`),
+                      label: "← Previous",
+                      title: prev.data.title,
+                  }
+                : { href: href("/"), label: "← All work", title: "Selected work" }}
+            next={next
+                ? { href: href(`/work/${next.id}`), label: "Next →", title: next.data.title }
+                : undefined}
+        />
     </article>
 </Layout>

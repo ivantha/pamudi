@@ -1,0 +1,139 @@
+---
+import { getCollection, render } from "astro:content"
+import type { GetStaticPaths } from "astro"
+import Layout from "@/layouts/Layout.astro"
+import PageHead from "@/components/PageHead.astro"
+import PrevNext from "@/components/PrevNext.astro"
+import Figure from "@/components/Figure.astro"
+import Markup from "@/components/Markup.astro"
+import { href } from "@/lib/url"
+import { isWebVisible } from "@/lib/variants"
+import { plainMarkup } from "@/lib/markup"
+import { systemSlug } from "@/lib/slug"
+
+/**
+ * One page per product in the inventory, whether or not anyone has written it
+ * yet. A product with no file in `src/content/systems/` renders its sourced
+ * facts and stops there; that is the intended resting state, not a stub to be
+ * filled with plausible-sounding prose. See CLAUDE.md, "Whose site this is".
+ */
+export const getStaticPaths = (async () => {
+    const systems = (await getCollection("systems")).filter((s) => isWebVisible(s.data))
+    const pages = await getCollection("systemPages")
+
+    // A page naming a product the inventory does not carry is a typo, and it
+    // should stop the build rather than silently render nowhere.
+    for (const page of pages) {
+        if (!systems.some((s) => s.data.product === page.data.system)) {
+            throw new Error(
+                `src/content/systems/${page.id}: no entry in data/systems.yaml has product "${page.data.system}".`,
+            )
+        }
+    }
+
+    return systems.map((system, i) => ({
+        params: { slug: systemSlug(system.data.product) },
+        props: {
+            system,
+            page: pages.find((p) => p.data.system === system.data.product),
+            index: i + 1,
+            total: systems.length,
+            prev: systems[i - 1],
+            next: systems[i + 1],
+        },
+    }))
+}) satisfies GetStaticPaths
+
+const { system, page, index, total, prev, next } = Astro.props
+const { product, client, description, scope, stack, lead } = system.data
+
+const written = page && !page.data.draft
+const Content = written ? (await render(page)).Content : undefined
+
+const facts = [
+    client && { label: "Client", value: client },
+    { label: "Scope", value: scope },
+    { label: "Specified for", value: stack },
+    ...(page?.data.facts ?? []),
+].filter(Boolean) as Array<{ label: string; value: string }>
+
+const standfirst = page?.data.standfirst ?? description
+---
+
+<Layout
+    title={product}
+    description={description ? plainMarkup(description) : `${product} — ${scope}. ${stack}.`}
+>
+    <div class="status-bar pad">
+        <span class="status-bar__mark">System {String(index).padStart(2, "0")} / {total}</span>
+        <span class="status-bar__note">
+            {
+                written
+                    ? `${scope}${lead ? " · owned end to end" : ""}`
+                    : "Sourced record only · the written page is still to come"
+            }
+        </span>
+    </div>
+
+    <PageHead title={product} size="detail">
+        <a slot="standfirst" class="page-head__back" href={href("/systems")}>
+            &larr; Design systems
+        </a>
+        {
+            standfirst && (
+                <Markup slot="standfirst" as="p" class="page-head__standfirst" text={standfirst} />
+            )
+        }
+        <dl slot="aside" class="page-head__facts facts">
+            {
+                facts.map((fact) => (
+                    <div class="facts__row">
+                        <dt>{fact.label}</dt>
+                        <dd>{fact.value}</dd>
+                    </div>
+                ))
+            }
+        </dl>
+    </PageHead>
+
+    {
+        written && page.data.cover && (
+            <div class="pad">
+                <Figure
+                    src={page.data.cover}
+                    alt={page.data.coverAlt ?? ""}
+                    caption={page.data.coverCaption}
+                />
+            </div>
+        )
+    }
+
+    {
+        Content && (
+            <div class="case">
+                <Content />
+            </div>
+        )
+    }
+
+    <PrevNext
+        prev={{
+            href: href("/systems"),
+            label: "← All systems",
+            title: `${total}-product inventory`,
+        }}
+        next={next
+            ? {
+                  href: href(`/systems/${systemSlug(next.data.product)}`),
+                  label: "Next system →",
+                  title: next.data.product,
+              }
+            : prev
+              ? {
+                    href: href(`/systems/${systemSlug(prev.data.product)}`),
+                    label: "Previous system →",
+                    title: prev.data.product,
+                }
+              : undefined}
+    />
+</Layout>

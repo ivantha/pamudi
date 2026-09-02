@@ -1,0 +1,80 @@
+---
+/**
+ * One ruled section: an uppercase rust label in columns 1–2, the content
+ * beside it from column 3, and a hairline closing the block.
+ *
+ * This is the spine of the whole design — nearly every section on every page is
+ * one of these, so the label column lines up from the top of the home page to
+ * the bottom of a system detail page. It is also what keeps a new section from
+ * being hand-rolled with its own spans and drifting a column out.
+ *
+ * Mirrors `sec()` in `cv/theme.typ`, which does the same job in the PDF.
+ */
+interface Props {
+    /** The rail label, e.g. "Profile". Rendered uppercase in the accent. */
+    label: string
+    /** Optional second line under the label. `\n` becomes a line break. */
+    note?: string
+    /**
+     * How wide the body runs.
+     * `wide` fills columns 3–12; `prose` stops at column 8 so running text keeps
+     * a readable measure; `split` is `prose` with a three-column sidebar.
+     */
+    body?: "wide" | "prose" | "split"
+    /** The rule closing the section: a hairline, an ink rule, or none. */
+    rule?: "hair" | "ink" | "none"
+    /** Heading level for the label. `h2` unless the section nests inside one. */
+    as?: "h2" | "h3"
+    /** Anchor target, so a link can address the section. */
+    id?: string
+    class?: string
+}
+
+const {
+    label,
+    note,
+    body = "wide",
+    rule = "hair",
+    as: Tag = "h2",
+    id,
+    class: className,
+}: Props = Astro.props
+---
+
+<section
+    id={id}
+    class:list={[
+        "sec",
+        "grid",
+        "pad",
+        "sec-rail",
+        `sec-rail--${body}`,
+        rule === "ink" && "sec--ink",
+        rule === "none" && "sec--open",
+        className,
+    ]}
+>
+    <div class="sec-rail__head">
+        <Tag class="label">{label}</Tag>
+        {
+            note && (
+                <p class="sec-rail__note">
+                    {note.split("\n").map((line, i) => (
+                        <>
+                            {i > 0 && <br />}
+                            {line}
+                        </>
+                    ))}
+                </p>
+            )
+        }
+    </div>
+    <div class="sec-rail__body"><slot /></div>
+    {
+        Astro.slots.has("aside") && (
+            <div class="sec-rail__aside">
+                <slot name="aside" />
+            </div>
+        )
+    }
+</section>

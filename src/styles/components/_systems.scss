@@ -1,159 +1,147 @@
-// The page head shared by every inner page: eyebrow and title on the left, a
-// lede or a download button on the right, sitting on the page's first band.
+// The design-systems inventory: four groups of ruled rows. The group heading
+// sits on the same twelve columns as the rows under it, so the ordinal, the
+// title and the count all line up down the page.
 
-.page-head {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    column-gap: 4rem;
-    row-gap: 1.5rem;
-    align-items: end;
-    padding: calc(var(--band-y) * 0.875) var(--pad-x) var(--row-y);
+.inventory__head {
+    align-items: baseline;
+    padding: 2.75rem 0 1.25rem;
 
-    @media (max-width: 60rem) {
-        grid-template-columns: 1fr;
-        align-items: start;
+    .label {
+        grid-column: span 2;
     }
 }
 
-.page-head__eyebrow {
+// Every group after the first opens against an ink rule, which is what
+// separates "Owned" from "Extended" without a heading having to say so.
+.inventory__head:not(:first-child) {
+    border-top: 1px solid var(--rule-strong);
+    margin-top: 1.625rem;
+}
+
+.inventory__note {
+    grid-column: 3 / span 4;
     margin: 0;
-    letter-spacing: 0.26em;
-
-    a {
-        color: inherit;
-
-        &:hover {
-            color: var(--accent);
-        }
-    }
+    font-size: var(--fs-meta);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
 }
 
-.page-head__sep {
-    margin: 0 0.7em;
-    color: var(--rule-strong);
+.inventory__count {
+    grid-column: 12 / span 1;
+    text-align: right;
 }
 
-.page-head__title {
-    margin: 1rem 0 0;
-    font-family: var(--font-display);
-    font-weight: 300;
-    font-size: var(--fs-page-title);
-    line-height: 1;
+.inventory__foot {
+    margin: 1.5rem 0 var(--section-y);
+    font-size: var(--fs-text);
+    line-height: 1.7;
+    color: var(--muted);
+}
+
+.system-row {
+    align-items: start;
+    padding-block: var(--row-y);
+    border-top: 1px solid var(--rule);
     color: var(--ink);
-    text-wrap: pretty;
+    transition: background-color var(--dur) var(--ease);
 
-    em {
-        font-style: italic;
-        font-weight: 400;
-        color: var(--accent);
+    &:hover {
+        color: var(--ink);
+        background: var(--panel);
     }
 }
 
-.page-head__lede {
-    margin: 0;
-    font-size: var(--fs-body);
+.system-row--first {
+    border-top-color: var(--rule-strong);
+}
+
+.system-row--last {
+    border-bottom: 1px solid var(--rule-strong);
+}
+
+.system-row__index {
+    grid-column: span 1;
+    font-size: var(--fs-nav);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+}
+
+// A system owned end to end. The accent on the ordinal is the only difference
+// between the two kinds of row, and it matches how the CV colours them.
+.system-row__index--lead {
+    color: var(--accent);
+}
+
+.system-row__head {
+    grid-column: 2 / span 4;
+}
+
+.system-row__title {
+    display: block;
+    font-size: var(--fs-title-lg);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: var(--tracking-title);
+}
+
+.system-row__client {
+    display: block;
+    margin-top: 0.5rem;
+}
+
+.system-row__text {
+    grid-column: 6 / span 4;
+    display: block;
+    font-size: var(--fs-text);
     line-height: 1.7;
     color: var(--body);
     text-wrap: pretty;
 }
 
-// The CV head puts a button where the other pages put a lede, so its right
-// column is sized to the button rather than sharing the width. Guarded by the
-// same breakpoint the base rule stacks at: unguarded, `auto` plus a nowrap
-// button pushed the page 57px wider than a phone.
-@media (min-width: 60rem) {
-    .page-head--cv {
-        grid-template-columns: 1fr auto;
-        align-items: end;
-    }
+.system-row__meta {
+    grid-column: 10 / span 3;
+    display: block;
 }
 
-// ---- The inventory ----------------------------------------------------------
-
-.inventory__row {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr 14.375rem;
-    column-gap: 1.75rem;
-    align-items: start;
-    padding-block: 1.375rem;
-
-    &:first-child {
-        padding-block-start: 0;
-    }
-
-    &:not(:last-child) {
-        border-bottom: 1px solid var(--rule);
-    }
-
-    @media (max-width: 60rem) {
-        grid-template-columns: 2.5rem 1fr;
-        row-gap: 0.875rem;
-    }
-}
-
-.inventory__num {
-    font-size: var(--fs-eyebrow);
-    letter-spacing: var(--tracking-label);
-    color: var(--muted);
-    padding-top: 0.5rem;
-    font-variant-numeric: tabular-nums;
-}
-
-// The three she owned end to end are the claim this page exists to make, so
-// their numeral and scope carry the accent and the rest do not.
-.inventory__num--lead {
-    color: var(--accent);
-}
-
-.inventory__title {
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: var(--fs-title);
-    line-height: 1.2;
-    color: var(--ink);
-}
-
-.inventory__client {
-    margin: 0.3125rem 0 0;
-    font-size: var(--fs-eyebrow);
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
-    color: var(--muted);
-}
-
-.inventory__desc {
-    margin: 0.75rem 0 0;
-    max-width: 60ch;
+.system-row__stack {
+    display: block;
+    margin-top: 0.5rem;
     font-size: var(--fs-small);
-    line-height: 1.65;
-    color: var(--body);
-    text-wrap: pretty;
+    color: var(--muted);
 }
 
-.inventory__aside {
-    padding-top: 0.5rem;
+@media (max-width: 64rem) {
+    .inventory__head {
+        row-gap: 0.5rem;
 
-    @media (max-width: 60rem) {
-        grid-column: 2;
-        padding-top: 0;
+        .label {
+            grid-column: 1 / span 4;
+        }
     }
-}
 
-.inventory__scope {
-    margin: 0;
-    font-size: var(--fs-eyebrow);
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
-    color: var(--muted);
-}
+    .inventory__note {
+        grid-column: 1 / -1;
+        order: 1;
+    }
 
-.inventory__scope--lead {
-    color: var(--accent);
-}
+    .inventory__count {
+        grid-column: 5 / span 2;
+    }
 
-.inventory__stack {
-    margin: 0.5rem 0 0;
-    font-size: var(--fs-meta);
-    color: var(--muted);
+    .system-row {
+        row-gap: 0.625rem;
+    }
+
+    .system-row__index {
+        grid-column: 1 / -1;
+    }
+
+    .system-row__head,
+    .system-row__text,
+    .system-row__meta {
+        grid-column: 1 / -1;
+    }
 }

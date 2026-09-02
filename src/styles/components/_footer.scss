@@ -1,90 +1,105 @@
-// The closing dark band: an invitation set at display size, the contact record
-// beside it, and a colophon under a hairline.
+// The footer is the page's full stop: reversed out on ink, with the invitation
+// set at display size and the contact list ruled beside it.
 
 .site-footer {
     background: var(--dark);
     color: var(--on-dark);
-    padding: calc(var(--band-y) * 0.95) var(--pad-x) var(--row-y);
 }
 
 .site-footer__top {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    column-gap: 4rem;
-    row-gap: 2.5rem;
+    padding-block: calc(var(--band-y) * 1.2) 0;
     align-items: end;
+    row-gap: 3rem;
+}
 
-    @media (max-width: 60rem) {
-        grid-template-columns: 1fr;
-        align-items: start;
-    }
+.site-footer__invite {
+    grid-column: span 7;
 }
 
 .site-footer__standfirst {
-    margin: 0 0 1.125rem;
-    letter-spacing: 0.26em;
+    margin: 0 0 1.5rem;
+    font-size: var(--fs-nav);
+    font-weight: 600;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
     color: var(--on-dark-muted);
 }
 
 .site-footer__cta {
-    font-family: var(--font-display);
-    font-weight: 300;
+    display: inline-block;
     font-size: var(--fs-cta);
-    line-height: 1;
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: var(--tracking-display);
     color: var(--on-dark);
     text-wrap: balance;
 
     &:hover {
-        color: var(--mint);
+        color: var(--accent-bright);
     }
 }
 
 .site-footer__contact {
-    margin: 0;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: 1.5rem;
-    row-gap: 0.625rem;
-    align-items: baseline;
+    grid-column: 9 / span 4;
 
-    dt {
-        font-size: var(--fs-micro);
-        letter-spacing: var(--tracking-eyebrow);
-        text-transform: uppercase;
-        color: var(--on-dark-muted);
-        white-space: nowrap;
-    }
+    .facts__row {
+        --facts-label: 4.75rem;
+        border-top-color: var(--dark-rule);
 
-    dd {
-        margin: 0;
-        font-size: var(--fs-meta);
-        color: var(--on-dark-soft);
-        overflow-wrap: anywhere;
+        &:last-child {
+            border-bottom-color: var(--dark-rule);
+        }
+
+        dt {
+            color: var(--on-dark-muted);
+        }
+
+        dd {
+            font-size: var(--fs-small);
+            color: var(--on-dark-soft);
+        }
     }
 
     a {
         color: var(--on-dark-soft);
 
         &:hover {
-            color: var(--mint);
+            color: var(--accent-bright);
         }
     }
 }
 
 .site-footer__colophon {
-    margin-top: 2.375rem;
-    padding-top: 1.125rem;
-    border-top: 1px solid var(--dark-rule);
     display: flex;
     justify-content: space-between;
     gap: 1.5rem;
     flex-wrap: wrap;
-    font-size: var(--fs-eyebrow);
-    letter-spacing: var(--tracking-label);
+    padding-block: 1.125rem 2rem;
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-micro);
     text-transform: uppercase;
     color: var(--on-dark-muted);
 
     p {
         margin: 0;
+    }
+}
+
+// The invitation carries the space above the colophon; without it the rule has
+// to sit off the top of the block instead.
+.site-footer--full .site-footer__colophon {
+    margin-top: 4rem;
+    border-top: 1px solid var(--dark-rule);
+}
+
+.site-footer--rule .site-footer__colophon {
+    padding-block: 2rem;
+}
+
+@media (max-width: 64rem) {
+    .site-footer__invite,
+    .site-footer__contact {
+        grid-column: 1 / -1;
     }
 }

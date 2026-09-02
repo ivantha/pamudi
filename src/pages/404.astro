@@ -1,18 +1,34 @@
 ---
 import Layout from "@/layouts/Layout.astro"
 import { href } from "@/lib/url"
+
+const LINKS = [
+    { label: "The work", path: "/" },
+    { label: "The systems inventory", path: "/systems" },
+    { label: "The full record", path: "/about" },
+]
 ---
 
-<Layout title="Not found" description="That page does not exist.">
-    <div class="page-head">
-        <div>
-            <p class="eyebrow page-head__eyebrow">Error 404</p>
-            <h1 class="page-head__title">Nothing <em>here</em>.</h1>
+<Layout title="Not found" description="That page does not exist." footer="rule">
+    <section class="notfound grid pad">
+        <div class="notfound__main">
+            <p class="eyebrow notfound__eyebrow">Error 404</p>
+            <h1 class="notfound__title">Nothing <span class="notfound__accent">here</span>.</h1>
         </div>
-        <p class="page-head__lede">
-            The page you asked for does not exist. Try <a href={href("/")}>the work</a>, the{" "}
-            <a href={href("/systems")}>systems inventory</a>, or{" "}
-            <a href={href("/about")}>the full record</a>.
-        </p>
-    </div>
+        <div class="notfound__aside">
+            <p class="notfound__lede">The page you asked for does not exist.</p>
+            <nav class="notfound__links" aria-label="Elsewhere on this site">
+                {
+                    LINKS.map((link) => (
+                        <a class="notfound__link" href={href(link.path)}>
+                            <span>{link.label}</span>
+                            <span class="notfound__arrow" aria-hidden="true">
+                                &rarr;
+                            </span>
+                        </a>
+                    ))
+                }
+            </nav>
+        </div>
+    </section>
 </Layout>

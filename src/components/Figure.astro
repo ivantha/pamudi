@@ -1,0 +1,47 @@
+---
+import type { ImageMetadata } from "astro"
+import { Image } from "astro:assets"
+
+/**
+ * One figure: an image on the panel ground, with a caption that says what to
+ * look at rather than announcing that an image is present.
+ *
+ * Figures break out past the text measure on purpose — the prose runs on six
+ * columns, the evidence runs wider. Use it from a case study or a system page's
+ * MDX body, or directly in a page.
+ */
+interface Props {
+    /** An imported image. `astro:assets` handles the responsive sources. */
+    src: ImageMetadata
+    /** Real alt text. Never "screenshot"; describe what the image shows. */
+    alt: string
+    /** What to look at. Omit rather than restating the alt text. */
+    caption?: string
+    /**
+     * `full` spans the frame, `prose` aligns with the six-column text measure,
+     * `half` is sized for two figures side by side inside `.figure-grid`.
+     */
+    width?: "full" | "prose" | "half"
+    /** Widths the browser picks a source for. Defaults to the full-bleed case. */
+    sizes?: string
+    class?: string
+}
+
+const {
+    src,
+    alt,
+    caption,
+    width = "full",
+    sizes = width === "half"
+        ? "(max-width: 48rem) 92vw, 46vw"
+        : width === "prose"
+          ? "(max-width: 64rem) 92vw, 46vw"
+          : "(max-width: 64rem) 92vw, 92vw",
+    class: className,
+}: Props = Astro.props
+---
+
+<figure class:list={["figure", `figure--${width}`, className]}>
+    <Image src={src} alt={alt} sizes={sizes} widths={[640, 960, 1280, 1920]} loading="lazy" />
+    {caption && <figcaption>{caption}</figcaption>}
+</figure>

@@ -1,7 +1,8 @@
 ---
 import { getCollection, getEntry } from "astro:content"
 import Layout from "@/layouts/Layout.astro"
-import Row from "@/components/Row.astro"
+import PageHead from "@/components/PageHead.astro"
+import Section from "@/components/Section.astro"
 import Markup from "@/components/Markup.astro"
 import { href } from "@/lib/url"
 import { isWebVisible, pickField } from "@/lib/variants"
@@ -13,8 +14,8 @@ const { name, role, location, summary, blog, contact } = personal.data
 // Everything below comes from the same data/*.yaml the Typst CV reads, so the
 // page and the PDF cannot drift. `isWebVisible` honours `include_in`, which is
 // how the entries the two-page CV has no room for reach this page and only
-// this page. The design-systems inventory has its own page now; this one is
-// the career record.
+// this page. The design-systems inventory has its own page; this one is the
+// career record.
 const experience = (await getCollection("experience")).filter((e) => isWebVisible(e.data))
 const projects = (await getCollection("projects")).filter((e) => isWebVisible(e.data))
 const education = await getEntry("education", "education")!
@@ -31,21 +32,13 @@ const COMMUNITY = [
 ---
 
 <Layout title="About" description={`About ${name}, ${role} based in ${location}.`}>
-    <div class="page-head">
-        <div>
-            <p class="eyebrow page-head__eyebrow">
-                {name}<span class="page-head__sep">/</span>{location}
-            </p>
-            <h1 class="page-head__title">About</h1>
-        </div>
-        <p class="page-head__lede">{site.data.pages.about}</p>
-    </div>
+    <PageHead eyebrow={`${name} / ${location}`} title="About" lede={site.data.pages.about} />
 
-    <Row label="Profile" rule="strong">
+    <Section label="Profile">
         <Markup as="p" class="profile" text={summary} />
-    </Row>
+    </Section>
 
-    <Row label="Experience">
+    <Section label="Experience">
         <div class="entries">
             {
                 experience.map((entry) => (
@@ -68,55 +61,54 @@ const COMMUNITY = [
                 ))
             }
         </div>
-    </Row>
+    </Section>
 
     {
         projects.length > 0 && (
-            <Row label="Earlier projects" note={"BSc work,\nUCSC 2017—18"}>
-                <div class="entries">
+            <Section label="Earlier projects" note={"BSc work,\nUCSC 2017—18"}>
+                <div class="projects">
                     {projects.map((project) => (
-                        <article class="entry">
-                            <div class="entry__head">
-                                <h3 class="entry__name entry__name--sm">
-                                    {project.data.title}
-                                    <span class="entry__where">{project.data.context}</span>
-                                </h3>
-                                <p class="entry__when">{project.data.dates}</p>
+                        <article class="project">
+                            <div>
+                                <h3 class="project__name">{project.data.title}</h3>
+                                <p class="micro project__context">{project.data.context}</p>
+                                <p class="project__stack">
+                                    {project.data.dates} &nbsp;·&nbsp; {project.data.stack}
+                                </p>
                             </div>
-                            <div class="entry__body">
+                            <div class="project__body">
                                 {project.data.bullets.filter(isWebVisible).map((bullet) => (
-                                    <Markup as="p" text={bullet.text} />
+                                    <Markup as="p" class="text" text={bullet.text} />
                                 ))}
                             </div>
-                            <p class="entry__stack">{project.data.stack}</p>
                         </article>
                     ))}
                 </div>
-            </Row>
+            </Section>
         )
     }
 
-    <Row label="Education">
+    <Section label="Education">
         <div class="degrees">
             {
                 degrees.map((d) => (
-                    <div class="entry__head">
-                        <h3 class="entry__name entry__name--sm">
+                    <div class="degree">
+                        <h3 class="degree__name">
                             {d.degree}
-                            <span class="entry__where">{d.institute}</span>
+                            <span class="degree__where">{d.institute}</span>
                         </h3>
-                        <p class="entry__when">{pickField(d, "dates")}</p>
+                        <p class="degree__when">{pickField(d, "dates")}</p>
                     </div>
                 ))
             }
         </div>
         <div class="kv">
             <h3 class="kv__label">Professional training</h3>
-            <Markup as="p" text={education.data.training} />
+            <Markup as="p" class="text" text={education.data.training} />
         </div>
-    </Row>
+    </Section>
 
-    <Row label="Community">
+    <Section label="Community">
         <div class="kv-list">
             {
                 COMMUNITY.map(([label, rows]) => {
@@ -155,28 +147,28 @@ const COMMUNITY = [
             }
             <div class="kv">
                 <h3 class="kv__label">Judging panels</h3>
-                <Markup as="p" text={community.data.judging} />
+                <Markup as="p" class="text" text={community.data.judging} />
             </div>
             <div class="kv">
                 <h3 class="kv__label">Competitions</h3>
-                <Markup as="p" text={community.data.competitions} />
+                <Markup as="p" class="text" text={community.data.competitions} />
             </div>
             {
                 societies && (
                     <div class="kv">
                         <h3 class="kv__label">Societies</h3>
-                        <Markup as="p" text={societies} />
+                        <Markup as="p" class="text" text={societies} />
                     </div>
                 )
             }
         </div>
-    </Row>
+    </Section>
 
-    <Row label="Writing">
+    <Section label="Writing">
         <div class="writing">
             <div class="writing__row">
                 <a class="writing__title" href={blog.url} rel="noopener">{blog.title}</a>
-                <p class="writing__where">{blog.where}</p>
+                <p class="micro">{blog.where}</p>
             </div>
             {
                 writing.map((item) => (
@@ -192,9 +184,9 @@ const COMMUNITY = [
                 ))
             }
         </div>
-    </Row>
+    </Section>
 
-    <Row label="Elsewhere" flush>
+    <Section label="Elsewhere" rule="none">
         <div class="elsewhere">
             <a href={`mailto:${contact.email}`}>{contact.email}</a>
             {
@@ -206,5 +198,5 @@ const COMMUNITY = [
             }
             <a href={href("/cv")}>Curriculum vitae</a>
         </div>
-    </Row>
+    </Section>
 </Layout>

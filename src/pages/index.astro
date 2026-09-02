@@ -1,17 +1,18 @@
 ---
 import { getCollection, getEntry } from "astro:content"
 import Layout from "@/layouts/Layout.astro"
-import Row from "@/components/Row.astro"
+import Section from "@/components/Section.astro"
 import WorkItem from "@/components/WorkItem.astro"
 import Markup from "@/components/Markup.astro"
 import { href } from "@/lib/url"
 import { isWebVisible } from "@/lib/variants"
+import { systemSlug } from "@/lib/slug"
 
 const personal = await getEntry("personal", "personal")!
 const site = await getEntry("site", "site")!
 const education = await getEntry("education", "education")!
-const { headline, intro, role, location, availability, specialisms, stats, summary, contact } =
-    personal.data
+const community = await getEntry("community", "community")!
+const { headline, intro, role, location, availability, stats, summary, contact } = personal.data
 
 // `order` is the editorial sequence; year only breaks ties so that adding a
 // study without setting `order` still lands somewhere sensible.
@@ -26,7 +27,6 @@ const systems = (await getCollection("systems")).filter((s) => isWebVisible(s.da
 const led = systems.filter((s) => s.data.lead)
 
 const skills = (await getCollection("skills")).filter((s) => isWebVisible(s.data))
-const community = await getEntry("community", "community")!
 const experience = (await getCollection("experience")).filter((e) => isWebVisible(e.data))
 
 // The hero lede, in order of provenance: her own `intro` when she writes one,
@@ -36,207 +36,217 @@ const lede = intro ?? [site.data.home.lede]
 
 // Derived rather than written down, so neither can drift from the record. The
 // earliest year across every role, not the last entry's — the list is ordered
-// newest-first by role seniority, and the freelance work that sorts last began
-// in 2020, well after the career did.
-const years = experience.flatMap((e) => e.data.dates.match(/\d{4}/g) ?? []).map(Number)
-const startYear = years.length > 0 ? String(Math.min(...years)) : ""
-const thisYear = String(new Date().getFullYear())
-const highestDegree = education.data.entries[0]
+// newest-first by seniority, and the freelance work that sorts last began in
+// 2020, well after the career did.
+const startYear = Math.min(
+    ...experience.map((e) => Number(e.data.dates.match(/\b(19|20)\d{2}\b/)?.[0] ?? Infinity)),
+)
+const thisYear = new Date().getFullYear()
 
-// "Beyond the desk": the same three community lists the About page renders in
-// full, counted here.
-const mentoring = community.data.mentoring.filter(isWebVisible)
-const speaking = community.data.speaking.filter(isWebVisible)
-const judgingCount = community.data.judging.split("·").length
+const msc = education.data.entries.find((e) => e.degree.startsWith("MSc"))
 
-const beyond = [
-    { value: String(mentoring.length), label: "Mentoring engagements" },
-    { value: String(speaking.length), label: "Talks and workshops" },
-    { value: String(judgingCount), label: "Judging panels" },
+// The three community rows the home page previews. The full record, and the
+// counts beside it, live on About; these are the most recent of each kind.
+const recent = [...community.data.mentoring, ...community.data.speaking]
+    .filter((row) => isWebVisible(row))
+    .sort((a, b) => b.year.localeCompare(a.year))
+    .slice(0, 3)
+
+const counts = [
+    { value: community.data.mentoring.filter(isWebVisible).length, label: "Mentoring engagements" },
+    { value: community.data.speaking.filter(isWebVisible).length, label: "Talks and workshops" },
+    { value: community.data.events.filter(isWebVisible).length, label: "Event and brand work" },
 ]
-
-// Three entries as a sample of the community work, before the page hands off to
-// the full record on About. Taking the three most recent outright would show two
-// mentoring rows from the same year and no speaking at all, so each strand seeds
-// one entry first and the last slot goes to whatever is next most recent.
-const byYearDesc = <T extends { year: string }>(a: T, b: T) => b.year.localeCompare(a.year)
-const seeds = [mentoring, speaking].map((list) => [...list].sort(byYearDesc)[0]).filter(Boolean)
-const rest = [...mentoring, ...speaking].filter((row) => !seeds.includes(row)).sort(byYearDesc)
-const recent = [...seeds, ...rest].slice(0, 3).sort(byYearDesc)
 ---
 
 <Layout>
-    <section class="hero">
-        <div class="hero__meta-top">
-            <span>Portfolio<span class="hero__sep">/</span>{startYear} &ndash; {thisYear}</span>
+    <section class="hero pad sec sec--ink">
+        <div class="hero__meta">
+            <span>Portfolio</span>
+            <span>{startYear} &mdash; {thisYear}</span>
             <span>{location}</span>
+            {availability && <span class="hero__meta-accent">{availability}</span>}
         </div>
-        <h1 class="hero__title">
-            {headline.before}
-            <em>{headline.accent}</em>
+        <h1 class="hero__headline rise">
+            {headline.before}{" "}
+            <span class="hero__accent">{headline.accent}</span>{" "}
             {headline.after}
         </h1>
-        <div class="hero__body">
-            <div class="hero__lede">
-                {lede.map((line) => <p>{line}</p>)}
+        <div class="hero__foot grid">
+            <div class="hero__lede rise" style="--i: 1">
+                {lede.map((p) => <Markup as="p" text={p} />)}
             </div>
-            <dl class="hero__facts">
-                <dt>Currently</dt>
-                <dd>{role}, {experience[0]?.data.org.replace(/\s*\(Pvt\)\s*Ltd/, "")}</dd>
-                <dt>Focus</dt>
-                <dd>{specialisms.join(" · ")}</dd>
-                <dt>Study</dt>
-                <dd>{highestDegree.degree}, {highestDegree.institute.split(" · ").at(-1)}</dd>
-                {availability && <dt>Availability</dt>}
-                {availability && <dd>{availability}</dd>}
-                <dt>Elsewhere</dt>
-                <dd class="hero__links">
-                    <a href={`mailto:${contact.email}`}>Email</a>
-                    {
-                        contact.links.filter(isWebVisible).map((link) => (
-                            <a href={link.url} rel="me noopener">
-                                {link.label}
-                            </a>
-                        ))
-                    }
-                </dd>
+            <dl class="hero__facts facts rise" style="--i: 2">
+                <div class="facts__row">
+                    <dt>Currently</dt>
+                    <dd>{role}, {experience[0]?.data.org}</dd>
+                </div>
+                <div class="facts__row">
+                    <dt>Focus</dt>
+                    <dd>{personal.data.specialisms.join(" · ")}</dd>
+                </div>
+                {
+                    msc && (
+                        <div class="facts__row">
+                            <dt>Education</dt>
+                            <dd>
+                                {msc.degree}, {msc.institute}
+                            </dd>
+                        </div>
+                    )
+                }
+                <div class="facts__row">
+                    <dt>Elsewhere</dt>
+                    <dd class="hero__links">
+                        <a href={`mailto:${contact.email}`}>Email</a>
+                        {
+                            contact.links.filter(isWebVisible).map((l) => (
+                                <a href={l.url} rel="me noopener">
+                                    {l.label}
+                                </a>
+                            ))
+                        }
+                    </dd>
+                </div>
             </dl>
         </div>
     </section>
 
-    <section class="figures" aria-label="The work in figures">
-        <dl class="figures__band">
+    <section class="stats" aria-label="Headline figures">
+        {
+            stats.map((stat) => (
+                <div class="stats__cell">
+                    <p class="stats__label">{stat.label}</p>
+                    <p class="stats__value">{stat.value}</p>
+                </div>
+            ))
+        }
+    </section>
+
+    <!-- Second-order counts: each is drawn from an experience bullet rather
+         than being a headline claim, which is why they run as one line. -->
+    <p class="figures pad">
+        {
+            site.data.home.figures.map((f, i) => (
+                <span class="figures__item">
+                    {i > 0 && <span class="figures__sep" aria-hidden="true" />}
+                    <b>{f.value}</b> {f.label}
+                </span>
+            ))
+        }
+    </p>
+
+    <Section label="Profile">
+        <Markup as="p" class="profile" text={summary} />
+    </Section>
+
+    <Section label="Practice" note="What the work is" body="wide">
+        <div class="practice">
             {
-                stats.map((stat) => (
-                    // Label first, value second, so the `dl` stays valid; the
-                    // stylesheet reverses them so the figure reads on top.
-                    <div class="figure">
-                        <dt class="figure__label">{stat.label}</dt>
-                        <dd class="figure__value">{stat.value}</dd>
+                site.data.practice.map((card) => (
+                    <div class="practice__card">
+                        <p class="micro">{card.label}</p>
+                        <h3 class="practice__title">{card.title}</h3>
+                        <Markup as="p" class="text" text={card.text} />
                     </div>
                 ))
             }
-        </dl>
-        <ul class="figures__minor">
-            <li><span>{systems.length}</span> products in the systems inventory</li>
+        </div>
+    </Section>
+
+    <section class="selected pad">
+        <div class="selected__head grid">
+            <p class="label">Selected work</p>
+            <p class="selected__lede">
+                {
+                    work.length > 0
+                        ? "Case studies, in the order they are worth reading."
+                        : "Three systems owned end to end, from the first token to the shipped screen."
+                }
+            </p>
+            <p class="selected__count micro">
+                {work.length > 0 ? work.length : led.length} / {systems.length}
+            </p>
+        </div>
+        {
+            work.length > 0
+                ? work.map((entry, i) => (
+                      <WorkItem
+                          index={i + 1}
+                          title={entry.data.title}
+                          context={entry.data.context}
+                          description={entry.data.summary}
+                          scope={entry.data.role}
+                          stack={entry.data.tools.join(" · ")}
+                          href={href(`/work/${entry.id}`)}
+                          cover={entry.data.cover}
+                          coverAlt={entry.data.coverAlt}
+                          first={i === 0}
+                          last={i === work.length - 1}
+                      />
+                  ))
+                : led.map((entry, i) => (
+                      <WorkItem
+                          index={i + 1}
+                          title={entry.data.product}
+                          context={entry.data.client}
+                          description={entry.data.description}
+                          scope={entry.data.scope}
+                          stack={entry.data.stack}
+                          href={href(`/systems/${systemSlug(entry.data.product)}`)}
+                          first={i === 0}
+                          last={i === led.length - 1}
+                      />
+                  ))
+        }
+        <p class="selected__more">
+            {systems.length - led.length} further products, with the scope and stack each was specified
+            for, are <a href={href("/systems")}>in the systems inventory</a>.
+        </p>
+    </section>
+
+    <section class="band process">
+        <div class="grid pad process__head">
+            <p class="label process__label">How it runs</p>
+            <p class="process__lede">{site.data.process.lede}</p>
+        </div>
+        <ol class="process__steps pad">
             {
-                site.data.home.figures.map((f) => (
-                    <li>
-                        <span>{f.value}</span> {f.label}
+                site.data.process.steps.map((step, i) => (
+                    <li class="process__step">
+                        <span class="process__num">{String(i + 1).padStart(2, "0")}</span>
+                        <h3 class="process__title">{step.title}</h3>
+                        <Markup as="p" class="process__text" text={step.text} />
                     </li>
                 ))
             }
-        </ul>
+        </ol>
     </section>
 
-    <Row label="Profile" rule="none">
-        <Markup as="p" class="profile" text={summary} />
-    </Row>
-
-    <Row label="Practice" note={"Four things\nthe work is"}>
-        <div class="practice">
-            {
-                site.data.practice.map((card, i) => (
-                    <article class="practice__card">
-                        <p class="practice__label">
-                            {String(i + 1).padStart(2, "0")} / {card.label}
-                        </p>
-                        <h3 class="practice__title">{card.title}</h3>
-                        <Markup as="p" class="practice__text" text={card.text} />
-                    </article>
-                ))
-            }
-        </div>
-    </Row>
-
-    <Row label="Selected work" note={"Owned,\nfrom scratch"} flush>
-        {
-            work.length > 0 ? (
-                <div class="work-index">
-                    {work.map((entry, i) => (
-                        <WorkItem entry={entry} index={i + 1} />
-                    ))}
-                </div>
-            ) : (
-                <div class="selected">
-                    {led.map((system, i) => (
-                        <a class="selected__row" href={href("/systems")}>
-                            <span class="selected__num">{String(i + 1).padStart(2, "0")}</span>
-                            <span class="selected__main">
-                                <span class="selected__title">{system.data.product}</span>
-                                {system.data.client && (
-                                    <span class="selected__client">{system.data.client}</span>
-                                )}
-                                {system.data.description && (
-                                    <Markup
-                                        as="span"
-                                        class="selected__desc"
-                                        text={system.data.description}
-                                    />
-                                )}
-                            </span>
-                            <span class="selected__aside">
-                                <span class="selected__scope">{system.data.scope}</span>
-                                <span class="selected__stack">{system.data.stack}</span>
-                            </span>
-                        </a>
-                    ))}
-                    <p class="selected__note">
-                        {systems.length - led.length} further products, with the scope and stack
-                        each was specified for, are{" "}
-                        <a href={href("/systems")}>in the systems inventory</a>.
-                    </p>
-                </div>
-            )
-        }
-    </Row>
-
-    <section class="band">
-        <div class="band__inner">
-            <div class="band__rail">
-                <h2 class="band__label">How it runs</h2>
-            </div>
-            <div>
-                <p class="band__lede">{site.data.process.lede}</p>
-                <ol class="process">
-                    {
-                        site.data.process.steps.map((step, i) => (
-                            <li class="process__step">
-                                <span class="process__num">{String(i + 1).padStart(2, "0")}</span>
-                                <h3 class="process__title">{step.title}</h3>
-                                <Markup as="p" class="process__text" text={step.text} />
-                            </li>
-                        ))
-                    }
-                </ol>
-            </div>
-        </div>
-    </section>
-
-    <Row label="Toolkit" rule="none">
+    <Section label="Toolkit" note="What it is built with">
         <div class="toolkit">
             {
-                skills.map((s) => (
-                    <div class="toolkit__item">
-                        <h3 class="toolkit__label">{s.data.category}</h3>
-                        <Markup as="p" class="toolkit__stack" text={s.data.stack} />
+                skills.map((skill) => (
+                    <div class="toolkit__row">
+                        <h3 class="micro micro--ink">{skill.data.category}</h3>
+                        <Markup as="p" class="text" text={skill.data.stack} />
                     </div>
                 ))
             }
         </div>
-    </Row>
+    </Section>
 
-    <Row label="Beyond the desk">
-        <dl class="beyond">
+    <Section label="Beyond the desk" rule="none">
+        <div class="counts">
             {
-                beyond.map((item) => (
-                    <div class="beyond__item">
-                        <dt class="beyond__label">{item.label}</dt>
-                        <dd class="beyond__value">{item.value}</dd>
+                counts.map((c) => (
+                    <div>
+                        <p class="micro">{c.label}</p>
+                        <p class="counts__value">{c.value}</p>
                     </div>
                 ))
             }
-        </dl>
+        </div>
         <div class="dated-list">
             {
                 recent.map((row) => (
@@ -247,9 +257,10 @@ const recent = [...seeds, ...rest].slice(0, 3).sort(byYearDesc)
                 ))
             }
         </div>
-        <p class="row__footnote">
-            The full record of speaking, mentoring, events and judging is{" "}
-            <a href={href("/about")}>on the About page</a>.
+        <p class="selected__more">
+            The full record of speaking, mentoring, events and judging is <a href={href("/about")}
+                >on the About page</a
+            >.
         </p>
-    </Row>
+    </Section>
 </Layout>

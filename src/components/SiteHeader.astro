@@ -14,16 +14,20 @@ const NAV = [
 ]
 
 /**
- * True when `target` is the page being rendered. Case-study pages live under
- * `/work/`, so they mark "Work" as current rather than leaving the nav blank.
+ * True when `target` is the section being rendered.
+ *
+ * Case studies live under `/work/` and system detail pages under `/systems/`,
+ * so both mark their parent rather than leaving the nav blank. The home page is
+ * matched exactly first, because every path starts with the base.
  */
 const isCurrent = (target: string) => {
     const t = href(target).replace(/\/$/, "")
-    return target === "/" ? path === t || path.startsWith(`${t}/work/`) : path === t
+    if (target === "/") return path === t || path.startsWith(`${t}/work`)
+    return path === t || path.startsWith(`${t}/`)
 }
 ---
 
-<header class="site-header">
+<header class="site-header pad grid">
     <a class="site-header__mark" href={href("/")}>
         <span class="site-header__name">{name}</span>
         <span class="site-header__role">{role}</span>

@@ -1,87 +1,67 @@
 ---
 import { getCollection, getEntry } from "astro:content"
 import Layout from "@/layouts/Layout.astro"
-import Row from "@/components/Row.astro"
-import Markup from "@/components/Markup.astro"
+import PageHead from "@/components/PageHead.astro"
+import SystemRow from "@/components/SystemRow.astro"
+import { href } from "@/lib/url"
 import { isWebVisible } from "@/lib/variants"
 import { groupSystems } from "@/lib/systems"
+import { systemSlug } from "@/lib/slug"
 
-const personal = await getEntry("personal", "personal")!
 const site = await getEntry("site", "site")!
-const { name, role } = personal.data
-
 const systems = (await getCollection("systems")).filter((s) => isWebVisible(s.data))
 const groups = groupSystems(systems)
+const led = systems.filter((s) => s.data.lead)
 
-// The inventory is numbered straight through, across the group boundaries, so
-// a product keeps the same number wherever it is cited.
-let n = 0
+// The ordinal runs across the whole inventory rather than restarting inside
+// each group, so a row's number is a stable way to refer to it.
+let ordinal = 0
+const lastGroup = groups.at(-1)
 ---
 
 <Layout
     title="Design systems"
-    description={`The design-systems inventory of ${name}, ${role}: ${systems.length} products, the scope of each engagement and the stack each system was specified against.`}
+    description={`The design-systems inventory: ${systems.length} client and in-house products, grouped by what the engagement was.`}
 >
-    <div class="page-head">
-        <div>
-            <p class="eyebrow page-head__eyebrow">
-                Inventory<span class="page-head__sep">/</span>{systems.length} products
-            </p>
-            <h1 class="page-head__title">Design systems</h1>
-        </div>
-        <p class="page-head__lede">{site.data.pages.systems}</p>
-    </div>
+    <PageHead
+        eyebrow={`Inventory / ${systems.length} products`}
+        title="Design systems"
+        lede={site.data.pages.systems}
+    />
 
-    {
-        groups.map((group, gi) => (
-            <Row
-                label={group.label}
-                note={group.note?.replace(", ", ",\n")}
-                rule="strong"
-                flush={gi === groups.length - 1}
-            >
-                <div class="inventory">
-                    {group.rows.map((s) => {
-                        n += 1
+    <div class="inventory pad">
+        {
+            groups.map((group) => (
+                <>
+                    <div class="inventory__head grid">
+                        <h2 class="label">{group.label}</h2>
+                        {group.note && <p class="inventory__note">{group.note}</p>}
+                        <p class="inventory__count micro">{group.rows.length}</p>
+                    </div>
+                    {group.rows.map((row, i) => {
+                        ordinal += 1
                         return (
-                            <article class="inventory__row">
-                                <span
-                                    class:list={[
-                                        "inventory__num",
-                                        s.data.lead && "inventory__num--lead",
-                                    ]}
-                                >
-                                    {String(n).padStart(2, "0")}
-                                </span>
-                                <div>
-                                    <h3 class="inventory__title">{s.data.product}</h3>
-                                    {s.data.client && (
-                                        <p class="inventory__client">{s.data.client}</p>
-                                    )}
-                                    {s.data.description && (
-                                        <Markup
-                                            as="p"
-                                            class="inventory__desc"
-                                            text={s.data.description}
-                                        />
-                                    )}
-                                </div>
-                                <div class="inventory__aside">
-                                    <p
-                                        class:list={[
-                                            "inventory__scope",
-                                            s.data.lead && "inventory__scope--lead",
-                                        ]}
-                                    >
-                                        {s.data.scope}
-                                    </p>
-                                    <p class="inventory__stack">{s.data.stack}</p>
-                                </div>
-                            </article>
+                            <SystemRow
+                                index={ordinal}
+                                product={row.data.product}
+                                client={row.data.client}
+                                description={row.data.description}
+                                scope={row.data.scope}
+                                stack={row.data.stack}
+                                href={href(`/systems/${systemSlug(row.data.product)}`)}
+                                lead={row.data.lead}
+                                first={i === 0}
+                                last={group === lastGroup && i === group.rows.length - 1}
+                            />
                         )
                     })}
-                </div>
-            </Row>
-        ))
-    }
+                </>
+            ))
+        }
+        <p class="inventory__foot">
+            The {led.length} systems owned end to end are set out on <a href={href("/")}
+                >the work page</a
+            >; the roles behind them are <a href={href("/about")}>on About</a>.
+        </p>
+    </div>
 </Layout>

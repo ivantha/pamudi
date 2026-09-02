@@ -29,8 +29,12 @@ select {
     color: inherit;
 }
 
-ul[class],
-ol[class] {
+// Wrapped in `:where()` so the whole rule weighs nothing. `ol[class]` is
+// specificity (0,1,1) and would otherwise beat a single class — which is how a
+// layout utility like `.pad` silently loses to the reset on a list and the
+// section runs off the edge of the frame. A reset should never win a
+// cascade it was not invited to.
+:where(ul[class], ol[class]) {
     list-style: none;
     padding: 0;
 }

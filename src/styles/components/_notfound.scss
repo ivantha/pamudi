@@ -1,0 +1,93 @@
+// The 404. The one page that is allowed to be mostly empty, so it centres in
+// whatever height is left between the header and the colophon.
+
+.notfound {
+    flex: 1;
+    align-content: center;
+    padding-block: calc(var(--section-y) * 2);
+    row-gap: 3rem;
+}
+
+.notfound__main {
+    grid-column: span 6;
+}
+
+.notfound__eyebrow {
+    color: var(--accent);
+}
+
+.notfound__title {
+    margin: 1.5rem 0 0;
+    font-size: var(--fs-404);
+    font-weight: 600;
+    line-height: 0.88;
+    letter-spacing: -0.045em;
+    color: var(--ink);
+}
+
+.notfound__accent {
+    color: var(--accent-bright);
+}
+
+.notfound__aside {
+    grid-column: 8 / span 5;
+}
+
+.notfound__lede {
+    margin: 0;
+    font-size: var(--fs-lede);
+    line-height: 1.65;
+    color: var(--body);
+}
+
+.notfound__links {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.notfound__link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--rule);
+    color: var(--ink);
+    font-size: var(--fs-title-sm);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+
+    &:first-child {
+        border-top-color: var(--rule-strong);
+    }
+
+    &:last-child {
+        border-bottom: 1px solid var(--rule);
+    }
+
+    &:hover {
+        color: var(--accent-bright);
+    }
+}
+
+.notfound__arrow {
+    font-size: var(--fs-nav);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+}
+
+// The 404 is a flex item of `main`, and `main` is a flex item of the frame; the
+// chain has to be declared or `align-content: center` has no height to work in.
+body:has(.notfound) main {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 64rem) {
+    .notfound__main,
+    .notfound__aside {
+        grid-column: 1 / -1;
+    }
+}

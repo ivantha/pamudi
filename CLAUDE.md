@@ -16,10 +16,11 @@ touching anything under `cv/`.
 
 ## Stack
 
-Astro 5, TypeScript, static output, zero client JS. MDX case studies in
-`src/content/work/` with `zod` schemas in `src/content.config.ts`; plain SCSS,
-no framework; pnpm on Node 22; `astro:assets` for every content image;
-GitHub Pages via `.github/workflows/deploy.yml` on push to `main`.
+Astro 5, TypeScript, static output, zero client JS. MDX in
+`src/content/` — case studies under `work/`, system project pages under
+`systems/` — with `zod` schemas in `src/content.config.ts`; plain SCSS, no
+framework; pnpm on Node 22; `astro:assets` for every content image; GitHub
+Pages via `.github/workflows/deploy.yml` on push to `main`.
 
 This mirrors `../ivantha.github.io` deliberately — same runtime, package
 manager, deploy shape, and the same YAML-plus-Typst CV arrangement, so one set
@@ -43,14 +44,29 @@ If a contact form, gated NDA work, or anything else needs a server, that is the
 signal to move hosting to Vercel — not to bolt a third-party form widget onto
 Pages. Static Pages is the default until something real breaks it.
 
-### The four pages
+### The pages
 
-`/` (Work), `/systems`, `/about`, `/cv`, plus `/work/[slug]` for a published
-case study and a `/404`. The home page carries the argument (hero, figures,
-Profile, Practice, selected work, process, Toolkit, community); `/systems` is
-the full inventory, grouped; `/about` is the career record. The inventory used
-to sit on About and moved out in the Website v2 import, so a link to
-`/about#systems` from anywhere is stale.
+`/` (Work), `/systems`, `/about`, `/cv`, plus `/systems/[slug]` for every
+product in the inventory, `/work/[slug]` for a published case study, and a
+`/404`. The home page carries the argument (hero, figures, Profile, Practice,
+selected work, process, Toolkit, community); `/systems` is the full inventory,
+grouped; `/about` is the career record. The inventory used to sit on About and
+moved out in the Website v2 import, so a link to `/about#systems` from anywhere
+is stale.
+
+**`/systems/[slug]` builds a page for every entry in `data/systems.yaml`,
+written or not.** The slug is derived from `product` by `systemSlug` in
+`src/lib/slug.ts` rather than stored — the inventory is shared with the Typst
+CV, and a `slug:` key only the website read is the same drift risk as a
+`group:` key. Renaming a product therefore changes its URL.
+
+A product's long-form page is an optional MDX file in `src/content/systems/`
+whose `system:` field must match `product` exactly; the build throws on a file
+that names a product the inventory does not have. With no file, the page
+renders the sourced facts and the prev/next pair and stops there, and its
+status bar says so. **That is the resting state, not a stub to fill with
+plausible-sounding prose** — twelve of the thirteen are deliberately in it. See
+"Whose site this is".
 
 **`groupSystems` in `src/lib/systems.ts` deliberately duplicates `system-groups`
 in `cv/common/loaders.typ`** — same tests, same order: `lead`, then an
@@ -145,7 +161,8 @@ one with plausible-looking career history. Ask.
 What that leaves, as of September 2026:
 
 - **`data/site.yaml` is awaiting her sign-off.** It holds the framing copy that
-  arrived with the Website v2 design: the hero lede, the four Practice cards,
+  arrived with the Website v2 design and carried over into Grid: the hero lede,
+  the four Practice cards,
   the five process steps, the Systems and About page ledes, the CV contents
   list and the footer standfirst. It says nothing the sourced data does not
   support, but the phrasing came from the design rather than from her, which is
@@ -166,6 +183,16 @@ What that leaves, as of September 2026:
   artwork on a public portfolio under her name. The home page's work section
   falls back to the three design systems she led from scratch and switches back
   to the case-study index by itself the moment one is published.
+- **Twelve of the thirteen system pages are deliberately unwritten.** Only
+  `src/content/systems/photo-id-compliance-app.mdx` exists; the rest render
+  their sourced facts and say so in the status bar. Writing the other twelve is
+  hers to do, or hers to approve. An unwritten page is not a bug.
+- **The photo-ID page is written but not yet hers.** Its prose is of two kinds
+  and no third: scope claims lifted from the 2025 appraisal record via
+  `kb/projects.md`, and description of what is visibly in the screens beside
+  them. No outcomes, no metrics, no adoption claims, because no source carries
+  any. The file header states this; treat the page the way `data/site.yaml` is
+  treated, and read that header before extending it.
 - **Everything else on the site is sourced.** The career record in `kb/` is the
   provenance for every fact in `data/`, reconciled from her 2018 CV, the
   2019–2025 Zone24x7 appraisals, a September 2026 update from her and a
@@ -185,6 +212,18 @@ decision. See the callout at the top of `cv/CLAUDE.md`. Do not add an image,
 name, or metric unless it is confirmed publishable, and do not de-anonymise an
 entry without her.
 
+The photo-ID screens are the first images to pass that test, and how they passed
+is the procedure for the next set. Each frame was rendered and looked at before
+it was committed, and each was checked for three things: a client logo or
+product wordmark anywhere in the pixels, a real customer's data, and a name that
+would defeat the anonymisation. All ten came back clean — the session label is
+"1-4-24-John Doe", the phone number is a placeholder in the design file, and the
+product name exists only as a Figma layer name, never on screen. **The exported
+frame is the artefact, not the Figma page title**: publishing a frame whose
+layer name is the client's product is fine, publishing the name is not. Two
+frames were dropped rather than published, one a duplicate and one visually
+thin; do the same rather than filling a grid.
+
 One value on the page is still unconfirmed: the BSc, where LinkedIn and her 2018
 CV disagree on both the degree name and the institution and no source gives an
 end year. It carries a `⚠ CONFLICT` comment at `data/education.yaml`; leave it
@@ -199,36 +238,50 @@ separate sentences instead.
 
 ## Visual system
 
-**Currently: "Website v2"**, imported from the Claude Design project on
-2026-09-02 and replacing the earlier Direction A ("Annual", Fraunces + Karla),
-which is gone from the repo along with the two directions pitched beside it.
+**Currently: "Grid"**, imported from the Claude Design project on 2026-09-02 and
+replacing "Website v2" ("Band & Rule", Cormorant Garamond + Work Sans), which is
+gone from the repo, as Direction A ("Annual", Fraunces + Karla) was before it.
 
-A printed sheet laid on a darker ground, banded with full-bleed ink sections.
-Cormorant Garamond carries every heading, every numeral and every section label
-(the labels in italic); Work Sans carries the text sizes. There is no ornament.
+A twelve-column editorial ruling drawn in hairlines on white, with the ink
+reversed out only where the page needs a full stop. One typeface, Archivo,
+worked hard: tight and heavy at display sizes, uppercase and letterspaced at
+label sizes, tabular for every numeral. There is no ornament and no second
+family.
 
-Three things do the structural work, and breaking any of them is what makes the
+Four things do the structural work, and breaking any of them is what makes the
 page stop looking like itself:
 
-- **The sheet.** `.sheet` in `_base.scss` is a 1240px card holding the header,
-  the page and the footer, so the dark bands can run edge to edge inside it. The
-  shadow only appears once the viewport is wider than the sheet; below that
-  there is no ground to cast onto.
-- **The label rail.** `Row.astro` is a 180px italic label beside its content,
-  and nearly every section on every page is one. That is what lines the pages up
-  with each other and with the CV's `sec()`. Do not hand-roll a section.
-- **Two palettes, not one.** Header, hero, "How it runs" and the footer are
-  reversed out on `--dark`, and the paper palette's `--muted` measures 3.10:1
-  there. `--on-dark-muted` is its counterpart. The contrast gate below covers
-  both surfaces so this cannot be got wrong quietly.
+- **The frame.** `.frame` in `_base.scss` is a 1680px column with a hairline
+  down each side, holding the header, the page and the footer, so the dark
+  bands can bleed edge to edge inside it. The side rules run the full height,
+  which is why the frame is a flex column with the footer inside it.
+- **The twelve columns.** `.grid` is `repeat(12, minmax(0, 1fr))`, halving to
+  six on a tablet and collapsing to one on a phone. A component that sets a
+  span must restate it at those two widths: a `span 10` on a six-track grid
+  overflows silently.
+- **The label rail.** `Section.astro` is an uppercase rust label in columns 1–2
+  with its content from column 3, and nearly every section on every page is
+  one. That is what lines the pages up with each other and with the CV's
+  `sec()`. Do not hand-roll a section.
+- **Two rule weights, and two palettes.** `--rule` is a hairline between rows
+  inside a group; `--rule-strong` is ink and closes a section. Swapping them is
+  what stops the page reading as a ruled sheet. Separately, the bands and the
+  footer are reversed out on `--dark`, where the paper `--muted` measures
+  2.13:1 — `--on-dark-muted` is its counterpart, and the contrast gate below
+  covers both surfaces so the swap cannot be got wrong quietly.
+
+`--accent-bright` is the one colour with a usage rule attached: at 4.44:1 on
+paper and 4.37:1 on ink it clears the large-text floor on both and nothing else.
+Display type, 2px rules and hover on display-sized links only. `--accent` is the
+text-sized rust on paper, `--accent-on-dark` on ink.
 
 Every colour, typeface, size and spacing value lives in `src/styles/_tokens.scss`,
 one value per role. The display sizes are named for what each one sets rather
-than as an abstract step scale, because the design uses eleven of them and means
-all eleven. Change values there; do not introduce a second value for the same
+than as an abstract step scale, because the design uses twelve of them and means
+all twelve. Change values there; do not introduce a second value for the same
 role anywhere else.
 
-Two rules that would hold in any direction:
+Three rules that would hold in any direction:
 
 - **Contrast is not a matter of taste.** `scripts/check-contrast.mjs` reads the
   palette out of `_tokens.scss` and fails `pnpm lint` if a pair drops below its
@@ -238,9 +291,20 @@ Two rules that would hold in any direction:
   pair, dark-mode browsers paint their own canvas and the ink lands on it at
   roughly 1.5:1. Keep those in sync with the `theme-color` meta tag in
   `src/layouts/Layout.astro` and with `public/manifest.json`.
+- **The reset never wins a cascade.** Every rule in `_reset.scss` is wrapped in
+  `:where()` so it weighs nothing. `ol[class]` is specificity (0,1,1) and beat
+  `.pad` on the process band until it was; a reset that outranks a layout
+  utility fails silently and off the edge of the frame.
 
 Whether the site gets a dark mode at all is a real decision to make with her,
 not a default to assume.
+
+**The CV is a separate visual system and was not restyled with the site.** The
+Grid design project carries a `/cv` page but no redesigned PDF, so `cv/` is
+still the Cormorant-and-green "Band & Rule" document while the site around it is
+Archivo and rust. That divergence is visible on `/cv`, where the sheets are
+shown. Whether to bring the PDF across is a decision for Pamudi, not a tidy-up;
+`cv/CLAUDE.md` remains authoritative for anything under `cv/`.
 
 ## Images
 
@@ -257,6 +321,10 @@ not a default to assume.
   roughly 2× the largest rendered width.
 - Every image needs real `alt` text, or `alt=""` when decorative. On a
   portfolio, "screenshot" is not alt text.
+- `src/assets/systems/<product>/` holds a product's published screens. Those
+  under `photo-id/` were exported from Pamudi's own Figma file and checked frame
+  by frame before committing — see the header of
+  `src/content/systems/photo-id-compliance-app.mdx` before adding to them.
 - `src/assets/work/placeholder-*.png` and `scripts/make-placeholders.mjs` are
   scaffolding. Delete both once real covers land.
 
@@ -268,16 +336,21 @@ Self-hosted in `src/assets/fonts/`, imported by relative path from
 Google Fonts CDN: on the sibling site that was the only render-blocking request
 on the page.
 
-The woff2 files are Google's own `latin` slices taken byte-for-byte and are not
-subset. Both families are OFL-1.1 with a Reserved Font Name, so modifying the
-binaries would force a family rename. Copy new versions in verbatim.
+The woff2 files are Google's own `latin` slices, copied byte-for-byte out of
+`@fontsource-variable/archivo` in `node_modules` and not subset. Archivo is
+OFL-1.1 with a Reserved Font Name, so modifying the binaries would force a
+family rename. Copy new versions in verbatim, from the same package.
 
-Three faces, both variable on `wght` alone: Cormorant Garamond roman and italic,
-Work Sans roman. The Cormorant italic is a real face doing real work — every
-section label is set in it — not a synthesised slant. Work Sans italic is
-deliberately absent; nothing on the site asks for one. Both roman faces are
-preloaded in `Layout.astro` because the sticky header sets one of each above the
-fold on every page.
+Two faces, both variable on `wght` alone: Archivo roman and italic. The italic
+is a real face rather than a synthesised slant, and it has exactly one job — the
+degree names inside the earlier-projects descriptions, which arrive through
+`_emphasis_` in the shared YAML. Only the roman is preloaded in `Layout.astro`,
+because the sticky header sets it at two weights above the fold on every page
+and the italic appears once, well down the About page.
+
+Archivo also ships a `wdth` axis, and `_fonts.scss` deliberately does not load
+it: nothing in this design condenses or extends, and the two-axis file is
+markedly larger for an axis no rule would move.
 
 ## Git workflow
 

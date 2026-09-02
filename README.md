@@ -75,6 +75,42 @@ pnpm build:cv                # or: cd cv && ./build.sh
 cd cv && ./build.sh --preview  # PNG proofs of both pages
 ```
 
+## Adding a system page
+
+Every product in `data/systems.yaml` already has a page at
+`/systems/<slug>`, whether or not anyone has written it. With no file it shows
+the sourced facts — client, scope, what it was specified for — and stops there.
+
+To write one, create `src/content/systems/<slug>.mdx`. `system` must match the
+`product` field in `data/systems.yaml` exactly, or the build fails.
+
+```mdx
+---
+system: Freight logistics cockpit
+facts:
+  - label: Platform
+    value: Web
+cover: "../../assets/systems/freight/cover.png"
+coverAlt: Describe the image.
+---
+
+import Figure from "@/components/Figure.astro"
+import shot from "../../assets/systems/freight/flow.png"
+
+## The brief
+
+What the product had to do.
+
+<Figure src={shot} alt="What the image shows." caption="What to look at." />
+```
+
+`<h2>` becomes a rust section label. Put two figures side by side by wrapping
+them in `<div class="figure-grid">` and giving each `width="half"`. `draft:
+true` keeps a written page out and leaves the sourced scaffold in its place.
+
+`src/content/systems/photo-id-compliance-app.mdx` is the worked example, and its
+header explains what may and may not go in one of these.
+
 ## Adding a case study
 
 Create `src/content/work/<slug>.mdx`. The frontmatter schema lives in
@@ -128,8 +164,9 @@ contract, the theme, the fonts, the image discipline, and what not to write on
 Pamudi's behalf. `cv/CLAUDE.md` covers the CV's visual system, its vendored
 fonts and its two-page guard. Read both before making changes.
 
-The hero headline in `data/personal.yaml`, and the three `draft: true` files in
-`src/content/work/`, are placeholders waiting on Pamudi. Do not fill one in with
+The hero headline in `data/personal.yaml`, the three `draft: true` files in
+`src/content/work/`, and twelve of the thirteen system pages are waiting on
+Pamudi. Do not fill one in with
 a plausible guess. `tagline`, `intro` and `availability` are hers too; they are
 optional and currently absent, and every page falls back to verified material
 rather than rendering a placeholder.
