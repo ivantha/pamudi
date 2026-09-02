@@ -239,7 +239,7 @@ const { writing, student_events: studentEvents, societies } = community.data
                 <ul>
                     <li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>
                     {
-                        contact.links.map((link) => (
+                        contact.links.filter(isWebVisible).map((link) => (
                             <li>
                                 <a href={link.url} rel="me noopener">
                                     {link.label}

@@ -68,6 +68,14 @@ summary: >-
   in the codebase, implementing design changes directly with Cursor and Claude
   rather than waiting on a frontend handoff. MSc in Advanced Software
   Engineering, University of Westminster, read alongside the full-time role.
+summary_cv: >-
+  Building and owning design systems across enterprise client products. Token
+  architecture, component libraries and prototypes in Figma and Adobe XD, each
+  specified for the consuming framework: Flutter, React, Kendo UI, Ant Design.
+  Accessibility built in from the first token. Equally at home in the codebase,
+  implementing design changes directly with Cursor and Claude rather than
+  waiting on a frontend handoff. MSc in Advanced Software Engineering,
+  University of Westminster.
 
 # Published writing. A verified credential, so it sits in the CV masthead
 # rather than in an appendix.
@@ -93,3 +101,7 @@ contact:
     - label: Behance
       url: https://www.behance.net/pamudi
       display: behance.net/pamudi
+    - label: Website
+      url: https://pamudi.com
+      display: pamudi.com
+      include_in: [cv]

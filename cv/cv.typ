@@ -32,9 +32,9 @@
 #let CONTACT = CONTACT + if PHONE != "" { ([#PHONE],) } else { () }
 #let CONTACT = CONTACT + (
   personal.contact.links
+    .filter(l => "cv" in l.at("include_in", default: ("cv", "web")))
     .map(l => link(l.url)[#l.at("display", default: l.label)])
     .join(h(3mm)),
-  [#link(personal.blog.url)[#personal.blog.at("title_cv", default: personal.blog.title)], #personal.blog.where],
 )
 
 // ── Page ─────────────────────────────────────────────────────────────────
@@ -76,7 +76,7 @@
 
   #sec("Profile", {
     set text(font: DISPLAY, size: SZ.lead, weight: 400, fill: ink, ..lh(DISPLAY, LH-LEAD))
-    render-md(personal.summary)
+    render-md(field(personal, "summary", "cv"))
   }, after: 4mm)
 
   #sec("Experience", grid(columns: 1fr, row-gutter: 5mm,

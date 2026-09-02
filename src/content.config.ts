@@ -82,6 +82,7 @@ const personal = defineCollection({
                     url: z.string().url(),
                     // What to print instead of the bare URL on the CV.
                     display: z.string().optional(),
+                    include_in: includeIn.optional(),
                 }),
             ),
         }),
