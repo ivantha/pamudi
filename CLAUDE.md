@@ -199,8 +199,9 @@ What that leaves, as of September 2026:
   agriculture app, manufacturing warehouse app, warehouse management platform,
   mining-site tool platform. The other seven render their sourced facts and say
   so in the status bar, which remains the intended resting state rather than a
-  stub to fill. Four of the seven have no design file on the Figma document at
-  all, so they have nothing to illustrate them even in principle.
+  stub to fill. Six of the seven have no design file on the Figma document at
+  all, so nothing could illustrate them even in principle; the seventh is the
+  consumer delivery platform, below.
 - **The written pages are not hers yet.** Their prose is of two kinds and no
   third: scope claims lifted from the appraisal record via `kb/projects.md`, and
   description of what is visibly in the screens beside them. No outcomes, no
