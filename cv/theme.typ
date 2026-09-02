@@ -33,8 +33,8 @@
 #let TEXTF   = "Work Sans"           // everything read at length
 
 #let SZ = (
-  name:    31pt,     // the name, in the band
-  figure:  21pt,     // statistic figures
+  name:    34pt,     // the name, in the band
+  figure:  27pt,     // statistic figures (stat-strip)
   entry:   13.5pt,   // role titles
   rail:    12.5pt,   // italic section names
   degree:  10.8pt,   // education degrees
@@ -48,13 +48,14 @@
 )
 
 // ── Measure ──────────────────────────────────────────────────────────────
-#let MARGIN   = 15mm   // page inset; the band bleeds past it
-#let RAIL     = 22mm   // in-content column carrying section names
-#let GUTTER   = 5mm
-#let KV-LABEL = 26mm   // micro-label column of a kv / subsec row
-#let KV-GAP   = 5mm
-#let YEAR-COL = 14mm   // year column of a dated list
-#let YEAR-GAP = 4mm
+#let MARGIN    = 15mm   // page inset; the band bleeds past it
+#let RAIL      = 22mm   // in-content column carrying section names
+#let GUTTER    = 5mm
+#let KV-LABEL  = 26mm   // micro-label column of a kv / subsec row
+#let KV-GAP    = 5mm
+#let YEAR-COL  = 14mm   // year column of a dated list
+#let YEAR-GAP  = 4mm
+#let SYS-GROUP = 22mm   // group-label column of the systems table
 
 // ── CSS line boxes ───────────────────────────────────────────────────────
 // A browser makes every line box exactly `line-height` tall, splitting the
@@ -114,19 +115,32 @@
   v(after)
 }
 
-// The figures band, which lives inside the masthead. Numbers and labels are
-// laid out as two separate grid rows so they share a baseline: bottom-aligning
-// a figure inside a fixed-height box makes `3` and `24` sit differently.
-// This has been reintroduced twice — leave it as two rows.
-#let stat-band(stats) = {
+// The stat strip on paper ground, below the masthead band. Figures and labels
+// as two table rows so numbers share a baseline regardless of digit count;
+// column dividers carry the visual rhythm across the four cells.
+#let stat-strip(stats) = {
   let n = stats.len()
-  grid(columns: (1fr,) * n, column-gutter: 8mm,
-    ..stats.map(s => text(
-      font: DISPLAY, size: SZ.figure, weight: 300, fill: band-accent,
-      ..lh(DISPLAY, LH-FIG), s.at(0))))
-  v(2mm)
-  grid(columns: (1fr,) * n, column-gutter: 8mm,
-    ..stats.map(s => tracked(s.at(1), fill: band-mute)))
+  block(
+    width: 100%,
+    stroke: (bottom: 0.4pt + rule-strong),
+    inset: (y: 4.5mm),
+  )[
+    #table(
+      columns: (1fr,) * n,
+      rows: (auto, auto),
+      stroke: (x, y) => if x > 0 { (left: 0.4pt + rule) },
+      inset: (x, y) => (
+        left: if x > 0 { 6mm } else { 0mm },
+        right: 0mm,
+        top: 0mm,
+        bottom: if y == 0 { 2mm } else { 0mm },
+      ),
+      ..stats.map(s => text(
+        font: DISPLAY, size: SZ.figure, weight: 300, fill: accent,
+        ..lh(DISPLAY, LH-FIG), s.at(0))),
+      ..stats.map(s => tracked(s.at(1), fill: mute)),
+    )
+  ]
 }
 
 // The eyebrow above the name: a label at each end of the band.
@@ -136,33 +150,36 @@
   tracked(trail, em: 0.28, fill: band-mute),
 )
 
-// The full-bleed dark masthead. Every word arrives as an argument.
+// The full-bleed dark masthead. Stats live below the band now (stat-strip).
 #let masthead(
-  eyebrow-lead: "", city: "", name: "", role: "", spec: (), stats: (),
-  contact: (),
+  eyebrow-lead: "", city: "", name: "", role: "", spec: (),
+  contact-left: (), contact-right: [],
 ) = block(
   width: 100%, fill: band, above: 0pt, below: 0pt,
-  inset: (x: MARGIN, top: 11mm, bottom: 9mm),
+  inset: (x: MARGIN, top: 11mm, bottom: 7mm),
 )[
   #set text(font: TEXTF, size: SZ.body, weight: 300, fill: band-ink, ..lh(TEXTF, LH-BODY))
   #show link: set text(fill: band-meta)
   #eyebrow(eyebrow-lead, city)
-  #v(4mm)
+  #v(4.5mm)
   #block(above: 0pt, below: 0pt, text(
     font: DISPLAY, size: SZ.name, weight: 300, fill: band-ink,
     ..lh(DISPLAY, LH-NAME), name))
-  #v(4mm)
+  #v(3mm)
   #grid(columns: (auto, 1fr), column-gutter: 7mm, align: (left + bottom, left + bottom),
     tracked(role, size: SZ.label, em: 0.28, fill: band-accent),
     tracked(spec.join(dot), fill: band-mute),
   )
-  #v(5.5mm)
-  #stat-band(stats)
-  #v(4mm)
+  #v(4.5mm)
   #band-hairline()
   #v(3mm)
-  #grid(columns: (1fr,) * contact.len(), column-gutter: 8mm,
-    ..contact.map(c => text(size: SZ.label, fill: band-meta, c)))
+  #grid(columns: (1fr, auto), column-gutter: 8mm,
+    text(size: SZ.label, fill: band-meta)[#contact-left.join(dot)],
+    {
+      show link: set text(fill: band-accent)
+      text(size: SZ.label, fill: band-accent)[#contact-right]
+    },
+  )
 ]
 
 // One role: title and employer left, dates in accent right, then the items as
@@ -216,27 +233,59 @@
   datestamp(years),
 )
 
-// Three-column rules-between table for the design-system inventory. Rows are
-// (product, scope, implementation, led); `led` colours the scope in accent.
-#let systable(head, rows) = table(
-  columns: (auto, auto, 1fr),
-  align: (left + top, left + top, left + top),
-  inset: (x, y) => (
-    left: 0mm, right: 5mm,
-    top: if y == 0 { 0mm } else { 0.45mm },
-    bottom: if y == 0 { 1.4mm } else { 0.45mm },
-  ),
-  stroke: (x, y) => (
-    bottom: if y == 0 { 0.4pt + rule-strong } else { 0.4pt + rule },
-  ),
-  table.header(..head.map(h => microlabel(h))),
-  ..rows.map(r => (
-    text(font: DISPLAY, size: SZ.product, weight: 500, fill: ink,
-         ..lh(DISPLAY, LH-BODY), r.at(0)),
-    text(size: SZ.body, fill: if r.at(3) { accent } else { ink }, r.at(1)),
-    text(size: SZ.body, fill: mute, r.at(2)),
-  )).flatten()
-)
+// Grouped design-systems table. Groups come from system-groups() in loaders.typ.
+// Each group's label appears in a narrow left column on the first row; subsequent
+// rows of that group leave the label cell empty. Group transitions get extra top
+// space; all rows carry a bottom hairline except the last.
+#let sysgroups(groups) = {
+  let glabel(s) = text(
+    font: TEXTF, size: SZ.micro, fill: accent, weight: 300, tracking: SZ.micro * 0.2,
+    s.split("\n").map(l => upper(l)).join(linebreak()))
+
+  let flat = ()
+  let starts = ()
+  let idx = 0
+
+  for g in groups {
+    starts.push(idx)
+    for (i, r) in g.rows.enumerate() {
+      flat.push((
+        label: if i == 0 { g.label } else { none },
+        product: r.at(0),
+        detail: r.at(1),
+        stack: r.at(2),
+      ))
+      idx += 1
+    }
+  }
+
+  let n = flat.len()
+
+  table(
+    columns: (SYS-GROUP, auto, 1fr),
+    align: (left + top, left + top, left + top),
+    inset: (x, y) => (
+      left: 0mm,
+      right: if x < 2 { 4mm } else { 0mm },
+      top: if y > 0 and y in starts { 1.6mm } else { 0.45mm },
+      bottom: 0.45mm,
+    ),
+    stroke: (x, y) => if y < n - 1 { (bottom: 0.4pt + rule) },
+    ..flat.map(r => (
+      if r.label != none { glabel(r.label) } else { [] },
+      {
+        let name = text(font: DISPLAY, size: SZ.product, weight: 500, fill: ink,
+          ..lh(DISPLAY, LH-BODY), r.product)
+        if r.detail != none {
+          [#name #text(size: SZ.body, fill: mute, r.detail)]
+        } else {
+          name
+        }
+      },
+      text(size: SZ.body, fill: mute, r.stack),
+    )).flatten()
+  )
+}
 
 // The running folio, on both pages. Numbers are zero-padded and tabular so
 // `01 / 02` and `02 / 02` occupy the same width at the same optical weight.

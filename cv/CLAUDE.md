@@ -146,14 +146,14 @@ the system; if something needs to stand out, use scale or weight instead.
 
 The light ground, which is most of the document:
 
-| Token         | Hex       | Role                                               | Contrast      |
-| ------------- | --------- | -------------------------------------------------- | ------------- |
-| `paper`       | `#F1F3F2` | page ground                                        | —             |
-| `ink`         | `#141817` | body text                                          | 16.07 : 1 AAA |
-| `mute`        | `#616768` | metadata, employer names, `dated` years            | 5.16 : 1 AA   |
-| `accent`      | `#1F6357` | dates, `kv` labels, led-from-scratch scopes, links | 6.32 : 1 AA   |
-| `rule`        | `#DFE3E1` | row hairlines **only**, never type                 | n/a           |
-| `rule-strong` | `#B2B6B5` | table header underline **only**                    | n/a           |
+| Token         | Hex       | Role                                           | Contrast      |
+| ------------- | --------- | ---------------------------------------------- | ------------- |
+| `paper`       | `#F1F3F2` | page ground                                    | —             |
+| `ink`         | `#141817` | body text                                      | 16.07 : 1 AAA |
+| `mute`        | `#616768` | metadata, employer names, `dated` years        | 5.16 : 1 AA   |
+| `accent`      | `#1F6357` | dates, `kv` labels, stat figures, group labels | 6.32 : 1 AA   |
+| `rule`        | `#DFE3E1` | row hairlines **only**, never type             | n/a           |
+| `rule-strong` | `#B2B6B5` | stat-strip bottom stroke **only**              | n/a           |
 
 The dark masthead band on page 1:
 
@@ -161,8 +161,8 @@ The dark masthead band on page 1:
 | ------------- | --------- | --------------------------------- | ------------- |
 | `band`        | `#14181A` | band ground                       | —             |
 | `band-ink`    | `#ECEFEF` | the name                          | 15.45 : 1 AAA |
-| `band-mute`   | `#8E9698` | eyebrow, spec line, stat labels   | 5.93 : 1 AA   |
-| `band-accent` | `#7FC6B2` | role label, stat figures          | 9.04 : 1 AAA  |
+| `band-mute`   | `#8E9698` | eyebrow, spec line                | 5.93 : 1 AA   |
+| `band-accent` | `#7FC6B2` | role label, website link          | 9.04 : 1 AAA  |
 | `band-meta`   | `#B9BFC0` | contact row                       | 9.59 : 1 AAA  |
 | `band-rule`   | `#2E3335` | hairline inside the band **only** | n/a           |
 
@@ -179,8 +179,8 @@ family's OFL licence beside them.
 
 | Role                       | Face                            | Size    |
 | -------------------------- | ------------------------------- | ------- |
-| Name                       | Cormorant Garamond 300          | 31 pt   |
-| Statistic figures          | Cormorant Garamond 300          | 21 pt   |
+| Name                       | Cormorant Garamond 300          | 34 pt   |
+| Statistic figures          | Cormorant Garamond 300          | 27 pt   |
 | Role titles                | Cormorant Garamond 500          | 13.5 pt |
 | Section names              | Cormorant Garamond 400 _italic_ | 12.5 pt |
 | Education degrees          | Cormorant Garamond 500          | 10.8 pt |
@@ -239,8 +239,8 @@ name and the statistic figures; everything else is `LH-BODY` (1.4).
 
 Cormorant's default figures are **oldstyle** — `24` and `3` descend below the
 baseline, `10` sits at x-height. That is the design's look, not a bug. Never
-bottom-align a figure inside a fixed-height box: `stat-band` lays numbers and
-labels as two separate grid rows so they share a baseline. This bug has been
+bottom-align a figure inside a fixed-height box: `stat-strip` lays numbers and
+labels as two separate table rows so they share a baseline. This bug has been
 fixed twice; don't reintroduce it.
 
 ### Structure
@@ -251,8 +251,14 @@ fixed twice; don't reintroduce it.
   is not the band must be wrapped in `pad(x: MARGIN, …)`.
 - A **22 mm label column** (+5 mm gutter) carries italic section names inside
   the measure, leaving a 153 mm body. It is not a margin rail.
-- **Hairlines separate bands**, never boxes. The masthead is the only filled
-  shape in the document.
+- **Hairlines separate sections.** Full-width hairlines appear between Profile
+  and Experience on page 1, and before each section on page 2. The masthead is
+  the only filled shape in the document.
+- The **stat-strip** sits on paper ground immediately below the masthead band,
+  carrying the four headline figures in accent with column dividers and a
+  `rule-strong` bottom stroke. Stats left the band to give them room at 27 pt.
+- **Contact is split**: left items (email, phone, LinkedIn, Behance) joined
+  with middots, the website link pulled right in `band-accent`.
 - A **running folio** appears on **both** pages, zero-padded and tabular.
 - Sub-headings go through `subsec()`, which is `kv()`'s geometry wrapped in
   `breakable: false`. A grey micro-label stranded at the foot of a page reads as
@@ -260,8 +266,8 @@ fixed twice; don't reintroduce it.
 
 ### Components in `theme.typ`
 
-`masthead` · `eyebrow` · `sec` · `subsec` · `role-entry` · `stat-band` · `kv` ·
-`systable` · `dated` · `dated-list` · `degree-entry` · `folio` · `hairline` ·
+`masthead` · `eyebrow` · `sec` · `subsec` · `role-entry` · `stat-strip` · `kv` ·
+`sysgroups` · `dated` · `dated-list` · `degree-entry` · `folio` · `hairline` ·
 `band-hairline` · `railhead` · `microlabel` · `kvlabel` · `datestamp` · `lh`
 
 Reach for one of these before writing a bare `grid`.
@@ -272,33 +278,20 @@ thing inside the function body — `eyebrow(left, right)` failed exactly this wa
 
 ## Where the vertical space is
 
-Measured after the September 2026 seniority edit: **~20 mm slack on page 1,
-~25 mm on page 2.** Every measurement in the document is now the design's own.
-
-It was not always. The port originally ran with ~3 mm and ~2 mm, because the
-design was authored to fill A4 at `line-height: 1.4` — laid out literally it
-came to roughly 298 mm on page 1, i.e. very slightly over the sheet — and six
-metrics were compressed to claw that back. The seniority edit cut enough content
-to pay for all six, and they were reverted:
-
-| Where                      | Design | Was    | Now      |
-| -------------------------- | ------ | ------ | -------- |
-| Band bottom padding        | 9 mm   | 6.5 mm | 9 mm ✓   |
-| Band → Profile             | 7 mm   | 4 mm   | 7 mm ✓   |
-| Profile → Experience       | 4 mm   | 2.5 mm | 4 mm ✓   |
-| Page-2 top padding         | 11 mm  | 10 mm  | 11 mm ✓  |
-| `sec` gap (page 2 row-gap) | 2.9 mm | 1.6 mm | 2.9 mm ✓ |
-| Table header bottom inset  | 1.4 mm | 0.9 mm | 1.4 mm ✓ |
+After the September 2026 theme update (stats moved to a paper-ground strip,
+inter-section hairlines added, page-2 top padding raised to 13 mm, section
+gaps set to 4.5 mm): **~15 mm slack on page 1, ~15 mm on page 2.** The
+measurements are the design's own — they follow `cv.dc.html`.
 
 **That slack is reserved, not spare.** It is what the outcome clauses will cost
 when Pamudi supplies them (see "Still owed by Pamudi" below) — a bullet that
 carries a consequence runs longer than one that names a deliverable. Do not
 spend it on new sections.
 
-If a page does overflow, take the space back from that table first, in the order
-listed, rather than touching `LH-BODY`, `systable`'s row inset or `dated`'s
-rhythm — all three are load-bearing for the design's proportions. The "Was"
-column is the record of how far each one bends without visibly breaking.
+If a page does overflow, take space back from the stat-strip inset (4.5 mm →
+3 mm) or the inter-section hairline gaps (3 mm → 2 mm) before touching
+`LH-BODY`, `sysgroups`'s row inset or `dated`'s rhythm — all three are
+load-bearing for the design's proportions.
 
 Re-measure rather than trusting these numbers after any content change:
 
@@ -354,7 +347,7 @@ facts no source in this repo holds. Do not fabricate them to close the gap.**
    exists — she held sole ownership of the Figma source of truth for eight
    teams, so there are arbitration and migration stories — but only she has
    them. The reserved page slack is sized for this.
-2. **The `stat-band` figures.** Four artefact counts. "24 products designed"
+2. **The `stat-strip` figures.** Four artefact counts. "24 products designed"
    invites the reader to wonder how deep any one of them was; volume without
    depth reads as production work. Two counts plus two consequences would carry
    more. Note the existing constraint: no figure in the band may rest on an
@@ -378,8 +371,8 @@ follows the full stop, not the structure.
   is an inference (see below). The Profile now opens "Building and owning…",
   and the fourth statistic is `8 / Product teams guided`, which the page
   corroborates itself in the senior role's second bullet. No figure in
-  `stat-band` now rests on an unverified value.
-- **No AI figure in `stat-band`.** The career record claims a "measurable increase in
+  `stat-strip` now rests on an unverified value.
+- **No AI figure in `stat-strip`.** The career record claims a "measurable increase in
   design output efficiency" but records no number, and inventing one would put a
   fabrication next to four verifiable figures.
 - **The 24-products figure reconciles.** Thirteen rows in the design-systems

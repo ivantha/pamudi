@@ -7,6 +7,13 @@
 # industry context; `description` carries the full project description for the
 # website. The mapping from these descriptors to the original product names is
 # maintained offline.
+#
+# `detail` is an inline annotation after the product name in the CV's grouped
+# table (e.g. "4 modules"). `stack_cv` overrides `stack` for the CV when the
+# grouped table merges scope into the display (the "Further engagements" group).
+#
+# Ordering: entries are grouped for the CV table (Owned, Extended, Contributed,
+# Further engagements). Within each group the order matches the design.
 
 - product: Precision agriculture app
   client: US ag-tech company
@@ -48,6 +55,7 @@
     energy and construction worksites, including unattended self-service
     checkout.
   scope: Extended, 4 modules
+  detail: "4 modules"
   stack: Figma → React, React Material, Sass
   lead: false
 
@@ -70,6 +78,16 @@
   stack: Figma → React, Ant Design, SCSS
   lead: false
 
+- product: Warehouse management platform
+  client: In-house product
+  description: >-
+    Configurable warehouse management platform (web and mobile), built as a
+    productised offering deployable across different warehouse operations
+    rather than forked per client.
+  scope: Extended
+  stack: Figma
+  lead: false
+
 - product: Photo-ID back-office
   client: Biometric photo-ID provider
   description: >-
@@ -79,12 +97,11 @@
   stack: Figma
   lead: false
 
-- product: Warehouse management platform
-  client: In-house product
+- product: Consumer banking app
+  client: Listed Sri Lankan commercial bank
   description: >-
-    Configurable warehouse management platform (web and mobile), built as a
-    productised offering deployable across different warehouse operations
-    rather than forked per client.
+    Customer-facing banking application for a bank operating a national branch
+    network with a predominantly digital transaction base.
   scope: Extended
   stack: Figma
   lead: false
@@ -99,15 +116,6 @@
   stack: Figma → React, Material UI
   lead: false
 
-- product: Consumer banking app
-  client: Listed Sri Lankan commercial bank
-  description: >-
-    Customer-facing banking application for a bank operating a national branch
-    network with a predominantly digital transaction base.
-  scope: Extended
-  stack: Figma
-  lead: false
-
 - product: Consumer delivery platform
   client: Sri Lankan digital platform company
   description: >-
@@ -115,6 +123,7 @@
     ride-hailing services.
   scope: UX and accessibility research
   stack: Figma
+  stack_cv: "UX and accessibility research · Figma"
   lead: false
 
 - product: Salon management app
@@ -135,4 +144,5 @@
     limited PDF generation library.
   scope: Targeted design fixes
   stack: Within PDF-library constraints
+  stack_cv: Targeted fixes within PDF-library constraints
   lead: false

@@ -24,18 +24,24 @@
 #let ROLE  = personal.role
 #let PHONE = private.at("phone", default: "")
 
-// The contact row. Phone is dropped entirely when the private overlay is empty,
-// which is what CI builds with — the published PDF carries no phone number.
-#let CONTACT = (
+// Contact: left items joined with middots, website pulled right in accent.
+#let CONTACT-LEFT = (
   link("mailto:" + personal.contact.email)[#personal.contact.email],
 )
-#let CONTACT = CONTACT + if PHONE != "" { ([#PHONE],) } else { () }
-#let CONTACT = CONTACT + (
+#let CONTACT-LEFT = CONTACT-LEFT + if PHONE != "" { ([#PHONE],) } else { () }
+#let CONTACT-LEFT = CONTACT-LEFT + (
   personal.contact.links
     .filter(l => "cv" in l.at("include_in", default: ("cv", "web")))
+    .filter(l => l.label != "Website")
     .map(l => link(l.url)[#l.at("display", default: l.label)])
-    .join(h(3mm)),
 )
+
+#let CONTACT-RIGHT = {
+  let site = personal.contact.links
+    .filter(l => "cv" in l.at("include_in", default: ("cv", "web")))
+    .find(l => l.label == "Website")
+  if site != none { link(site.url)[#site.at("display", default: site.label)] }
+}
 
 // ── Page ─────────────────────────────────────────────────────────────────
 // The horizontal margin is zero and the 15 mm inset lives on the content
@@ -68,16 +74,23 @@
   name: NAME,
   role: ROLE,
   spec: personal.specialisms,
-  stats: stats-tuples(personal.stats),
-  contact: CONTACT,
+  contact-left: CONTACT-LEFT,
+  contact-right: CONTACT-RIGHT,
 )
 
-#pad(x: MARGIN, top: 7mm)[
+#pad(x: MARGIN)[
+
+  #stat-strip(stats-tuples(personal.stats))
+
+  #v(4.5mm)
 
   #sec("Profile", {
     set text(font: DISPLAY, size: SZ.lead, weight: 400, fill: ink, ..lh(DISPLAY, LH-LEAD))
     render-md(field(personal, "summary", "cv"))
-  }, after: 4mm)
+  }, after: 4.5mm)
+
+  #hairline()
+  #v(3mm)
 
   #sec("Experience", grid(columns: 1fr, row-gutter: 5mm,
     ..experience.map(e => role-entry(
@@ -94,14 +107,20 @@
 // ═════════════════════════ PAGE 2 ════════════════════════════════════════
 #pagebreak()
 
-#pad(x: MARGIN, top: 11mm)[
+#pad(x: MARGIN, top: 13mm)[
 
-  #sec("Design systems", systable(
-    ("Product", "Scope", "Design → implementation"),
-    system-tuples(systems),
-  ), after: 5mm)
+  #hairline()
+  #v(3mm)
 
-  #sec("Toolkit", { for s in skills { kv(s.category, render-md(s.stack)) } }, after: 5mm)
+  #sec("Design systems", sysgroups(system-groups(systems, variant)), after: 4.5mm)
+
+  #hairline()
+  #v(3mm)
+
+  #sec("Toolkit", { for s in skills { kv(s.category, render-md(s.stack)) } }, after: 4.5mm)
+
+  #hairline()
+  #v(3mm)
 
   #sec("Education", {
     grid(columns: 1fr, row-gutter: 2.5mm,
@@ -109,7 +128,10 @@
     v(2.5mm)
     subsec("Professional training",
       text(size: SZ.body, fill: ink, render-md(education.training)))
-  }, after: 5mm)
+  }, after: 4.5mm)
+
+  #hairline()
+  #v(3mm)
 
   #sec("Community", {
     subsec("Mentoring",       dated-list(dated-tuples(keep(community.mentoring, variant))))

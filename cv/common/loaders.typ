@@ -48,8 +48,40 @@
 
 #let stats-tuples(stats) = stats.map(s => (s.value, s.label))
 
-#let system-tuples(systems) = systems.map(
-  s => (s.product, s.scope, s.stack, s.at("lead", default: false)))
+// Group systems by scope for the CV's design-systems table. Returns an array
+// of (label: string, rows: array of (product, detail-or-none, stack)) where
+// groups are Owned / Extended / Contributed / Further engagements.
+#let system-groups(systems, variant) = {
+  let owned = ()
+  let extended = ()
+  let contributed = ()
+  let further = ()
+
+  for s in systems {
+    let scope = s.at("scope", default: "")
+    let row = (
+      s.product,
+      s.at("detail", default: none),
+      field(s, "stack", variant),
+    )
+    if s.at("lead", default: false) {
+      owned.push(row)
+    } else if scope.starts-with("Extended") {
+      extended.push(row)
+    } else if scope == "Contributed" {
+      contributed.push(row)
+    } else {
+      further.push(row)
+    }
+  }
+
+  let groups = ()
+  if owned.len() > 0 { groups.push((label: "Owned,\nfrom scratch", rows: owned)) }
+  if extended.len() > 0 { groups.push((label: "Extended", rows: extended)) }
+  if contributed.len() > 0 { groups.push((label: "Contributed", rows: contributed)) }
+  if further.len() > 0 { groups.push((label: "Further\nengagements", rows: further)) }
+  groups
+}
 
 #let dated-tuples(rows) = rows.map(r => (r.year, render-md(r.text)))
 
