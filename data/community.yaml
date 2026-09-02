@@ -15,21 +15,21 @@ speaking:
 mentoring:
   - year: "2026"
     text: >-
-      Mentor, *IEEE Young Protégé 2026* — twelve weeks from June, guiding two
+      Mentor, *IEEE Young Protégé 2026*: twelve weeks from June, guiding two
       mentees on industry practice and on improving user experience
   - year: "2025"
     text: >-
-      Knowledge Partner, *Young Protégé 2025* — guided a young professional
+      Knowledge Partner, *Young Protégé 2025*: guided a young professional
       through a full UI/UX project lifecycle
   - year: "2025"
     text: >-
-      Internal mentoring at Zone24x7 — design reviews, skill-gap assessment,
+      Internal mentoring at Zone24x7: design reviews, skill-gap assessment,
       curated learning paths
   - year: "2023"
     text: Knowledge-transfer sessions for two client project teams
 
 events:
-  - year: "2021—22"
+  - year: "2021–22"
     text: Designer and Treasurer, *ClubZone* at Zone24x7
   - year: "2021"
     text: Designer, *IWM South Asia* and *Women Techmakers*
@@ -37,7 +37,7 @@ events:
     text: Designer, *DevFest Sri Lanka*
   # Student-era office-holding, eight years back and three lines long. Off the
   # PDF, kept on the site. Rows here honour include_in, same as everywhere else.
-  - year: "2017—18"
+  - year: "2017–18"
     include_in: [web]
     text: >-
       Head of Designing, *IEEE Student Branch, UCSC*; Head of Marketing,
@@ -73,9 +73,9 @@ writing:
 # `events` above, named individually.
 student_events:
   - year: "2018"
-    text: Designer, *IEEE SS12 — Age of Innovation*, IEEE Asia Pacific Region 10
+    text: Designer, *IEEE SS12 (Age of Innovation)*, IEEE Asia Pacific Region 10
   - year: "2018"
-    text: Designer, *Google I/O Extended Sri Lanka* — GDG, Dialog and Ideamart
+    text: Designer, *Google I/O Extended Sri Lanka*, GDG, Dialog and Ideamart
   - year: "2017"
     text: Design Lead, *IEEE SLSYW Congress*, IEEE Sri Lanka Section
   - year: "2017"
@@ -90,13 +90,13 @@ student_events:
     text: Designer, *IEEE Xtreme 11.0*, IEEE Student Branch UCSC
   - year: "2017"
     text: Designer, *Foxepreneur*, UCSC Mozilla Club
-  - year: "2016—17"
+  - year: "2016–17"
     text: Designer and logistics, *IEEE Day*, IEEE Student Branch UCSC
   - year: "2016"
     text: Logistics, *Reid Cyber Wars*, Compsoc UOC
 
 societies: >-
-  Designer — *IEEE Sri Lanka Section* · *UCSC WIE* · *UCSC ISACA Student Group*
+  Designer, *IEEE Sri Lanka Section* · *UCSC WIE* · *UCSC ISACA Student Group*
   · *UCSC Exploration Club* · *Compsoc Forum*, Compsoc UOC · *Codestudy* ·
   Student Ambassador, *UCSC Mozilla Club* · Member, *IEEE Student Branch UCSC*
   and *IEEE WIE UCSC* · Singer and keyboardist, *UCSC Music Circle* ·

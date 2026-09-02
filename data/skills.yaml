@@ -14,8 +14,8 @@
   # Named individually here; the CV keeps them under one "AI tooling" row.
   include_in: [web]
   stack: >-
-    Gemini Nano · Banana Pro · ChatGPT — custom iconography that would otherwise
-    have been illustrated by hand or bought in
+    Gemini Nano · Banana Pro · ChatGPT (custom iconography that would otherwise
+    have been illustrated by hand or bought in)
 
 - category: Design
   stack: Figma · Adobe XD · InVision · Illustrator · Photoshop
@@ -25,17 +25,17 @@
 
 - category: Frontend
   stack: >-
-    React · Angular · React Native · JavaScript · Sass/SCSS · LESS — shipped UI
+    React · Angular · React Native · JavaScript · Sass/SCSS · LESS; shipped UI
     across four client products
 
 - category: Frontend delivery
   # What shipped, per project, rather than the language list above.
   include_in: [web]
   stack: >-
-    Branch operations platform — Kendo UI, React, Sass · Manufacturing
-    warehouse app — React, Ant Design, SCSS, web and mobile · Mining-site tool
-    platform, four modules — React Material, React, Sass · RFID inventory
-    tracker — React, Material UI
+    Branch operations platform: Kendo UI, React, Sass · Manufacturing
+    warehouse app: React, Ant Design, SCSS, web and mobile · Mining-site tool
+    platform, four modules: React Material, React, Sass · RFID inventory
+    tracker: React, Material UI
 
 - category: Component libraries
   stack: Material UI · Ant Design · Kendo UI · Angular Material · Bootstrap · NativeBase
@@ -43,8 +43,8 @@
 - category: Other platforms
   include_in: [web]
   stack: >-
-    WordPress · JavaFX · MySQL · Express.js · Node.js · MongoDB — from the 2018
-    record and the UCSC projects
+    WordPress · JavaFX · MySQL · Express.js · Node.js · MongoDB (from the 2018
+    record and the UCSC projects)
 
 - category: Accessibility
   stack: WCAG colour contrast · content sizing · readability, applied at token level

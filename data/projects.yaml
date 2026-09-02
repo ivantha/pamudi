@@ -10,7 +10,7 @@
 - id: patient-management-system
   title: Patient Management System
   context: National Cancer Hospital (Apeksha), Maharagama
-  dates: Jan 2017 — Jan 2018
+  dates: Jan 2017 – Jan 2018
   stack: JavaFX · MySQL
   bullets:
     - text: >-
@@ -24,7 +24,7 @@
 - id: project-scheduling-staff-allocation
   title: Project Scheduling and Staff Allocation
   context: Software development companies · UCSC
-  dates: Feb 2018 — Jul 2018
+  dates: Feb 2018 – Jul 2018
   stack: Angular · Express.js · Node.js · MongoDB
   bullets:
     - text: >-
@@ -35,7 +35,7 @@
 - id: nutri-plus
   title: Nutri Plus
   context: Nutrition reference app · UCSC
-  dates: Feb 2018 — Jul 2018
+  dates: Feb 2018 – Jul 2018
   stack: React Native · Node.js · MongoDB
   bullets:
     - text: >-

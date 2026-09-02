@@ -27,8 +27,8 @@ const siteDescription = tagline ?? `${role} in ${location}. ${opener}`
 const { title, description = siteDescription } = Astro.props
 
 const pageTitle = title
-    ? `${title} — ${personal.data.name}`
-    : `${personal.data.name} — ${personal.data.role}`
+    ? `${title} | ${personal.data.name}`
+    : `${personal.data.name} | ${personal.data.role}`
 const canonical = new URL(Astro.url.pathname, Astro.site)
 ---
 

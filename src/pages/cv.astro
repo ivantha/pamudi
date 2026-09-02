@@ -22,7 +22,7 @@ const sheets = Object.entries(modules)
 if (sheets.length === 0) {
     // Shipping this page with no CV on it would be worse than failing here.
     throw new Error(
-        "No CV page renders in src/assets/cv/. Run `pnpm build:cv` — `pnpm dev` and `pnpm build` both do it for you.",
+        "No CV page renders in src/assets/cv/. Run `pnpm build:cv`; `pnpm dev` and `pnpm build` both do it for you.",
     )
 }
 
@@ -40,8 +40,8 @@ const CONTENTS = ["profile and experience", "design systems, toolkit, education 
         <header class="case__header wrap">
             <h1 class="display case__title">Curriculum vitae</h1>
             <p class="lede case__summary">
-                Two pages, typeset from the same data files this site reads — so the document and
-                the site cannot drift apart.
+                Two pages, typeset from the same data files this site reads, so the document and the
+                site cannot drift apart.
             </p>
             <a class="cv-download" href={href("/cv/cv.pdf")}>Download the PDF</a>
         </header>
@@ -59,7 +59,7 @@ const CONTENTS = ["profile and experience", "design systems, toolkit, education 
                                 loading={i === 0 ? "eager" : "lazy"}
                             />
                             <figcaption class="eyebrow cv-sheet__folio">
-                                Page {String(i + 1).padStart(2, "0")} &mdash;{" "}
+                                Page {String(i + 1).padStart(2, "0")} /{" "}
                                 {String(sheets.length).padStart(2, "0")}
                             </figcaption>
                         </figure>
