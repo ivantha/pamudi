@@ -154,9 +154,19 @@ const counts = [
         </div>
     </Section>
 
+    <!-- `selected` and the `process` band below are the two sections on the site
+         that do not come from Section.astro: they carry a count and a dark band
+         it does not do. They still take the h2 it would have emitted. Every
+         other section label on every page is one, the five process steps below
+         are h3s that need a parent, and a label that only looks like a heading
+         leaves the two sections that matter most here out of the outline
+         entirely.
+
+         Note where this sits. A comment directly in the Layout slot is stripped
+         from the build; one nested inside an element ships to every visitor. -->
     <section class="selected pad">
         <div class="selected__head grid">
-            <p class="label">Selected work</p>
+            <h2 class="label">Selected work</h2>
             <p class="selected__lede">
                 {
                     work.length > 0
@@ -207,7 +217,7 @@ const counts = [
 
     <section class="band process">
         <div class="grid pad process__head">
-            <p class="label process__label">How it runs</p>
+            <h2 class="label process__label">How it runs</h2>
             <p class="process__lede">{site.data.process.lede}</p>
         </div>
         <ol class="process__steps pad">
