@@ -166,21 +166,31 @@ What that leaves, as of September 2026:
   artwork on a public portfolio under her name. The home page's work section
   falls back to the three design systems she led from scratch and switches back
   to the case-study index by itself the moment one is published.
-- **Everything else on the site is sourced.** The archived career record at
-  `~/Documents/archives/pamudi-cv-data-2026-09-02/` — reconciled from her 2018
-  CV, the 2019–2025 Zone24x7 appraisals and a September 2026 update from her —
-  is the provenance for every fact in `data/`. Check a claim against it before
-  adding one.
+- **Everything else on the site is sourced.** The career record in `kb/` is the
+  provenance for every fact in `data/`, reconciled from her 2018 CV, the
+  2019–2025 Zone24x7 appraisals, a September 2026 update from her and a
+  September 2026 project-description handover. Start at `kb/INDEX.md` and check
+  a claim against it before adding one. It also carries the mapping from the
+  anonymised descriptors in `data/` back to the real client and product names.
+  **`kb/` is gitignored**, because this repo is public and the record holds those
+  names, an employer's internal appraisal detail and her phone number; only
+  `kb/README.md` is tracked. A fresh clone will not have it. Recover it from the
+  frozen upstream snapshot at `~/Documents/archives/pamudi-cv-data-2026-09-02/`.
 
-**Client work may be under NDA, and this repo is public.** Ten client and product
-names currently ship in `data/systems.yaml` and `data/experience.yaml`;
-anonymisation was raised in September 2026 and deferred, not settled. See the
-callout at the top of `cv/CLAUDE.md`. Do not add an image, name, or metric
-unless it is confirmed publishable.
+**Client work may be under NDA, and this repo is public.** Client and product
+names are therefore anonymised to domain descriptors in `data/systems.yaml` and
+`data/experience.yaml`, with the mapping back held in the gitignored
+`kb/projects.md`. That is a precaution pending Pamudi's answer, not a settled
+decision. See the callout at the top of `cv/CLAUDE.md`. Do not add an image,
+name, or metric unless it is confirmed publishable, and do not de-anonymise an
+entry without her.
 
-Four values on the page are flagged `⚠ unverified` or `⚠ inferred` in the YAML
-(the LinkedIn and Behance handles, her pre-2022 title, the Zone24x7 start year,
-the BSc graduation year). Leave the flags until she confirms them.
+One value on the page is still unconfirmed: the BSc, where LinkedIn and her 2018
+CV disagree on both the degree name and the institution and no source gives an
+end year. It carries a `⚠ CONFLICT` comment at `data/education.yaml`; leave it
+until she settles it. The LinkedIn and Behance handles, her pre-2022 title and
+the Zone24x7 start year were all verified on 2026-09-02 and now carry
+`# Verified` comments instead. `kb/open-questions.md` has the rest.
 
 ## Writing style
 

@@ -14,15 +14,19 @@ one edit updates the page and the PDF together.
 > ### ⚠ Open: client-name anonymisation
 >
 > This repo went **public** on 2026-09-02 when the CV was merged into the
-> website. The client and product names — AROYA, EZIOS, EFL Cockpit, SFIKS,
-> UKG-BC, Haycarb, Acetrak, NTBFS, Marx.lk, KOHL'S — are now world-readable in
-> `/data/systems.yaml` and `/data/experience.yaml`, and on pamudi.com.
+> website. Client and product names were anonymised to domain descriptors at the
+> same time, as a precaution: Pamudi has not confirmed that any of them are
+> publishable, and some may be under NDA.
 >
-> Anonymisation was raised in September 2026 and **deferred, not rejected**.
-> Pamudi has not confirmed that these are publishable, and some may be under
-> NDA. **Ask her.** To withhold one, set `include_in: []` on the entry: it
-> vanishes from the site and the PDF while the record survives. Detail in
-> "Editorial decisions worth knowing" below.
+> That anonymisation is a holding position, not a decision. **Ask her** whether
+> the real names may appear. The mapping from each descriptor back to the real
+> product and client lives in `/kb/projects.md`, which is gitignored precisely so
+> that this stays her question to answer. Do not reproduce those names in a
+> tracked file, including this one.
+>
+> To withhold an entry outright, set `include_in: []`: it vanishes from the site
+> and the PDF while the record survives. Detail in "Editorial decisions worth
+> knowing" below.
 
 ## Build
 
@@ -320,7 +324,7 @@ fixed what could be fixed without new facts:
   custodial verb on a document arguing she is an owner. The six the record calls
   "maintained and expanded" are now `Extended`; the three she built are
   `Owned, from scratch` rather than "Led"; `Contributed` stands, because that is
-  what Acetrak RFID was. Keep this vocabulary: **Owned > Extended > Contributed**,
+  what the RFID inventory tracker was. Keep this vocabulary: **Owned > Extended > Contributed**,
   and never reach for a verb the source record does not support.
 - **The AI bullet leads with the consequence.** It opened on a tool roll-call;
   it now opens on removing the frontend dependency and closes with "Currently
@@ -376,12 +380,12 @@ follows the full stop, not the structure.
   design output efficiency" but records no number, and inventing one would put a
   fabrication next to four verifiable figures.
 - **The 24-products figure reconciles.** Thirteen rows in the design-systems
-  table plus eleven named under the earlier role. Acetrak WMS and Acetrak RFID
-  are separate rows — one extended, one contributed — which is both the honest
-  split and what makes the count add up. It did not previously: the table held
+  table plus eleven named under the earlier role. The warehouse management
+  platform and the RFID inventory tracker are separate rows — one extended, one
+  contributed — which is both the honest split and what makes the count add up. It did not previously: the table held
   twelve rows. If either list changes, recount.
 - **The senior role's first bullet said "seven more" and listed six.** It now
-  reads "six more … and contributed to the existing system on Acetrak RFID",
+  reads "six more … and contributed to an RFID inventory tracking system",
   matching the table.
 - **The 2025 project record is grouped, not listed.** Fourteen projects times
   four activity types is unreadable at CV length. It collapses into six themes
@@ -410,40 +414,45 @@ follows the full stop, not the structure.
   threes; `data/private.yaml` keeps the standard Sri Lankan mobile grouping.
   Same digits. The number itself is deliberately absent from every tracked file
   in this repo — do not paste it into one, including this file.
-- **Project-name anonymisation was raised and deferred** (September 2026), and
-  the merge into a public repo on 2026-09-02 raised the stakes without settling
-  it — see the callout at the top of this file. The question was whether client
-  and product names can appear at all, or whether they need replacing with
-  domain descriptors. Deferred, not rejected; the names currently stand. If it
-  comes back, note that the career record does **not** give a domain for several
-  of them (AROYA, EZIOS, NTBFS, EZPassport), so honest descriptors there have to
-  describe shape rather than industry, and the page-2 table would grow — it is
-  keyed by product name in its narrowest column.
+- **Project names are anonymised to domain descriptors** (September 2026), after
+  the merge into a public repo on 2026-09-02 raised the stakes — see the callout
+  at the top of this file. The question was whether client and product names can
+  appear at all; pending Pamudi's answer they do not, so `data/systems.yaml` and
+  `data/experience.yaml` carry a `product` descriptor plus a `client` industry
+  line, and `/kb/projects.md` holds the mapping back. This was once blocked by
+  the career record giving no domain for several products, which would have
+  forced descriptors describing shape rather than industry; the September 2026
+  project-description handover cleared that, supplying a client industry and a
+  purpose for every product in the record. The page-2 table is keyed by the
+  descriptor in its narrowest column, so descriptors have to stay short.
 
 ## Unverified facts — do not treat as settled
 
-Five values that no source can confirm: the LinkedIn and Behance handles, the
-pre-2022 job title, the Zone24x7 start year, and the graduation year. Each is
-marked with a `⚠ unverified` or `⚠ inferred` comment next to it in the YAML:
+**One value is still open: the BSc.** LinkedIn records it as "Bachelor of
+Science, Information Technology" at "University of Colombo"; the 2018 CV, which
+is what the YAML carries, says Information Systems at UCSC. One of them is wrong.
+No source gives an end year either, and 2020 is an inference from a four-year
+degree. The live flag is the `⚠ CONFLICT` comment at `/data/education.yaml` →
+BSc `dates`. **Do not silently switch it to match LinkedIn**, and note it shows
+on the public website as well as in the PDF.
 
-| Value             | Where                                            |
-| ----------------- | ------------------------------------------------ |
-| LinkedIn, Behance | `/data/personal.yaml` → `contact.links`          |
-| pre-2022 title    | `/data/experience.yaml` → `zone24x7-early.role`  |
-| Zone24x7 start    | `/data/experience.yaml` → `zone24x7-early.dates` |
-| BSc graduation    | `/data/education.yaml` → BSc `dates`             |
+The four values this section used to list were settled on 2026-09-02 against her
+live logged-in LinkedIn profile. They now carry `# Verified 2026-09-02` comments
+in the YAML rather than warnings, so there is no `⚠ unverified` or `⚠ inferred`
+marker left anywhere in `/data`:
 
-The start year no longer reaches any figure — the "seven years" and "7 yrs"
-claims that derived from it are gone — but it still sets the earlier role's date
-range on the page, so the flag stays live.
+| Value             | Resolution                                                 |
+| ----------------- | ---------------------------------------------------------- |
+| LinkedIn, Behance | Both handles are real; the 2018 source was right           |
+| pre-2022 title    | Trainee Associate → Associate → UI Engineer, from Sep 2018 |
+| Zone24x7 start    | September 2018, making tenure eight years and not seven    |
 
-**Do not remove those comments until Pamudi has confirmed the values**, and note
-that these now show on the public website as well as in the PDF.
+Everything else the sources cannot settle is in `/kb/open-questions.md`.
 
 ## Conventions
 
 - British spelling in prose; product and client names keep their source spelling
-  (the archived career record documents the normalisations applied).
+  (`/kb/INDEX.md` documents the normalisations applied).
 - Solo personal repo: commit directly to `main`.
 - `preview-*.png` and `public/cv/*.pdf` are build artefacts and are gitignored.
   **The PDF is no longer committed** — CI rebuilds it on every push and serves it

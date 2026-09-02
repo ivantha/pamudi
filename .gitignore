@@ -32,3 +32,12 @@ src/assets/cv/
 
 # Private contact overlay — real phone number, never tracked
 data/private.yaml
+
+# Career knowledge base — the provenance behind data/*.yaml. Untracked because
+# this repo is public and the record carries real client names (some possibly
+# under NDA), an employer's internal appraisal detail, third-party colleague
+# names and her phone number. kb/README.md is the one tracked file: a signpost
+# that names nothing. `kb/*` not `kb/` — git will not descend into an ignored
+# directory, so the negation below would never be reached.
+kb/*
+!kb/README.md

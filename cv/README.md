@@ -63,10 +63,13 @@ Full rationale, component reference and the rules for changing any of it are in
 the number and the published PDF does not, which is deliberate — the repo is
 public.
 
-Five values no source can confirm are flagged `⚠ unverified` or `⚠ inferred`
-where they sit in the YAML: the LinkedIn and Behance handles
-(`/data/personal.yaml`), the pre-2022 job title and Zone24x7 start year
-(`/data/experience.yaml`), and the BSc graduation year (`/data/education.yaml`).
+One value no source can confirm is flagged `⚠ CONFLICT` where it sits in the
+YAML: the BSc in `/data/education.yaml`, where LinkedIn and her 2018 CV disagree
+on the degree name and the institution, and no source gives an end year. The
+LinkedIn and Behance handles, the pre-2022 job title and the Zone24x7 start year
+were verified on 2026-09-02 and now carry `# Verified` comments instead.
 
-Ten client and product names appear on the page and are now public. Whether they
-may is [an open question](CLAUDE.md) that was deferred, not settled.
+Client and product names are anonymised to domain descriptors, because this repo
+is public and some of the work may be under NDA. Whether the real names may
+appear is [an open question](CLAUDE.md) pending Pamudi's answer; the mapping back
+is in the gitignored `/kb/projects.md`.
