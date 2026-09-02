@@ -1,0 +1,119 @@
+---
+# ⚠ PROVENANCE. Read before editing.
+#
+# The screens are Pamudi's own, exported 2026-09-03 from her Figma file (page
+# "EFL Cockpit (owned)"). Every frame was checked before committing: the only
+# wordmark in the pixels is the product's own generic "COCKPIT APP", never the
+# client's name or logo, and the rack, aisle and pallet identifiers are
+# repeating placeholders (A07-01-01) rather than a customer's data. That is why
+# these sit in a public repo under the anonymised product name.
+#
+# The prose is of two kinds and no third:
+#   - Scope claims come from the 2025 appraisal record, via kb/projects.md
+#     ("EFL Cockpit"). They are not paraphrased upward.
+#   - Everything else describes what is visibly in the screens beside it.
+# No outcomes, no metrics, no adoption claims: no source carries any.
+system: Freight logistics cockpit
+facts:
+  - label: Platform
+    value: Wall-mounted tablet, 1024×768
+  - label: Role
+    value: Senior UI/UX Engineer, Zone24x7
+  - label: Recorded
+    value: "2025"
+cover: ../../assets/systems/freight-logistics-cockpit/racks.png
+coverAlt: A grid of rack cards, each labelled A07-01-01 and marked Empty, one highlighted in amber, above a dark footer paging through 01 to 32.
+coverCaption: Racks are the whole screen. Thirty-two to a page, one state per card, and the page counter sits in the footer bar rather than floating over the grid.
+---
+
+import Figure from "@/components/Figure.astro"
+import cameraDisconnected from "../../assets/systems/freight-logistics-cockpit/camera-disconnected.png"
+import warehouseModules from "../../assets/systems/freight-logistics-cockpit/warehouse-modules.png"
+import bay from "../../assets/systems/freight-logistics-cockpit/bay.png"
+import racksCollapsed from "../../assets/systems/freight-logistics-cockpit/racks-collapsed.png"
+
+## The brief
+
+A global freight forwarder runs distribution centres in roughly thirty-nine countries.
+This application detects where a load actually is inside one of them, and says so on a
+screen mounted where the work happens rather than in a report someone reads later.
+
+It is a fixed-position tablet in a warehouse, read at a distance by someone who is
+holding something else. That constraint sets the type size, the colour coding and the
+decision to give the running status its own permanent bar rather than a toast that
+disappears while you are looking away.
+
+## The system
+
+There was no system to inherit. Design started at the foundations and had to arrive as
+something an implementation team could build without interpretation.
+
+<div class="spec">
+  <div class="spec__item">
+    <h3>Owned end to end</h3>
+    <p>
+      Led the creation and maintenance of the complete Figma design system from scratch for the
+      cockpit application.
+    </p>
+  </div>
+  <div class="spec__item">
+    <h3>UX direction for the team</h3>
+    <p>
+      Guided the project team through the UI/UX process, providing direction during design and
+      support through implementation.
+    </p>
+  </div>
+  <div class="spec__item">
+    <h3>One of three owned outright</h3>
+    <p>
+      One of the three systems in the inventory she built from scratch and owned for its whole
+      lifecycle.
+    </p>
+  </div>
+</div>
+
+## Navigation that stays put
+
+The application has four destinations and no more: Home, Warehouse, Settings, License.
+They live in a rail that expands to labels and collapses to icons, and the collapsed
+state is the working default because the grid it sits beside is the actual content.
+
+<div class="figure-grid">
+  <Figure
+    width="half"
+    src={warehouseModules}
+    alt="Warehouse section showing three large tiles labelled Racks, Bay and Transactions, with the navigation rail expanded to icons and labels on the left."
+    caption="Warehouse splits into three targets, drawn as tiles big enough to hit without looking."
+  />
+  <Figure
+    width="half"
+    src={racksCollapsed}
+    alt="The rack grid with the navigation rail collapsed into the top bar, giving the grid the full width of the screen."
+    caption="Collapsed, the rail gives the grid back its width. Same screen, same grid, one fewer column of chrome."
+  />
+</div>
+
+## Two ways to look at a warehouse
+
+Racks are discrete and countable, so they are drawn as cards with a state each. A bay
+is continuous floor, so it is drawn as a ruled area instead. Using one metaphor for both
+would have made the second one lie.
+
+<Figure
+  src={bay}
+  alt="Bay view showing an empty dotted grid where bay positions are drawn, under the same header and navigation rail as the rack view."
+  caption="The bay in its empty state: a dotted grid rather than a list, because floor space is not a set of rows."
+/>
+
+## The failure state is a screen, not a blank
+
+The application depends on a camera feed it does not control. When that feed drops, the
+panel does not sit empty and it does not show a spinner that never resolves. It names
+the fault, and puts the one action that fixes it in the middle of the space the video
+would have filled.
+
+<Figure
+  src={cameraDisconnected}
+  alt="The cockpit with an empty video panel reading 'Video stream is not connected, please go to settings to connect' above an amber Go To Settings button, and a struck-through camera icon in the header."
+  caption="The header icon turns red, the panel says what happened, and the fix is one target away. Designing this state at the same time as the working one is why it is this specific rather than generic."
+/>

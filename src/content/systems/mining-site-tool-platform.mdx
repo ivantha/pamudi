@@ -1,0 +1,128 @@
+---
+# ⚠ PROVENANCE. Read before editing.
+#
+# The screens are Pamudi's own, exported 2026-09-03 from her Figma file (page
+# "SFI Web (Collaborated)").
+#
+# ⚠ THESE FOUR ARE REDACTED, and that is not a detail to lose. The client's
+# three-letter wordmark sits in the sidebar of every screen in this module, and
+# one page title carried the same letters in parentheses. Both were painted out
+# in the client's own brand orange and title-bar grey before the files were
+# committed, so the redaction reads as an empty brand slot rather than a censor
+# bar. `data/systems.yaml` anonymises this client to "Australian industrial
+# tooling and consumables supplier"; publishing the mark unredacted would undo
+# that. If Pamudi lifts the anonymisation, re-export the originals rather than
+# un-redacting these.
+#
+# Everything else in the pixels was checked and left alone: the catalogue rows
+# are generic consumables (WD40, sand bags, resin discs), prices are zeroed, and
+# the signed-in persona is a placeholder.
+#
+# The screens also settle something the written record could not. kb/open-
+# questions.md #4 asks whether "SFI" (2022-2023) and "SFIKS" (2025) are the same
+# system. These frames carry a "Kiosk Location" selector in the header, and the
+# mobile module labels its device "K70 - Star Kiosk" — kiosks being exactly what
+# the SFIKS record describes. That is evidence, not a ruling; the question is
+# still hers to close.
+#
+# The prose is of two kinds and no third:
+#   - Scope claims come from the 2025 appraisal record, via kb/projects.md
+#     ("SFIKS"). This was a system she maintained across four modules, not one
+#     she owned.
+#   - Everything else describes what is visibly in the screens beside it.
+system: Mining-site tool platform
+facts:
+  - label: Platform
+    value: Web, mobile and on-site kiosk
+  - label: Modules
+    value: Four, maintained in one system
+  - label: Role
+    value: Senior UI/UX Engineer, Zone24x7
+  - label: Recorded
+    value: "2025"
+cover: ../../assets/systems/mining-site-tool-platform/asset-catalogue.png
+coverAlt: An asset catalogue in a web console, an Items table listing item numbers, descriptions such as resin discs and WD40 spray, and an ownership column, beside a dark icon rail with Issue, Return and Maintenance actions and a blank orange brand panel at the top.
+coverCaption: The orange panel at the top of the rail is where the client's mark sits; it has been painted out here. Everything below it is unaltered.
+---
+
+import Figure from "@/components/Figure.astro"
+import assets from "../../assets/systems/mining-site-tool-platform/assets.png"
+import addObjectType from "../../assets/systems/mining-site-tool-platform/add-object-type.png"
+import noInternet from "../../assets/systems/mining-site-tool-platform/no-internet.png"
+
+## The brief
+
+Tools and consumables are lent out of relocatable container stores parked on mining,
+energy and construction sites. The sites are remote, the stores are unstaffed for much
+of the day, and the people using them are wearing gloves. The platform tracks what left,
+what came back, and what needs servicing, across web, mobile and an on-site kiosk.
+
+Three clients, one system. That is the whole design problem: a console used at a desk, a
+handheld used in a yard, and a kiosk used at a container door in daylight all have to be
+recognisably the same product without pretending they are the same device.
+
+## The scope, stated plainly
+
+<div class="spec">
+  <div class="spec__item">
+    <h3>Four modules, one system</h3>
+    <p>
+      Maintained the Figma design system across four distinct application modules, developing
+      reusable components, prototypes and full-screen designs for each.
+    </p>
+  </div>
+  <div class="spec__item">
+    <h3>Design to implementation</h3>
+    <p>
+      Guided all four modules through the design-to-implementation lifecycle, with the build in
+      React, React Material and Sass.
+    </p>
+  </div>
+  <div class="spec__item">
+    <h3>Four embedded style guides</h3>
+    <p>
+      Each of the four modules carries its own self-contained style guide inside the Figma file.
+    </p>
+  </div>
+</div>
+
+## The rail is the product
+
+Issue, Return, Maintenance. Three verbs, drawn as large icon targets in a permanent left
+rail, with the signed-in user pinned above them and Logout pinned below. Nothing about
+the current screen can move them, because on a kiosk at a container door the person in
+front of it may not be the person who started the session.
+
+<Figure
+  src={assets}
+  alt="An Assets page with Objects and Items tabs, a table of item numbers, descriptions, ownership, unit price and available quantity, filter chips reading All Assets, In HQ and In Transit, and buttons for Add Object Type, Add Item and Upload CSV."
+  caption="Location is a filter, not a column you sort: All Assets, In HQ, In Transit. For a fleet of container stores, where a thing is matters more than what it costs."
+/>
+
+## Two levels of "what is this"
+
+The catalogue separates the type of thing from the individual thing, and the console
+keeps that distinction visible as a pair of tabs rather than burying it in a form. A
+resin disc is an object type; the four in the container are items.
+
+That is also why adding a type is a heavier dialog than adding an item. It defines a
+taxonomy that everything below it inherits.
+
+<Figure
+  src={addObjectType}
+  alt="An Add Object Type dialog with fields for object type, description, object group, category, sub-category, brand, colour and size, then an Offerings section with a For Sale price and For Rental rows priced per day, per week and per month."
+  caption="Offerings is the part that makes it a lending platform rather than a stock list: the same object carries a sale price and three rental terms, priced separately."
+/>
+
+## Designed for the connection it will not have
+
+A container store on a remote site loses its link regularly. The offline state is
+therefore a designed screen with the module's own illustration, not a browser error page,
+and it says what the user should conclude ("you are in offline now") rather than only
+what failed.
+
+<Figure
+  src={noInternet}
+  alt="An offline screen showing a line illustration of a satellite dish with signal arcs, the heading 'No Internet :(' in accent, and the line 'Please check your Internet connection, you are in offline now.'"
+  caption="Drawn in the product's own hand, in the product's own accent. A remote-site tool that treats losing signal as an exception has misread where it runs."
+/>

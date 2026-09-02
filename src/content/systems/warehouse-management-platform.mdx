@@ -1,0 +1,131 @@
+---
+# ⚠ PROVENANCE. Read before editing.
+#
+# The screens are Pamudi's own, exported 2026-09-03 from her Figma file (page
+# "Acetrak Mobile (Collaborated)"). Every frame was checked before committing.
+#
+# The web console is NOT published and should not be added without a decision:
+# its sidebar carries the product wordmark on every screen, and the product name
+# is what `data/systems.yaml` anonymises to "Warehouse management platform". The
+# mobile client carries no wordmark on any inner screen, which is why the six
+# published here are all mobile.
+#
+# Demo data is synthetic (SKU_48484837, Item_48484837, bin 4-4-D) and the two
+# personas in the sort list are plainly fictional, in the same category as the
+# "John Doe" session label on the photo-ID screens.
+#
+# The prose is of two kinds and no third:
+#   - Scope claims come from the 2025 appraisal record, via kb/projects.md
+#     ("Acetrak WMS"). This was a system she maintained, not one she owned.
+#   - Everything else describes what is visibly in the screens beside it.
+system: Warehouse management platform
+facts:
+  - label: Platform
+    value: Mobile client, handheld scanner
+  - label: Role
+    value: Senior UI/UX Engineer, Zone24x7
+  - label: Recorded
+    value: "2025"
+cover: ../../assets/systems/warehouse-management-platform/batch-pick-items.png
+coverAlt: Batch Pick item list on a pink ground, a SKU header reading 00 of 40 items scanned, three item cards each showing total item quantity with a Pick Qty field and a Pick button, and a Scan SKU ID field pinned at the foot.
+coverCaption: The scan field is pinned to the bottom of every step in the flow, so the hand holding the scanner never has to hunt for where the input went.
+---
+
+import Figure from "@/components/Figure.astro"
+import scanBin from "../../assets/systems/warehouse-management-platform/batch-pick-scan-bin.png"
+import summary from "../../assets/systems/warehouse-management-platform/batch-pick-summary.png"
+import sortOrders from "../../assets/systems/warehouse-management-platform/batch-sort-orders.png"
+import locateTag from "../../assets/systems/warehouse-management-platform/locate-tag.png"
+import countSummary from "../../assets/systems/warehouse-management-platform/inventory-count-summary.png"
+
+## The brief
+
+An in-house warehouse management platform, built as a product to be configured for
+different operations rather than forked for each one. That is the constraint that shapes
+everything below: no screen can assume one customer's vocabulary, one customer's process,
+or one customer's hardware.
+
+The mobile client is used one-handed, by someone holding a scanner in the other hand,
+walking. Every flow here is a loop of scan, confirm, scan again, and the design's job is
+to make the loop tight enough that it does not need reading.
+
+## The scope, stated plainly
+
+<div class="spec">
+  <div class="spec__item">
+    <h3>Maintained, not owned</h3>
+    <p>
+      Maintained the Figma design system, developing reusable components, prototypes and full-screen
+      designs within it.
+    </p>
+  </div>
+  <div class="spec__item">
+    <h3>UX direction through the build</h3>
+    <p>Gave UX direction and guided the development team through implementation.</p>
+  </div>
+  <div class="spec__item">
+    <h3>An embedded style guide</h3>
+    <p>
+      One of the ten projects carrying a self-contained style guide inside the Figma file itself.
+    </p>
+  </div>
+</div>
+
+## Every flow starts by binding a container
+
+Nothing is picked, sorted or counted until the app knows which physical bin the work is
+going into. That step gets its own screen rather than a field on a busier one, and the
+screen says what to do in its subtitle rather than in a tooltip.
+
+<Figure
+  src={scanBin}
+  alt="Batch Pick screen with a subtitle reading 'Scan Your Mobile Bin Number to Continue', a centred illustration of a parcel and a checked list, and a Scan Mobile Bin Number field with an OK button at the foot."
+  caption="One instruction, one field, one illustration. The header carries the step name and the subtitle carries the instruction, a pattern every module in the app repeats."
+/>
+
+## The work itself
+
+Picking and sorting are the same shape: a list of things to work through, each carrying
+its own count and its own action, with the scan field always at the foot. The pattern is
+the point. Once a picker knows one module, the others do not need learning.
+
+<Figure
+  src={sortOrders}
+  alt="Batch Sort orders list, a batch header reading BP-6773-7913 with 10 orders, and order cards showing SKU counts, created timestamps, a sorting-location field and a Scan Items button."
+  caption="Sorting adds one field to the picking card, the destination location, and keeps everything else in place."
+/>
+
+## Numbers at the end, including the honest one
+
+Both the pick and the count close on a summary, and both summaries report time as well
+as quantity. Average time per parcel is a number that judges the operator as much as the
+process, and putting it on the screen the operator sees is a deliberate choice rather
+than an oversight.
+
+<div class="figure-grid">
+  <Figure
+    width="half"
+    src={summary}
+    alt="Batch Pick Summary showing total SKUs 12, total items picked 116, time taken 00:10:00 and average time per parcel 00:00:24, above an OK button."
+    caption="What moved, how long it took, and the per-parcel average in accent."
+  />
+  <Figure
+    width="half"
+    src={countSummary}
+    alt="Inventory Counting Summary showing total parcels scanned 10, time taken 00:04:00 and average time per parcel 00:00:24, above an OK button."
+    caption="The count closes on the same three numbers in the same three positions. Different module, identical summary."
+  />
+</div>
+
+## When the item will not scan
+
+RFID search is the one screen in the set that cannot be a list, because the thing being
+looked for is somewhere in a room rather than somewhere in a table. It becomes a dial: the
+tag identifier at the top, signal strength as a filling arc, and start and stop as the
+only two controls.
+
+<Figure
+  src={locateTag}
+  alt="Locate Tag screen reading 'Searching For EPC' above the identifier 422689000-7666, a large circular progress dial reading 68 percent in red, and Start and Stop buttons beneath."
+  caption="Signal strength as a dial rather than a number, because the reading is 'warmer or colder' while walking, not a value to record."
+/>

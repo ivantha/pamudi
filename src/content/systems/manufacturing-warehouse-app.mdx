@@ -1,0 +1,124 @@
+---
+# ⚠ PROVENANCE. Read before editing.
+#
+# The screens are Pamudi's own, exported 2026-09-03 from her Figma file (pages
+# "Haycarb Web (Collaborated)" and "Haycarb Mobile (Collaborated)"). Every frame
+# was checked before committing, and the check turned two things down:
+#   - Every login screen, web and mobile, carries the client's logo full size.
+#     None is published.
+#   - The Approvals screen's sidebar names the client's raw material, which
+#     narrows "listed multinational manufacturer" to its industry. Dropped for
+#     that reason alone; it is otherwise clean.
+# What is published carries no wordmark. The demo data is synthetic throughout
+# (Machine A to F, barcodes MM111111 upward, Type 1 / Type 2, F1 / F2).
+#
+# The prose is of two kinds and no third:
+#   - Scope claims come from the 2024 and 2025 appraisal record, via
+#     kb/projects.md ("Haycarb App"). They are not paraphrased upward, and in
+#     particular this was a system she maintained, not one she owned.
+#   - Everything else describes what is visibly in the screens beside it.
+system: Manufacturing warehouse app
+facts:
+  - label: Platform
+    value: Web console and mobile, React
+  - label: Role
+    value: Senior UI/UX Engineer, Zone24x7
+  - label: Recorded
+    value: "2024, 2025"
+cover: ../../assets/systems/manufacturing-warehouse-app/machines.png
+coverAlt: A machines register in a web console, columns for work centre, barcode ID, machine description, type, location and located section, beside a dark navigation tree listing bins and bags, forklifts, trucks, machines, weighing scales, lab equipment and labware.
+coverCaption: The asset tree is the argument. Bins, forklifts, trucks, machines, scales, lab equipment and labware are different things on the floor, and the console refuses to flatten them into one "assets" table.
+---
+
+import Figure from "@/components/Figure.astro"
+import addMachine from "../../assets/systems/manufacturing-warehouse-app/add-machine.png"
+import jobs from "../../assets/systems/manufacturing-warehouse-app/jobs.png"
+import lab from "../../assets/systems/manufacturing-warehouse-app/lab.png"
+import captureWeight from "../../assets/systems/manufacturing-warehouse-app/capture-weight.png"
+
+## The brief
+
+A listed manufacturer with production sites in several countries, running one warehouse
+application across manufacturing and distribution. Two clients on two very different
+devices: a console for the people who configure and approve, and a phone for the people
+on the floor who scan things.
+
+The design job here was maintenance rather than authorship. The system existed; the work
+was to keep it coherent while it grew across modules, and to make the two clients feel
+like one product rather than two teams' output.
+
+## The scope, stated plainly
+
+<div class="spec">
+  <div class="spec__item">
+    <h3>Maintained, not owned</h3>
+    <p>
+      Maintained the Figma design system and developed reusable components, prototypes and
+      full-screen designs within it.
+    </p>
+  </div>
+  <div class="spec__item">
+    <h3>Into the build</h3>
+    <p>
+      Contributed to styling both the web console and the mobile app, in React, Ant Design and SCSS.
+    </p>
+  </div>
+  <div class="spec__item">
+    <h3>Across two cycles</h3>
+    <p>
+      Recorded in both the 2024 and the 2025 appraisal cycles, one of the longer running engagements
+      in the inventory.
+    </p>
+  </div>
+</div>
+
+## The console: configuration is data entry, so make it fast
+
+Adding a machine is a form, and the design does not pretend otherwise. What it does is
+offer three routes to the same identifier: pick it, scan it, or key it. A barcode panel
+sits inside the dialog rather than behind a separate scan mode, and a plain code field
+sits under it for the case where the label is damaged.
+
+<Figure
+  src={addMachine}
+  alt="An Add Machine dialog with fields for type, name, active state, feed quantity, temperature, code, size, oil consumption and location, a barcode scan panel, and an Enter Code field beneath it."
+  caption="Three ways in, stacked in one dialog: the dropdown, the scanned barcode, the typed code. The 'OR' between them is doing real work."
+/>
+
+## The floor: one card, reused exactly
+
+The mobile modules could easily have drifted into three different card layouts. They do
+not. A job in production and a sales order in the lab are the same card: title, status
+chip, the same three labelled rows, then a three-button action bar in the same three
+colours.
+
+Quantities are bars rather than fractions because the reading is comparative, and the
+number stays beside the bar for when it is not.
+
+<div class="figure-grid">
+  <Figure
+    width="half"
+    src={jobs}
+    alt="Mobile Jobs list showing a job card with production order, planned machine quantity and production sales quantity as green progress bars reading 9/10 and 4/10, and an orange, purple and green action row beneath."
+    caption="Production: bars for the comparative read, numbers for the exact one, three actions in fixed positions."
+  />
+  <Figure
+    width="half"
+    src={lab}
+    alt="Mobile Lab list showing sales order cards with the identical layout to the jobs list, the same labelled rows, the same progress bars and the same three-colour action row."
+    caption="The lab module, using the identical card. Learning one screen is learning the other, which is the whole return on maintaining a system."
+  />
+</div>
+
+## Scanning, with a way out
+
+Weight capture is the same pattern as the console's machine dialog, one screen down.
+The scanner is the primary path and takes the centre of the screen, but the manual entry
+underneath is not hidden behind a link. In a warehouse the label is sometimes unreadable,
+and a flow that assumes otherwise stops the line.
+
+<Figure
+  src={captureWeight}
+  alt="Capture Weight screen with a green header, a large QR code panel on white, an 'OR' divider, an Enter Manually field with an Add button, and a Done bar at the foot."
+  caption="Scan or type, with the same 'OR' the console uses. The green header is the module's colour, carried down from the web side."
+/>
