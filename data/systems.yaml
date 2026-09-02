@@ -146,3 +146,31 @@
   stack: Within PDF-library constraints
   stack_cv: Targeted fixes within PDF-library constraints
   lead: false
+
+# A personal group project, not client or in-house work, and `include_in: [web]`
+# for exactly that reason: the CV's systems table is a record of professional
+# engagements and a row here would read as one. The website groups it into its
+# own band instead (`src/lib/systems.ts`, and the matching branch in
+# `cv/common/loaders.typ` so the two derivations stay identical).
+#
+# Not anonymised, unlike every entry above it. There is no client to protect:
+# the product is hers, the name is her own, and the IN2OCEAN wordmark is on the
+# screens because it is the thing she designed rather than something to redact.
+#
+# ⚠ No sourced scope. It appears in no appraisal, no CV and no handover — the
+# only sources are her own Figma page label ("IN2Ocean (Personal Group
+# Project)") and the 44 frames on it. `scope` therefore says what kind of
+# project it is, not what she did on it, and the page says the same. Do not
+# fill that gap with a guess; it is a group project and the split of work is
+# not recorded.
+- product: IN2Ocean
+  include_in: [web]
+  client: Personal group project
+  description: >-
+    Beach and ocean cleanup companion for volunteers: find or create a cleanup
+    event, log what comes off the beach item by item, and close the session on
+    a weight, a distance and a badge. Carries its own identity, a seven-level
+    badge ladder, and light and dark style guides.
+  scope: Personal project
+  stack: Figma
+  lead: false

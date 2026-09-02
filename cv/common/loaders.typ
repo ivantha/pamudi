@@ -56,6 +56,7 @@
   let extended = ()
   let contributed = ()
   let further = ()
+  let personal = ()
 
   for s in systems {
     let scope = s.at("scope", default: "")
@@ -66,6 +67,11 @@
     )
     if s.at("lead", default: false) {
       owned.push(row)
+    } else if scope == "Personal project" {
+      // Mirrors `groupSystems` in src/lib/systems.ts. The one entry with this
+      // scope is `include_in: [web]`, so this branch never fires here today;
+      // it exists so the two derivations cannot drift.
+      personal.push(row)
     } else if scope.starts-with("Extended") {
       extended.push(row)
     } else if scope == "Contributed" {
@@ -80,6 +86,7 @@
   if extended.len() > 0 { groups.push((label: "Extended", rows: extended)) }
   if contributed.len() > 0 { groups.push((label: "Contributed", rows: contributed)) }
   if further.len() > 0 { groups.push((label: "Further\nengagements", rows: further)) }
+  if personal.len() > 0 { groups.push((label: "Personal", rows: personal)) }
   groups
 }
 

@@ -4,7 +4,7 @@ type System = CollectionEntry<"systems">
 
 /** One band of the inventory: a rail label, its subtitle, and the rows under it. */
 export interface SystemGroup {
-    key: "owned" | "extended" | "contributed" | "further"
+    key: "owned" | "extended" | "contributed" | "further" | "personal"
     label: string
     /** The two-line note under the label, or `undefined` where the label stands alone. */
     note?: string
@@ -16,8 +16,13 @@ export interface SystemGroup {
  *
  * The rule is deliberately identical to `system-groups` in
  * `cv/common/loaders.typ`, down to the order of the tests: `lead` wins, then an
- * "Extended" prefix, then an exact "Contributed", and everything left over is a
- * further engagement. Keeping the derivation in both consumers rather than
+ * exact "Personal project", then an "Extended" prefix, then an exact
+ * "Contributed", and everything left over is a further engagement.
+ *
+ * "Personal project" is tested before the client bands on purpose. Its one
+ * entry is `include_in: [web]`, so the Typst branch never fires today — it is
+ * there so the two derivations stay identical, which is the whole point of
+ * duplicating them. Keeping the derivation in both consumers rather than
  * writing a `group:` key into `data/systems.yaml` is the point — a key only the
  * website read would let the PDF's grouping drift silently, which is the one
  * failure this repo's shared-data arrangement exists to prevent.
@@ -32,9 +37,11 @@ export function groupSystems(systems: System[]): SystemGroup[] {
     const extended: System[] = []
     const contributed: System[] = []
     const further: System[] = []
+    const personal: System[] = []
 
     for (const s of systems) {
         if (s.data.lead) owned.push(s)
+        else if (s.data.scope === "Personal project") personal.push(s)
         else if (s.data.scope.startsWith("Extended")) extended.push(s)
         else if (s.data.scope === "Contributed") contributed.push(s)
         else further.push(s)
@@ -50,5 +57,6 @@ export function groupSystems(systems: System[]): SystemGroup[] {
             note: "Research and targeted work",
             rows: further,
         },
+        { key: "personal", label: "Personal", note: "Outside client work", rows: personal },
     ].filter((g) => g.rows.length > 0) as SystemGroup[]
 }
