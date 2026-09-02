@@ -22,6 +22,15 @@ interface Props {
      * `half` is sized for two figures side by side inside `.figure-grid`.
      */
     width?: "full" | "prose" | "half"
+    /**
+     * Sit the image on a white plate with padding.
+     *
+     * Component boards exported from Figma come out with a transparent
+     * background and cropped flush to their content, so on the panel ground a
+     * white swatch vanishes and the outermost glyph touches the frame. This is
+     * for those; a screenshot with its own background does not want it.
+     */
+    plate?: boolean
     /** Widths the browser picks a source for. Defaults to the full-bleed case. */
     sizes?: string
     class?: string
@@ -32,6 +41,7 @@ const {
     alt,
     caption,
     width = "full",
+    plate = false,
     sizes = width === "half"
         ? "(max-width: 48rem) 92vw, 46vw"
         : width === "prose"
@@ -41,7 +51,7 @@ const {
 }: Props = Astro.props
 ---
 
-<figure class:list={["figure", `figure--${width}`, className]}>
+<figure class:list={["figure", `figure--${width}`, plate && "figure--plate", className]}>
     <Image src={src} alt={alt} sizes={sizes} widths={[640, 960, 1280, 1920]} loading="lazy" />
     {caption && <figcaption>{caption}</figcaption>}
 </figure>

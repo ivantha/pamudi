@@ -31,57 +31,140 @@ const FILE_KEY = "J9n3q2TRVcsh7HdKxV8Bd8"
 const OUT_DIR = path.resolve("src/assets/systems/photo-id")
 
 /**
- * The nodes worth having, with the scale each is rendered at.
+ * The nodes, with the scale each is rendered at and what happened to it.
  *
  * Scale is chosen per node so the committed PNG lands near 2× its largest
  * rendered width and no higher — the repo keeps every byte of a source forever
  * and the build downscales anyway. A 400px-wide control needs 3×; a 2272px
  * board needs less than 1×.
  *
- * `note` is what the node is, for whoever reads this next. It is not alt text:
- * alt text describes a specific rendering and belongs beside the figure.
+ * `verdict` records the outcome of the look-at-every-frame check, so the next
+ * run does not silently re-add material that was already considered and turned
+ * down. It is the memory of a review, not a preference:
+ *
+ *   published  on the page now. Fetched by default.
+ *   dropped    looked at, nothing wrong with it, not worth a figure. Fetch
+ *              with --dropped if you want to reconsider one.
+ *   blocked    must not be published. Never fetched. The reason is recorded
+ *              beside it and is not a matter of taste.
  */
 const NODES = [
-    // ── The design system board, component by component ──────────────────────
-    // Exporting the board whole gives one 2272×9735 strip nobody can read. The
-    // components are the figures; the board is only useful as a contact sheet.
-    { id: "4:24917", slug: "ds-typography", scale: 4, note: "Typography scale" },
-    { id: "4:24951", slug: "ds-colour", scale: 2, note: "Colour palette" },
-    { id: "4:25085", slug: "ds-button", scale: 2, note: "Button: size × style × state × label" },
-    { id: "4:25022", slug: "ds-tabbar", scale: 3, note: "Tab bar, 2 to 5 tabs" },
-    { id: "4:24988", slug: "ds-progressbar", scale: 3, note: "Progress bar, 0 to 100%" },
-    { id: "4:25604", slug: "ds-textfield", scale: 3, note: "Text field" },
-    { id: "4:25631", slug: "ds-select", scale: 3, note: "Select" },
-    { id: "4:25655", slug: "ds-searchfield", scale: 3, note: "Search field" },
-    { id: "4:25646", slug: "ds-stepper", scale: 4, note: "Stepper" },
-    { id: "4:25497", slug: "ds-alert", scale: 2, note: "Alert" },
-    { id: "4:25460", slug: "ds-keyboard", scale: 3, note: "Keyboard" },
-    { id: "4:25765", slug: "ds-list", scale: 3, note: "List" },
-    { id: "4:25810", slug: "ds-tablecell", scale: 3, note: "Table cell" },
-    { id: "4:25872", slug: "ds-table", scale: 2, note: "Table" },
-    { id: "4:25441", slug: "ds-sheet", scale: 1.5, note: "Sheet" },
-    { id: "4:25254", slug: "ds-menu", scale: 1.5, note: "Menu" },
-    { id: "4:24916", slug: "ds-board", scale: 0.5, note: "The whole board, as a contact sheet" },
+    // ── Published ────────────────────────────────────────────────────────────
+    {
+        id: "4:24916",
+        slug: "ds-board",
+        scale: 0.5,
+        verdict: "published",
+        note: "The whole board, as a contact sheet",
+    },
+    { id: "4:24951", slug: "ds-colour", scale: 2, verdict: "published", note: "Colour palette" },
+    {
+        id: "4:24917",
+        slug: "ds-typography",
+        scale: 4,
+        verdict: "published",
+        note: "Typography scale",
+    },
+    {
+        id: "4:25085",
+        slug: "ds-button",
+        scale: 2,
+        verdict: "published",
+        note: "Button: size × style × state × label",
+    },
+    {
+        id: "4:24583",
+        slug: "ds-icons",
+        scale: 3,
+        verdict: "published",
+        note: "The icon set, 44px grid",
+    },
+    {
+        id: "4:23660",
+        slug: "edit-photo",
+        scale: 2,
+        verdict: "published",
+        note: "Edit Photo screen",
+    },
 
-    // ── The library sections beside it ───────────────────────────────────────
-    { id: "4:24583", slug: "ds-icons", scale: 3, note: "The icon set, 44px grid" },
-    { id: "4:24528", slug: "ds-flags", scale: 3, note: "Country flags" },
-    { id: "4:24137", slug: "ds-modals", scale: 0.6, note: "Modal section" },
-    // Photography, so the PII check matters more here than anywhere else: look
-    // at every face before this one goes near a commit.
-    { id: "4:24464", slug: "ds-imagery", scale: 0.5, note: "Imagery section" },
+    // ── Blocked ──────────────────────────────────────────────────────────────
+    // The modal board carries the client's product name in plain text, twice:
+    // an application-version row reading "ezPassport Studio 1.3.0" and an
+    // address row reading "EZ PASSPORT - 'OFFICE', No6A, Manitoba, Canada".
+    // A printer serial and two unmasked phone strings sit beside them. The
+    // whole site anonymises this client to a domain descriptor, so publishing
+    // this undoes that in one image. It stays blocked until Pamudi says the
+    // product name is publishable, and even then it wants a purpose-built crop
+    // rather than the raw board — at web width nothing on it is readable.
+    {
+        id: "4:24137",
+        slug: "ds-modals",
+        scale: 0.6,
+        verdict: "blocked",
+        note: "Modal section — CARRIES THE CLIENT'S PRODUCT NAME",
+    },
 
-    // ── The screen the first export run never reached ────────────────────────
-    { id: "4:23660", slug: "edit-photo", scale: 2, note: "Edit Photo screen" },
+    // ── Dropped ──────────────────────────────────────────────────────────────
+    // All clean: no branding, no personal data. They simply do not earn a
+    // figure. The button matrix already makes the "every state is drawn" point
+    // better than any of them, and a portfolio page is not an asset dump.
+    {
+        id: "4:25022",
+        slug: "ds-tabbar",
+        scale: 3,
+        verdict: "dropped",
+        note: "Tab bar, 2 to 5 tabs",
+    },
+    {
+        id: "4:24988",
+        slug: "ds-progressbar",
+        scale: 3,
+        verdict: "dropped",
+        note: "Progress bar, 0 to 100%",
+    },
+    { id: "4:25604", slug: "ds-textfield", scale: 3, verdict: "dropped", note: "Text field" },
+    { id: "4:25631", slug: "ds-select", scale: 3, verdict: "dropped", note: "Select" },
+    { id: "4:25655", slug: "ds-searchfield", scale: 3, verdict: "dropped", note: "Search field" },
+    { id: "4:25646", slug: "ds-stepper", scale: 4, verdict: "dropped", note: "Stepper" },
+    { id: "4:25497", slug: "ds-alert", scale: 2, verdict: "dropped", note: "Alert" },
+    { id: "4:25460", slug: "ds-keyboard", scale: 3, verdict: "dropped", note: "Keyboard" },
+    { id: "4:25765", slug: "ds-list", scale: 3, verdict: "dropped", note: "List" },
+    { id: "4:25810", slug: "ds-tablecell", scale: 3, verdict: "dropped", note: "Table cell" },
+    {
+        id: "4:25872",
+        slug: "ds-table",
+        scale: 2,
+        verdict: "dropped",
+        note: "Table — unreadable at web width",
+    },
+    { id: "4:25441", slug: "ds-sheet", scale: 1.5, verdict: "dropped", note: "Sheet" },
+    {
+        id: "4:25254",
+        slug: "ds-menu",
+        scale: 1.5,
+        verdict: "dropped",
+        note: "Menu — unreadable at web width",
+    },
+    { id: "4:24528", slug: "ds-flags", scale: 3, verdict: "dropped", note: "Country flags" },
+    // Near-empty: a silhouette, a checkerboard and one small illustration in a
+    // 727×2572 frame that is otherwise whitespace.
+    { id: "4:24464", slug: "ds-imagery", scale: 0.5, verdict: "dropped", note: "Imagery section" },
 ]
 
 const args = new Set(process.argv.slice(2))
 
 if (args.has("--list")) {
     for (const n of NODES) {
-        console.info(`${n.slug.padEnd(18)} ${n.id.padEnd(10)} @${n.scale}x  ${n.note}`)
+        console.info(
+            `${n.verdict.padEnd(10)} ${n.slug.padEnd(16)} ${n.id.padEnd(10)} @${n.scale}x  ${n.note}`,
+        )
     }
-    console.info(`\n${NODES.length} nodes. File key: ${FILE_KEY}`)
+    const by = (v) => NODES.filter((n) => n.verdict === v).length
+    console.info(
+        `\n${NODES.length} nodes: ${by("published")} published, ${by("dropped")} dropped, ` +
+            `${by("blocked")} blocked. File key: ${FILE_KEY}`,
+    )
+    console.info("Default run fetches the published set. --dropped adds the dropped ones.")
     process.exit(0)
 }
 
@@ -105,20 +188,28 @@ const exists = async (p) =>
 
 await mkdir(OUT_DIR, { recursive: true })
 
+// `blocked` is not a default anyone can opt out of by forgetting a flag: the
+// reason is a disclosure problem, not a preference, so it is filtered first and
+// separately from everything else.
+const selectable = NODES.filter((n) => n.verdict !== "blocked")
+const wanted = args.has("--dropped")
+    ? selectable
+    : selectable.filter((n) => n.verdict !== "dropped")
+
 // Skip what is already on disk unless asked to redo it, so a re-run after a
 // partial failure costs only the nodes that failed.
 const pending = args.has("--all")
-    ? NODES
+    ? wanted
     : (
           await Promise.all(
-              NODES.map(async (n) =>
+              wanted.map(async (n) =>
                   (await exists(path.join(OUT_DIR, `${n.slug}.png`))) ? null : n,
               ),
           )
       ).filter(Boolean)
 
 if (pending.length === 0) {
-    console.info("Nothing pending. Pass --all to re-fetch everything.")
+    console.info("Nothing pending. Pass --all to re-fetch, --dropped to widen the set.")
     process.exit(0)
 }
 

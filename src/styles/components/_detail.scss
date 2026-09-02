@@ -56,6 +56,15 @@
     max-width: 52rem;
 }
 
+// A board exported flush to its content, on transparency. The plate gives it
+// the white it was drawn against and the margin it was cropped out of; without
+// it a white swatch disappears into the panel ground and the outermost glyph
+// sits on the frame.
+.figure--plate img {
+    background: var(--page);
+    padding: clamp(1rem, 0.5rem + 2vw, 2rem);
+}
+
 .figure--half {
     padding-top: 0;
 }
@@ -73,9 +82,24 @@
     }
 }
 
+// Three specimen strips side by side. A class rather than an inline
+// `--figure-cols: 3`, because an inline custom property outranks every media
+// query below and the column count would never step down.
+.figure-grid--three {
+    --figure-cols: 3;
+}
+
+// A three-up drops to two before it drops to one, so a set of tall strips never
+// gets narrow enough to be a smear.
+@media (max-width: 64rem) {
+    .figure-grid--three {
+        --figure-cols: 2;
+    }
+}
+
 @media (max-width: 48rem) {
     .figure-grid {
-        grid-template-columns: minmax(0, 1fr);
+        --figure-cols: 1;
     }
 }
 

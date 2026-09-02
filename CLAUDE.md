@@ -224,6 +224,17 @@ layer name is the client's product is fine, publishing the name is not. Two
 frames were dropped rather than published, one a duplicate and one visually
 thin; do the same rather than filling a grid.
 
+The second batch, 2026-09-02, is why the check is not a formality. Of 22
+exported nodes, **one carries the client's product name in plain text**: the
+modal board has an application-version row reading "ezPassport Studio 1.3.0"
+and an address row naming the company, with a printer serial and two unmasked
+phone strings beside them. Publishing it would undo the whole site's
+anonymisation in one image. It is recorded as `verdict: "blocked"` in
+`scripts/fetch-figma.mjs`, which never fetches it, and the reason is written
+beside it — a finding like that belongs in the tool that would otherwise
+re-acquire it, not only in a commit message. Fifteen more were clean but not
+worth a figure and are marked `dropped`; six are on the page.
+
 One value on the page is still unconfirmed: the BSc, where LinkedIn and her 2018
 CV disagree on both the degree name and the institution and no source gives an
 end year. It carries a `⚠ CONFLICT` comment at `data/education.yaml`; leave it

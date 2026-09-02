@@ -33,6 +33,12 @@ import Figure from "@/components/Figure.astro"
 import landing from "../../assets/systems/photo-id/landing.png"
 import typeSelection from "../../assets/systems/photo-id/type-selection.png"
 import editTemplate from "../../assets/systems/photo-id/edit-template.png"
+import editPhoto from "../../assets/systems/photo-id/edit-photo.png"
+import dsBoard from "../../assets/systems/photo-id/ds-board.png"
+import dsColour from "../../assets/systems/photo-id/ds-colour.png"
+import dsTypography from "../../assets/systems/photo-id/ds-typography.png"
+import dsButton from "../../assets/systems/photo-id/ds-button.png"
+import dsIcons from "../../assets/systems/photo-id/ds-icons.png"
 import print from "../../assets/systems/photo-id/print.png"
 import save from "../../assets/systems/photo-id/save.png"
 import saveFocused from "../../assets/systems/photo-id/save-autofocused.png"
@@ -95,6 +101,56 @@ something an implementation team could build without interpretation.
   caption="Three columns hold for the whole session: what you captured, what you are working on, and what it has to comply with. The middle canvas is a transparency checkerboard, not a grey box — the working artefact is a cut-out, and the empty state says so."
 />
 
+## The library itself
+
+Three sheets, at the scale they were drawn at. The board on the left is the whole system;
+it is not meant to be read here and does not need to be. What it shows is how much of the
+product was specified before a screen was drawn, and that every control on the pages
+further down came off it.
+
+<div class="figure-grid figure-grid--three">
+  <Figure
+    width="half"
+    src={dsBoard}
+    alt="A design-system board for a passport-photo app: type scale, colour swatches, buttons, fields, menus, keyboards, date pickers, alerts and data tables, laid out on one tall sheet."
+    caption="The whole component board: around two hundred drawn states, type ramp at the top, data tables at the foot."
+  />
+  <Figure
+    width="half"
+    src={dsTypography}
+    alt="Eleven named text styles stacked in a column, each specimen labelled with its weight and point size, from Heading 1 bold 28 down to Info medium 10."
+    caption="The type ramp: eleven styles named for what each one does, not for its size."
+  />
+  <Figure
+    width="half"
+    src={dsButton}
+    alt="A button component set: four fill treatments in three sizes, each drawn as icon-plus-label, icon-only and label-only, in enabled and disabled states."
+    caption="One button, drawn 72 ways: four fills, three sizes, three label types, both states."
+  />
+</div>
+
+The button set is the argument the rest of the library repeats. Every configuration a
+developer could reach for is drawn rather than described, which is what makes the build
+assembly instead of interpretation.
+
+Foundations are platform-native by choice. This is an iPad application a photographer
+picks up between customers, so the palette is the iOS system set under semantic names
+rather than a bespoke one competing with the device it runs on.
+
+<Figure
+  src={dsColour}
+  plate
+  alt="Twelve colour swatches in two rows: blue Primary, green Success, orange Warning, red Danger, black and white, then a six-step grey ramp."
+  caption="Colour as roles rather than values: four semantic, black and white, and a six-step neutral ramp."
+/>
+
+<Figure
+  src={dsIcons}
+  plate
+  alt="A ten-column grid of about sixty blue line icons: globe, printer, camera, chevrons, wifi, lock, plus checkbox and radio states drawn as component groups."
+  caption="The icon set at a single stroke weight, with checkbox and radio kept as component groups rather than loose glyphs."
+/>
+
 ## Choosing the specification first
 
 The document type is picked before the photograph, because it is what every later check
@@ -120,6 +176,20 @@ short ones.
     caption="The editor keeps every captured file addressable, with its dimensions and byte size on the card rather than behind an inspector."
   />
 </div>
+
+## Adjusting the shot
+
+Correction is bounded on purpose. The adjustment panel offers zoom, brightness, tilt and
+a colour profile, and nothing else: a compliance photograph that has been retouched is no
+longer a compliance photograph. Each control carries its current value as a number beside
+the slider, and the two that a specification can fail on, brightness and tilt, also get
+plus and minus steppers, so a value can be nudged exactly rather than dragged at.
+
+<Figure
+  src={editPhoto}
+  alt="The adjustment screen: captured files on the left, the photo canvas in the middle, and a panel of Zoom, Brightness, Tilt and Colour Profile controls on the right."
+  caption="Zoom, brightness, tilt, colour profile. Brightness and tilt read 30% and 0 beside their sliders, and step by a fixed amount."
+/>
 
 ## Delivering it
 
