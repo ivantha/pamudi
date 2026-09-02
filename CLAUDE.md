@@ -325,6 +325,15 @@ shown. Whether to bring the PDF across is a decision for Pamudi, not a tidy-up;
   under `photo-id/` were exported from Pamudi's own Figma file and checked frame
   by frame before committing — see the header of
   `src/content/systems/photo-id-compliance-app.mdx` before adding to them.
+- **`scripts/fetch-figma.mjs` is how the next batch arrives.** It carries the
+  node manifest for the photo-ID file — the design-system components, the icon,
+  flag, modal and imagery sections, and the one screen the first run missed —
+  with a per-node scale, and pulls them over the Figma REST API. Use it rather
+  than the Figma MCP: the MCP's Starter-plan tool-call allowance runs out well
+  short of a design system's worth of boards, and it is an account-level cap
+  with no visible reset window. The REST endpoint is a separate quota and needs
+  only a free read-only personal access token in `FIGMA_TOKEN`. Never commit
+  that token; this repo is public. `--list` prints the manifest without one.
 - `src/assets/work/placeholder-*.png` and `scripts/make-placeholders.mjs` are
   scaffolding. Delete both once real covers land.
 
