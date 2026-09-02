@@ -40,11 +40,21 @@ select {
 }
 
 // One breakpoint's worth of motion policy, applied everywhere at once.
+//
+// The delay is reset alongside the duration, and negatively, which is the part
+// that is easy to leave out. `.rise` staggers its entrance with
+// `animation-delay` and holds the `from` keyframe through it via
+// `animation-fill-mode: backwards` — so collapsing only the duration leaves the
+// hero lede and facts sitting at `opacity: 0` for the full 160ms and then
+// popping in. That is the animation this block exists to suppress, merely
+// rewritten as a flash. A negative delay starts each animation already past its
+// end, so the element is painted in its final state on the very first frame.
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
         animation-duration: 0.01ms !important;
+        animation-delay: -1ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
