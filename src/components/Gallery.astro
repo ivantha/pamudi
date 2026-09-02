@@ -1,0 +1,68 @@
+---
+import type { ImageMetadata } from "astro"
+import { Image } from "astro:assets"
+
+/**
+ * A ruled grid of plated images, for the sets of pictures that sit inside a
+ * `Section` on a record page rather than illustrating an argument.
+ *
+ * Deliberately not `Figure` from the detail pages. Those break out past the
+ * text measure and are sized one at a time; these are a set, and the point of a
+ * set is that every cell is the same size whatever shape the picture is. So
+ * each image is contained on a panel plate rather than cropped to fill it: a
+ * painting cropped to fit a grid is a painting damaged to fit a grid, and a
+ * speaker card cropped at the edge loses the names it exists to carry.
+ */
+interface Item {
+    /** An imported image. `astro:assets` handles the responsive sources. */
+    src: ImageMetadata
+    /** Real alt text. Describe the picture, not the fact that it is one. */
+    alt: string
+    /** What it is. Omit rather than restating the alt text. */
+    caption?: string
+}
+
+interface Props {
+    items: Item[]
+    /**
+     * Cells across at full width. Steps down at the two grid breakpoints, so a
+     * count set here is the widest case, never the only one.
+     */
+    cols?: 2 | 3 | 4
+    /** Cell shape. `square` suits mixed portrait and landscape work. */
+    ratio?: "wide" | "square"
+    class?: string
+}
+
+const { items, cols = 3, ratio = "wide", class: className }: Props = Astro.props
+
+// The section body runs columns 3–12, roughly 1350px inside the 1680px frame,
+// so a cell is that over `cols`. Stated per count rather than derived, because
+// the browser needs the number before any layout has happened.
+const SIZES = {
+    2: "(max-width: 48rem) 92vw, 40vw",
+    3: "(max-width: 40rem) 92vw, (max-width: 64rem) 44vw, 26vw",
+    4: "(max-width: 40rem) 92vw, (max-width: 64rem) 44vw, 20vw",
+} as const
+---
+
+<ul class:list={["gallery", `gallery--${cols}`, `gallery--${ratio}`, className]}>
+    {
+        items.map((item) => (
+            <li class="gallery__item">
+                <figure class="gallery__figure">
+                    <span class="gallery__plate">
+                        <Image
+                            src={item.src}
+                            alt={item.alt}
+                            sizes={SIZES[cols]}
+                            widths={[320, 480, 640, 960]}
+                            loading="lazy"
+                        />
+                    </span>
+                    {item.caption && <figcaption>{item.caption}</figcaption>}
+                </figure>
+            </li>
+        ))
+    }
+</ul>

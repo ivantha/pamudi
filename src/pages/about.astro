@@ -3,9 +3,30 @@ import { getCollection, getEntry } from "astro:content"
 import Layout from "@/layouts/Layout.astro"
 import PageHead from "@/components/PageHead.astro"
 import Section from "@/components/Section.astro"
+import Gallery from "@/components/Gallery.astro"
 import Markup from "@/components/Markup.astro"
 import { href } from "@/lib/url"
 import { isWebVisible, pickField } from "@/lib/variants"
+
+import badge from "@/assets/event-design/slsywc-2017-badge.jpg"
+import ss12Tracks from "@/assets/event-design/ss12-tracks.jpg"
+import ss12Logo from "@/assets/event-design/ss12-logo.png"
+import congressEmblem from "@/assets/event-design/congress-2017-emblem.png"
+import congressLinework from "@/assets/event-design/congress-2017-linework.png"
+
+import revoux from "@/assets/community/revoux-workshop-card.jpg"
+import creativeEye from "@/assets/community/creative-eye-speakers.jpg"
+import designThinking from "@/assets/community/design-thinking-talk.jpg"
+import youngProtege from "@/assets/community/young-protege-2025.jpg"
+
+import portrait from "@/assets/art/portrait-graphite.jpg"
+import koi from "@/assets/art/koi-watercolour.jpg"
+import treeFrog from "@/assets/art/tree-frog-watercolour.jpg"
+import colourStudy from "@/assets/art/colour-study.jpg"
+import owl from "@/assets/art/owl-digital.jpg"
+import fox from "@/assets/art/fox-digital.jpg"
+import macaw from "@/assets/art/macaw-digital.jpg"
+import tigerCub from "@/assets/art/tiger-cub-digital.jpg"
 
 const personal = await getEntry("personal", "personal")!
 const site = await getEntry("site", "site")!
@@ -29,6 +50,84 @@ const COMMUNITY = [
     ["Speaking", community.data.speaking],
     ["Event and brand", community.data.events],
 ] as const
+
+// The three picture sets below came out of Pamudi's own Figma file, checked
+// frame by frame before they were committed — see CLAUDE.md, "Whose site this
+// is". Alt text and captions describe what is visibly in each picture and name
+// only the events `data/community.yaml` already names. Nothing here asserts an
+// outcome, a role or a credit the sourced record does not already carry, and
+// nothing is her prose. Keep it that way when adding to these.
+
+const EVENT_DESIGN = [
+    {
+        src: badge,
+        alt: "An organising-committee lanyard badge reading Design Team Lead, lying on the printed Congress 2017 artwork.",
+        caption: "Organising-committee credential, IEEE SLSYW Congress 2017.",
+    },
+    {
+        src: congressEmblem,
+        alt: "The Congress 2017 emblem: a geometric elephant above the event title.",
+        caption: "Congress 2017 emblem.",
+    },
+    {
+        src: congressLinework,
+        alt: "The same elephant drawn as open linework, without fill.",
+        caption: "The same mark, as linework.",
+    },
+    {
+        src: ss12Tracks,
+        alt: "Three track announcement panels for SS12: Maker Fair, Junior Einstein Track and Virtual Track.",
+        caption: "Track announcements, IEEE SS12.",
+    },
+    {
+        src: ss12Logo,
+        alt: "The SS12 Age of Innovation wordmark.",
+        caption: "SS12 identity.",
+    },
+]
+
+const COMMUNITY_PICTURES = [
+    {
+        src: revoux,
+        alt: "Event card for Workshop 3, Branding and Marketing in the Design Process, at RevolUX 2.0, naming Pamudi Dahanayake as the speaker.",
+        caption: "Workshop 3, RevolUX 2.0.",
+    },
+    {
+        src: creativeEye,
+        alt: "A Creative Eye speaker card announcing two speakers from Zone24x7.",
+        caption: "Speaker card, Creative Eye.",
+    },
+    {
+        src: designThinking,
+        alt: "A shared slide headed Design Thinking Process, with the presenter's camera tile beside it.",
+        caption: "Presenting the design thinking process.",
+    },
+    {
+        src: youngProtege,
+        alt: "Pamudi Dahanayake receiving a plaque on stage at the Young Protégé 2025 final summit.",
+        caption: "Young Protégé 2025, final summit.",
+    },
+]
+
+const ARTWORK = [
+    {
+        src: portrait,
+        alt: "Graphite portrait of an older man, drawn in a spiral-bound sketchbook.",
+    },
+    { src: koi, alt: "Watercolour study of three koi, one blue and two orange." },
+    {
+        src: treeFrog,
+        alt: "Watercolour of a red-eyed tree frog gripping a branch, held up to the camera.",
+    },
+    {
+        src: colourStudy,
+        alt: "Colour study of interlocking animal heads in red, blue, green and yellow.",
+    },
+    { src: owl, alt: "Digital painting of an owl with green and blue plumage and a white breast." },
+    { src: fox, alt: "Digital painting of a fox in profile against a green background." },
+    { src: macaw, alt: "Digital painting of a scarlet macaw." },
+    { src: tigerCub, alt: "Digital painting of a tiger cub looking out through grass." },
+]
 ---
 
 <Layout title="About" description={`About ${name}, ${role} based in ${location}.`}>
@@ -88,6 +187,10 @@ const COMMUNITY = [
         )
     }
 
+    <Section label="Event design" note={"IEEE student\nconferences, 2017—18"}>
+        <Gallery items={EVENT_DESIGN} cols={3} />
+    </Section>
+
     <Section label="Education">
         <div class="degrees">
             {
@@ -109,6 +212,7 @@ const COMMUNITY = [
     </Section>
 
     <Section label="Community">
+        <Gallery class="kv-pictures" items={COMMUNITY_PICTURES} cols={2} />
         <div class="kv-list">
             {
                 COMMUNITY.map(([label, rows]) => {
@@ -184,6 +288,10 @@ const COMMUNITY = [
                 ))
             }
         </div>
+    </Section>
+
+    <Section label="Sketches and paintings" note={"Graphite, watercolour\nand digital"}>
+        <Gallery items={ARTWORK} cols={4} ratio="square" />
     </Section>
 
     <Section label="Elsewhere" rule="none">
