@@ -27,23 +27,42 @@
  * every plan. Do not commit it, and do not put it in `data/` — this repo is
  * public.
  *
- * ── Two endpoints, and only one of them is usable ────────────────────────────
+ * ── Three routes, and the free one is the browser ───────────────────────────
  *
- * `mode: "render"` nodes are vector artboards — the UI screens. They have to be
- * rasterised by Figma, through `GET /v1/images`. On the Starter plan that
- * endpoint has a cost budget, and **this account has exhausted it**: as of
- * 2026-09-02 it answers 429 with `x-figma-rate-limit-type: low` and a
- * `retry-after` of about 396,000 seconds, which is four and a half days. The
- * Figma MCP server's `get_screenshot` is the other way to rasterise a frame and
- * it is also spent ("You've reached the Figma MCP tool call limit on the
- * Starter plan"), so there is currently no way to export a UI screen from this
- * file. That is why every product page below is `pending` rather than reviewed.
+ * `mode: "render"` nodes are vector artboards — the UI screens. Rasterising
+ * them through the API means `GET /v1/images`, and on the Starter plan that
+ * endpoint has a cost budget this account has **exhausted**: it answers 429
+ * with `x-figma-rate-limit-type: low` and a `retry-after` around 392,000
+ * seconds (checked again 2026-09-03, so it clears about 2026-09-07). The Figma
+ * MCP server's `get_screenshot` and `download_assets` share one account-level
+ * cap and are also spent. Both API routes are therefore dead for UI screens.
+ *
+ * **The Figma web app's own export is not metered, and that is how the product
+ * screens in `src/assets/systems/` were actually obtained.** Open the file,
+ * select a page's frames (Escape, then Cmd+A), add an export setting, pick the
+ * scale, and Export N layers; the ZIP lands in ~/Downloads. Two things to know:
+ * adding an export setting is a document edit, so Cmd+Z it afterwards rather
+ * than leaving her file changed; and Chrome will name a second ZIP
+ * "... (1).zip" rather than overwriting, so check what you actually extracted
+ * instead of trusting the filename. 1,047 frames across twelve pages came out
+ * this way on 2026-09-03. Prefer this route; the manifest below is still the
+ * record of what is on each page and what the review concluded.
  *
  * `mode: "fill"` nodes are bitmaps already uploaded into the file — photographs
  * and flat artwork placed on a rectangle. They come from
  * `GET /v1/files/:key/images`, which returns the stored originals and is a
- * different quota that is **not** exhausted. Everything published from this
- * file so far beyond the photo-ID screens came through that endpoint.
+ * different quota that is **not** exhausted. The About-page picture sets came
+ * through that endpoint, and it still works.
+ *
+ * ── Redaction is now allowed, within one rule ───────────────────────────────
+ *
+ * Oshan cleared covering a client mark rather than dropping the frame
+ * (2026-09-03). The rule that makes it safe: paint the mark out in the app's
+ * own surrounding colour so it reads as an empty brand slot, never a black
+ * censor bar, and never touch anything else in the pixels. The SFI screens in
+ * `src/assets/systems/mining-site-tool-platform/` are the worked example, and
+ * the page's frontmatter records exactly what was covered. A redacted frame
+ * must still pass every other part of the check.
  */
 import { mkdir, writeFile, access } from "node:fs/promises"
 import path from "node:path"
@@ -233,6 +252,7 @@ const PAGES = [
         figmaPage: "5:36595",
         title: "Aroya (owned)",
         product: "Precision agriculture app",
+        review: `Reviewed 2026-09-03, whole page. CLEAN: no client logo and no product wordmark anywhere. The demo facility is "Vandelay Industries", a placeholder, and the rooms are Blackfin / Prop 2 / Flower 1. Six frames published. The Journal view was dropped on its own: it lists named task assignees, which is third-party data whether or not the personas are invented.`,
         mode: "render",
         nodes: [
             {
@@ -256,6 +276,7 @@ const PAGES = [
         figmaPage: "5:36596",
         title: "EFL Cockpit (owned)",
         product: "Freight logistics cockpit",
+        review: `Reviewed 2026-09-03, whole page. CLEAN, and the reason is worth keeping: the app brands itself "COCKPIT APP", never the client, so these needed no redaction at all. Rack IDs repeat one placeholder (A07-01-01). Five frames published. The button component set was dropped: it exports with Figma's own dashed component-set boundary in the pixels, which reads as an unfinished export on a portfolio.`,
         mode: "render",
         nodes: [
             { id: "7:154981", slug: "home", scale: 2, verdict: "pending", note: "Home" },
@@ -307,6 +328,7 @@ const PAGES = [
         // description closely, but "closely" is not a mapping. Confirm with
         // Pamudi before filing anything from this page under a product.
         product: "Mining-site tool platform (UNCONFIRMED — see note)",
+        review: `Reviewed 2026-09-03, whole page. The client's three-letter mark sits in the sidebar of EVERY screen, and one page title repeated it in parentheses. Four frames published WITH BOTH PAINTED OUT in the app's own orange and title-bar grey — see the redaction rule in the header, and the frontmatter of the system page. Everything else in those pixels is untouched and was already generic (WD40, sand bags, resin discs; prices zeroed; a placeholder signed-in persona). These frames also carry a "Kiosk Location" selector, which is evidence toward kb/open-questions.md #4 (is SFI the same system as SFIKS). Evidence, not a ruling.`,
         mode: "render",
         nodes: [
             {
@@ -351,6 +373,7 @@ const PAGES = [
         figmaPage: "5:36601",
         title: "SFI Mobile (Collaborated)",
         product: "Mining-site tool platform (UNCONFIRMED — see sfi-web)",
+        review: `Reviewed 2026-09-03. The password screens carry the client's logo at full size and the Test Compliance detail prints the client as an Ownership value. Nothing published: the web module already covers this product, and these exported at 1x (360×800), too small to use without a re-export anyway.`,
         mode: "render",
         nodes: [
             {
@@ -388,6 +411,7 @@ const PAGES = [
         figmaPage: "5:36599",
         title: "Haycarb Web (Collaborated)",
         product: "Manufacturing warehouse app",
+        review: `Reviewed 2026-09-03, whole page. Two findings. Every login screen carries the client's logo full size — none published. And the Approvals screen's sidebar names the client's raw material, which narrows "listed multinational manufacturer" to its industry; that one is clean in every other respect and was still dropped. Two frames published. Demo data is synthetic throughout (Machine A–F, barcodes MM111111 upward).`,
         mode: "render",
         nodes: [
             // 519 top-level nodes on this page. Six.
@@ -428,6 +452,7 @@ const PAGES = [
         figmaPage: "5:36598",
         title: "Haycarb Mobile (Collaborated)",
         product: "Manufacturing warehouse app",
+        review: `Reviewed 2026-09-03, whole page. Inner screens carry no wordmark and three are published. The login screen carries the client's logo and is not published. The small green glyph bottom-right of the module screens was checked: it is a functional icon, not the wordmark.`,
         mode: "render",
         nodes: [
             {
@@ -461,6 +486,7 @@ const PAGES = [
         figmaPage: "5:36594",
         title: "Acetrack web (Collaborated)",
         product: "Warehouse management platform",
+        review: `Reviewed 2026-09-03. BLOCKED as a page: the product wordmark sits in the sidebar of every screen, and the product name is exactly what data/systems.yaml anonymises. Redactable in principle, but the mobile module already covers this product without any redaction, so nothing here was published.`,
         mode: "render",
         nodes: [
             { id: "5:93469", slug: "dashboard", scale: 1, verdict: "pending", note: "Dashboard" },
@@ -506,6 +532,7 @@ const PAGES = [
         figmaPage: "5:36593",
         title: "Acetrak Mobile (Collaborated)",
         product: "Warehouse management platform",
+        review: `Reviewed 2026-09-03, whole page. CLEAN: the wordmark appears only on the login screen, and no inner screen carries it. Six frames published. Demo data is synthetic (SKU_48484837, bin 4-4-D) and the two personas in the sort list are plainly fictional.`,
         mode: "render",
         nodes: [
             {
@@ -550,6 +577,7 @@ const PAGES = [
         figmaPage: "5:36597",
         title: "Marx.lk (Collaborated)",
         product: "Consumer delivery platform",
+        review: `Reviewed 2026-09-03, whole page. NOTHING PUBLISHED, for two reasons that stack. The platform's brand and its sub-brands are woven through the product copy itself ('Marx eWallet', 'Search MaxDine', 'Earn 50 Marx points'), so redaction would mean rewriting the UI rather than covering a logo. And her recorded scope on this one is UX and accessibility research, not UI ownership, so publishing its screens would claim the wrong contribution. Revisit only if she says otherwise.`,
         mode: "render",
         nodes: [
             // A consumer app: the brand is the product, so assume every screen

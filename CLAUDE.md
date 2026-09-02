@@ -66,7 +66,7 @@ whose `system:` field must match `product` exactly; the build throws on a file
 that names a product the inventory does not have. With no file, the page
 renders the sourced facts and the prev/next pair and stops there, and its
 status bar says so. **That is the resting state, not a stub to fill with
-plausible-sounding prose** — twelve of the thirteen are deliberately in it. See
+plausible-sounding prose** — seven of the thirteen are deliberately in it. See
 "Whose site this is".
 
 **`groupSystems` in `src/lib/systems.ts` deliberately duplicates `system-groups`
@@ -159,6 +159,16 @@ PDF.
 names, and anything about what she did on a project come from her. Never replace
 one with plausible-looking career history. Ask.
 
+**One standing exception, granted by Oshan on 2026-09-03: the system pages.**
+He cleared writing the `src/content/systems/*.mdx` prose from the sourced
+record. That is a licence to write, not a licence to invent, and the standard
+the photo-ID page already set still binds every one of them: scope claims come
+from the appraisal record via `kb/projects.md` and are never paraphrased upward,
+everything else describes what is visibly in the screens beside it, and there
+are no outcomes, metrics or adoption claims anywhere, because no source carries
+any. Each file's header states which is which. These pages are still hers to
+correct.
+
 What that leaves, as of September 2026:
 
 - **`data/site.yaml` is awaiting her sign-off.** It holds the framing copy that
@@ -184,16 +194,24 @@ What that leaves, as of September 2026:
   artwork on a public portfolio under her name. The home page's work section
   falls back to the three design systems she led from scratch and switches back
   to the case-study index by itself the moment one is published.
-- **Twelve of the thirteen system pages are deliberately unwritten.** Only
-  `src/content/systems/photo-id-compliance-app.mdx` exists; the rest render
-  their sourced facts and say so in the status bar. Writing the other twelve is
-  hers to do, or hers to approve. An unwritten page is not a bug.
-- **The photo-ID page is written but not yet hers.** Its prose is of two kinds
-  and no third: scope claims lifted from the 2025 appraisal record via
-  `kb/projects.md`, and description of what is visibly in the screens beside
-  them. No outcomes, no metrics, no adoption claims, because no source carries
-  any. The file header states this; treat the page the way `data/site.yaml` is
-  treated, and read that header before extending it.
+- **Six of the thirteen system pages are written; seven are not.** Written, all
+  with screens: photo-ID compliance app, freight logistics cockpit, precision
+  agriculture app, manufacturing warehouse app, warehouse management platform,
+  mining-site tool platform. The other seven render their sourced facts and say
+  so in the status bar, which remains the intended resting state rather than a
+  stub to fill. Four of the seven have no design file on the Figma document at
+  all, so they have nothing to illustrate them even in principle.
+- **The written pages are not hers yet.** Their prose is of two kinds and no
+  third: scope claims lifted from the appraisal record via `kb/projects.md`, and
+  description of what is visibly in the screens beside them. No outcomes, no
+  metrics, no adoption claims, because no source carries any. Each file's header
+  states this; treat them the way `data/site.yaml` is treated, and read the
+  header before extending one.
+- **Consumer delivery platform will stay unwritten unless she says otherwise,
+  and the reason is not a technical one.** Her recorded scope there is UX and
+  accessibility research, not UI ownership. Publishing that product's screens
+  would claim a contribution the record does not support, which is a worse
+  failure than an empty page.
 - **Everything else on the site is sourced.** The career record in `kb/` is the
   provenance for every fact in `data/`, reconciled from her 2018 CV, the
   2019–2025 Zone24x7 appraisals, a September 2026 update from her and a
@@ -259,13 +277,34 @@ IEEE piece was dropped for a reason worth repeating: it is clean, and probably
 hers, but `data/community.yaml` carries no credit for that event, and
 publishing it would assert one.
 
-**The product pages are all still unexported**, and not by choice: rasterising a
-Figma frame is metered separately from reading the file, and that budget is
-spent on both the REST endpoint and the MCP. See the Images section. The
-manifest in `scripts/fetch-figma.mjs` carries a shortlist for each of the ten
-pages so a later run is one command, but those entries are `pending` — they are
-candidates picked from frame names, not selections, and **not one has been
-looked at**. Expect client branding in most of them.
+**The fourth pass, 2026-09-03, exported the product pages and is where the UI
+screens came from.** Both API raster routes were still spent, so the export went
+through the Figma web app's own Export command instead, which is not metered:
+1,047 frames across twelve pages, into `staging/figma/`. Twenty-two are now
+published, across five products. The findings are recorded per page as a
+`review` note in `scripts/fetch-figma.mjs`, and they are the useful part:
+
+- **Freight logistics cockpit and precision agriculture app were clean as
+  exported.** The cockpit brands itself "COCKPIT APP" rather than with the
+  client's name, and the agriculture app's demo facility is "Vandelay
+  Industries", a placeholder. Neither needed a redaction.
+- **Manufacturing warehouse app and warehouse management platform are clean
+  below the login screen.** Every login carries the client logo or the product
+  wordmark and none is published; the inner screens carry neither.
+- **The mining-site tool platform screens are redacted**, the first on this
+  site. The client's mark sits in the sidebar of every screen in that module and
+  one title repeated it. See the Images section for the rule.
+- **One frame was dropped for narrowing rather than naming.** The manufacturing
+  Approvals screen has no wordmark, but its sidebar names the client's raw
+  material, which takes "listed multinational manufacturer" down to an industry.
+  Clean in every other respect, and still dropped.
+- **The consumer delivery platform is published from not at all**, for a reason
+  that is about the record rather than the pixels. See "Whose site this is".
+
+Those screens also bear on `kb/open-questions.md` #4, which asks whether "SFI"
+and "SFIKS" are the same system: the SFI frames carry a "Kiosk Location"
+selector and a device labelled "K70 - Star Kiosk", and kiosks are exactly what
+the SFIKS record describes. Evidence, not a ruling. The question stays hers.
 
 One value on the page is still unconfirmed: the BSc, where LinkedIn and her 2018
 CV disagree on both the degree name and the institution and no source gives an
@@ -379,16 +418,27 @@ shown. Whether to bring the PDF across is a decision for Pamudi, not a tidy-up;
     follows the review, and an untracked landing area is what keeps that
     structural rather than a good intention. Record the verdict in the script
     afterwards, so the next run cannot silently re-acquire what was turned down.
-  - **Rasterising a frame and reading the file are separate quotas, and the
-    first one is spent.** `GET /v1/images`, which renders the vector artboards,
-    answers 429 on this Starter account with a `retry-after` around 4.6 days;
-    the Figma MCP's `get_screenshot` is the only other way to rasterise and its
-    account-level tool-call cap is also reached. So **no UI screen can be
-    exported from this file at present** — that is why ten of the eleven product
-    pages sit at `pending`. `GET /v1/files/:key/images`, which returns bitmaps
-    already uploaded into the file, is a different quota and still works; the
-    photographic pages come through it. Both need only a free read-only personal
-    access token in `FIGMA_TOKEN`. Never commit that token; this repo is public.
+  - **The API cannot rasterise a frame on this account, and the browser can.**
+    `GET /v1/images` answers 429 on this Starter plan with a `retry-after`
+    around 4.5 days, and the Figma MCP's `get_screenshot` and `download_assets`
+    share one account-level cap that is also spent. **The Figma web app's own
+    Export command is not metered**, and it is how every product screen in
+    `src/assets/systems/` was obtained: open the file, Escape then Cmd+A on a
+    page, add an export setting, choose the scale, Export N layers. Two traps.
+    Adding an export setting is a document edit, so Cmd+Z afterwards rather than
+    leaving her file changed. And Chrome numbers a second download
+    `... (1).zip` instead of overwriting, so verify what you extracted rather
+    than trusting the filename. `GET /v1/files/:key/images`, which returns
+    bitmaps already uploaded into the file, is a third quota and still works;
+    the About-page picture sets come through it. Both API routes need only a
+    free read-only token in `FIGMA_TOKEN`. Never commit it; this repo is public.
+  - **Covering a client mark is allowed; changing anything else is not.** Oshan
+    cleared redaction on 2026-09-03, and the rule that keeps it honest is that
+    the mark is painted out in the app's own surrounding colour so it reads as
+    an empty brand slot, never as a black censor bar. Nothing else in the pixels
+    may be touched, the frame must still pass every other part of the check, and
+    the page's frontmatter must record exactly what was covered.
+    `src/assets/systems/mining-site-tool-platform/` is the worked example.
 - `src/assets/work/placeholder-*.png` and `scripts/make-placeholders.mjs` are
   scaffolding. Delete both once real covers land.
 
