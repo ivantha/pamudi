@@ -4,15 +4,25 @@
 # The screens are Pamudi's own, exported 2026-09-03 from her Figma file (page
 # "SFI Web (Collaborated)").
 #
-# ⚠ THESE FOUR ARE REDACTED, and that is not a detail to lose. The client's
-# three-letter wordmark sits in the sidebar of every screen in this module, and
-# one page title carried the same letters in parentheses. Both were painted out
-# in the client's own brand orange and title-bar grey before the files were
-# committed, so the redaction reads as an empty brand slot rather than a censor
-# bar. `data/systems.yaml` anonymises this client to "Australian industrial
-# tooling and consumables supplier"; publishing the mark unredacted would undo
-# that. If Pamudi lifts the anonymisation, re-export the originals rather than
-# un-redacting these.
+# ⚠ TWO OF THE FOUR ARE REDACTED, and which two matters. `asset-catalogue.png`
+# and `assets.png` are screens with the app's left rail, and the client's
+# three-letter wordmark sits at the top of that rail; the catalogue's page title
+# carried the same letters in parentheses as well. Those marks are painted out
+# in the client's own brand orange and title-bar grey, so the result reads as an
+# empty brand slot rather than a censor bar. `data/systems.yaml` anonymises this
+# client to "Australian industrial tooling and consumables supplier", and
+# publishing the mark unredacted would undo that.
+#
+# `add-object-type.png` and `no-internet.png` are NOT redacted and must not be.
+# Neither frame contains the rail (the first is a modal on a transparent
+# backdrop, the second a full-screen offline state) and neither contains the
+# client's name in any form. They are published exactly as exported. An earlier
+# pass applied the rail redaction to all four by coordinate rather than by
+# checking each frame, which painted a brand-coloured block onto two screens
+# that never had one. Do not redact by position; check the frame.
+#
+# If Pamudi lifts the anonymisation, re-export the two redacted originals rather
+# than trying to un-redact these.
 #
 # Everything else in the pixels was checked and left alone: the catalogue rows
 # are generic consumables (WD40, sand bags, resin discs), prices are zeroed, and
@@ -124,5 +134,5 @@ what failed.
 <Figure
   src={noInternet}
   alt="An offline screen showing a line illustration of a satellite dish with signal arcs, the heading 'No Internet :(' in accent, and the line 'Please check your Internet connection, you are in offline now.'"
-  caption="Drawn in the product's own hand, in the product's own accent. A remote-site tool that treats losing signal as an exception has misread where it runs."
+  caption="Drawn in the product's own hand, in the product's own accent. A remote-site tool that treats losing signal as an exception has misread where it runs. This frame carries no client mark and is published exactly as exported."
 />
