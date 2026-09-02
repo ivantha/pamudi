@@ -111,18 +111,28 @@ true` keeps a written page out and leaves the sourced scaffold in its place.
 `src/content/systems/photo-id-compliance-app.mdx` is the worked example, and its
 header explains what may and may not go in one of these.
 
-Screens come out of the product's Figma file via `scripts/fetch-figma.mjs`,
-which holds the node list and the scale each is exported at:
+Pictures come out of the portfolio Figma file via `scripts/fetch-figma.mjs`,
+which holds every page, every node, the scale each renders at, and what the last
+review concluded about it:
 
 ```bash
 node scripts/fetch-figma.mjs --list          # the manifest, no token needed
 FIGMA_TOKEN=figd_... node scripts/fetch-figma.mjs
+FIGMA_TOKEN=figd_... node scripts/fetch-figma.mjs --page extra
 ```
 
 The token is a free read-only personal access token from figma.com → Settings →
-Security. **Look at every frame before committing it** — client logo, product
-wordmark, real customer data — and drop anything redundant rather than filling a
-grid with it.
+Security. Files land in `staging/figma/`, which is gitignored: **look at every
+one before moving it into `src/assets/`** — client logo, product wordmark, real
+customer data, anyone in frame who did not agree to be on a public site — and
+drop what is redundant rather than filling a grid with it. Then record the
+verdict back in the script.
+
+Exporting a UI screen needs Figma to rasterise a vector artboard, and that is
+metered separately from reading the file. **That budget is currently spent**, on
+the REST endpoint and the Figma MCP both, so the product pages cannot be
+exported at all right now; the script says so when you try. Pages made of
+uploaded bitmaps come through a different quota and still work.
 
 ## Adding a case study
 

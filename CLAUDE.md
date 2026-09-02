@@ -50,9 +50,10 @@ Pages. Static Pages is the default until something real breaks it.
 product in the inventory, `/work/[slug]` for a published case study, and a
 `/404`. The home page carries the argument (hero, figures, Profile, Practice,
 selected work, process, Toolkit, community); `/systems` is the full inventory,
-grouped; `/about` is the career record. The inventory used to sit on About and
-moved out in the Website v2 import, so a link to `/about#systems` from anywhere
-is stale.
+grouped; `/about` is the career record, and carries the three picture sets
+(Event design, the Community photographs, Sketches and paintings) through
+`Gallery.astro`. The inventory used to sit on About and moved out in the Website
+v2 import, so a link to `/about#systems` from anywhere is stale.
 
 **`/systems/[slug]` builds a page for every entry in `data/systems.yaml`,
 written or not.** The slug is derived from `product` by `systemSlug` in
@@ -235,6 +236,37 @@ beside it — a finding like that belongs in the tool that would otherwise
 re-acquire it, not only in a commit message. Fifteen more were clean but not
 worth a figure and are marked `dropped`; six are on the page.
 
+The third pass, 2026-09-03, went through the other fourteen pages of the file
+and found the same thing twice more, in a different register. On the
+volunteering page, **two frames display other people's names**: a virtual-event
+participant grid, and a promotional card whose embedded call strip carries five
+attendees in full. Both are `blocked`. Nine more are clean group and workshop
+photographs, dropped because each is a room of identifiable people who did not
+agree to appear here and none shows anything the four published frames do not.
+On the freelance page, **all nine pieces carry the client's wordmark** —
+`data/experience.yaml` anonymises that client to "Indonesian consumer brand", so
+publishing the artwork names it. They are blocked for that reason alone, which
+is a decision for Pamudi rather than a defect: one word from her turns them into
+a portfolio section, and the anonymisation should be lifted in the same commit.
+
+What that pass did publish: five pieces of IEEE student-conference identity work
+(`src/assets/event-design/`), four photographs of speaking and mentoring
+(`src/assets/community/`), and eight of her own drawings and paintings
+(`src/assets/art/`). The section that holds the last of those takes its name,
+"Sketches and paintings", from her own label on the Figma page — the categories
+there are hers, so the section is her idea rather than an invention. A sixth
+IEEE piece was dropped for a reason worth repeating: it is clean, and probably
+hers, but `data/community.yaml` carries no credit for that event, and
+publishing it would assert one.
+
+**The product pages are all still unexported**, and not by choice: rasterising a
+Figma frame is metered separately from reading the file, and that budget is
+spent on both the REST endpoint and the MCP. See the Images section. The
+manifest in `scripts/fetch-figma.mjs` carries a shortlist for each of the ten
+pages so a later run is one command, but those entries are `pending` — they are
+candidates picked from frame names, not selections, and **not one has been
+looked at**. Expect client branding in most of them.
+
 One value on the page is still unconfirmed: the BSc, where LinkedIn and her 2018
 CV disagree on both the degree name and the institution and no source gives an
 end year. It carries a `⚠ CONFLICT` comment at `data/education.yaml`; leave it
@@ -332,19 +364,31 @@ shown. Whether to bring the PDF across is a decision for Pamudi, not a tidy-up;
   roughly 2× the largest rendered width.
 - Every image needs real `alt` text, or `alt=""` when decorative. On a
   portfolio, "screenshot" is not alt text.
-- `src/assets/systems/<product>/` holds a product's published screens. Those
-  under `photo-id/` were exported from Pamudi's own Figma file and checked frame
-  by frame before committing — see the header of
-  `src/content/systems/photo-id-compliance-app.mdx` before adding to them.
-- **`scripts/fetch-figma.mjs` is how the next batch arrives.** It carries the
-  node manifest for the photo-ID file — the design-system components, the icon,
-  flag, modal and imagery sections, and the one screen the first run missed —
-  with a per-node scale, and pulls them over the Figma REST API. Use it rather
-  than the Figma MCP: the MCP's Starter-plan tool-call allowance runs out well
-  short of a design system's worth of boards, and it is an account-level cap
-  with no visible reset window. The REST endpoint is a separate quota and needs
-  only a free read-only personal access token in `FIGMA_TOKEN`. Never commit
-  that token; this repo is public. `--list` prints the manifest without one.
+- `src/assets/systems/<product>/` holds a product's published screens;
+  `src/assets/community/`, `src/assets/event-design/` and `src/assets/art/` hold
+  the three picture sets on the About page. Everything in all four came out of
+  Pamudi's own Figma file and was checked frame by frame before committing — see
+  the header of `src/content/systems/photo-id-compliance-app.mdx`, and the
+  comment above the picture arrays in `src/pages/about.astro`, before adding.
+- **`scripts/fetch-figma.mjs` is how the next batch arrives.** It is the
+  manifest for the whole file: fifteen pages, 126 nodes, each with a scale and a
+  recorded verdict (`published`, `pending`, `dropped`, `blocked`). `--list`
+  prints it without a token. Two things to know before running it:
+  - **It writes to `staging/figma/`, which is gitignored, never to
+    `src/assets/`.** Moving a file out of staging is the deliberate act that
+    follows the review, and an untracked landing area is what keeps that
+    structural rather than a good intention. Record the verdict in the script
+    afterwards, so the next run cannot silently re-acquire what was turned down.
+  - **Rasterising a frame and reading the file are separate quotas, and the
+    first one is spent.** `GET /v1/images`, which renders the vector artboards,
+    answers 429 on this Starter account with a `retry-after` around 4.6 days;
+    the Figma MCP's `get_screenshot` is the only other way to rasterise and its
+    account-level tool-call cap is also reached. So **no UI screen can be
+    exported from this file at present** — that is why ten of the eleven product
+    pages sit at `pending`. `GET /v1/files/:key/images`, which returns bitmaps
+    already uploaded into the file, is a different quota and still works; the
+    photographic pages come through it. Both need only a free read-only personal
+    access token in `FIGMA_TOKEN`. Never commit that token; this repo is public.
 - `src/assets/work/placeholder-*.png` and `scripts/make-placeholders.mjs` are
   scaffolding. Delete both once real covers land.
 

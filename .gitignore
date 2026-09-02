@@ -41,3 +41,9 @@ data/private.yaml
 # directory, so the negation below would never be reached.
 kb/*
 !kb/README.md
+
+# Figma exports, before review. `scripts/fetch-figma.mjs` writes here and only
+# here: a frame is not publishable until it has been looked at (CLAUDE.md,
+# "Whose site this is"), and an untracked landing area is what makes that check
+# structural rather than a note in a comment.
+staging/
