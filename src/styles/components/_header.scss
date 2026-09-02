@@ -1,66 +1,105 @@
+// The sticky dark bar at the top of the sheet. It is the only element that
+// carries both faces at once — the name in Cormorant, everything else in Work
+// Sans uppercase — which sets the pairing before the page starts.
+
 .site-header {
     position: sticky;
     top: 0;
-    z-index: 10;
-    background-color: var(--paper);
-    border-bottom: 1px solid var(--rule);
+    z-index: 20;
+    background: var(--dark);
+    border-bottom: 1px solid var(--dark-rule);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1rem var(--pad-x);
+    flex-wrap: wrap;
 
-    &__inner {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: var(--gutter);
-        padding-block: 0.9rem;
+    // Narrow enough and the mark and the nav no longer share a line. Two rows
+    // of sticky bar is about a seventh of a phone screen held permanently, for
+    // a five-item nav nobody is mid-task in — so below the wrap it scrolls away
+    // with the rest of the page.
+    @media (max-width: 34rem) {
+        position: static;
+    }
+}
+
+.site-header__mark {
+    display: flex;
+    align-items: baseline;
+    gap: 0.875rem;
+    color: var(--on-dark);
+    flex-wrap: wrap;
+
+    &:hover {
+        color: var(--mint);
+    }
+}
+
+.site-header__name {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.3125rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+
+.site-header__role {
+    font-size: var(--fs-micro);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--on-dark-muted);
+    white-space: nowrap;
+
+    // The name alone identifies the site; the role is the first thing to go
+    // when the bar starts to crowd.
+    @media (max-width: 48rem) {
+        display: none;
+    }
+}
+
+.site-header__nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 30rem) {
+        gap: 1.125rem;
+        width: 100%;
+    }
+}
+
+.site-header__link {
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--on-dark-muted);
+
+    &:hover {
+        color: var(--mint);
     }
 
-    &__mark {
-        font-family: var(--font-display);
-        font-size: var(--step-1);
-        font-weight: 600;
-        font-variation-settings:
-            "opsz" 40,
-            "WONK" 1;
-        letter-spacing: -0.015em;
-        text-decoration: none;
-        white-space: nowrap;
+    // The current page reads as present rather than as a target: full-strength
+    // ink instead of the muted grey, no underline, no accent.
+    &[aria-current="page"] {
+        color: var(--on-dark);
     }
+}
 
-    &__nav {
-        display: flex;
-        flex-wrap: wrap;
-        gap: clamp(0.9rem, 0.4rem + 1.6vw, 2rem);
-        font-size: var(--step--1);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        font-weight: 600;
-    }
+.site-header__contact {
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--dark);
+    background: var(--mint);
+    padding: 0.6875rem 1.125rem;
+    transition:
+        background var(--dur) var(--ease),
+        color var(--dur) var(--ease);
 
-    &__link {
-        text-decoration: none;
-        position: relative;
-        padding-block: 0.15rem;
-
-        // Drawn from the left on hover rather than faded in — a rule that
-        // builds reads as editorial, a colour swap reads as a button.
-        &::after {
-            content: "";
-            position: absolute;
-            inset-inline: 0;
-            bottom: -0.1rem;
-            height: 1px;
-            background: var(--accent);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform var(--dur) var(--ease);
-        }
-
-        &:hover::after,
-        &[aria-current="page"]::after {
-            transform: scaleX(1);
-        }
-
-        &[aria-current="page"] {
-            color: var(--accent);
-        }
+    &:hover {
+        background: var(--on-dark);
+        color: var(--dark);
     }
 }

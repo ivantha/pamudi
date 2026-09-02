@@ -3,33 +3,43 @@ import { getEntry } from "astro:content"
 import { href } from "@/lib/url"
 
 const personal = await getEntry("personal", "personal")!
+const { name, role, contact } = personal.data
 const path = Astro.url.pathname.replace(/\/$/, "")
 
 const NAV = [
     { label: "Work", path: "/" },
+    { label: "Systems", path: "/systems" },
     { label: "About", path: "/about" },
     { label: "CV", path: "/cv" },
 ]
 
-/** True when `target` is the page currently being rendered. */
-const isCurrent = (target: string) => path === href(target).replace(/\/$/, "")
+/**
+ * True when `target` is the page being rendered. Case-study pages live under
+ * `/work/`, so they mark "Work" as current rather than leaving the nav blank.
+ */
+const isCurrent = (target: string) => {
+    const t = href(target).replace(/\/$/, "")
+    return target === "/" ? path === t || path.startsWith(`${t}/work/`) : path === t
+}
 ---
 
 <header class="site-header">
-    <div class="wrap site-header__inner">
-        <a class="site-header__mark" href={href("/")}>{personal.data.name}</a>
-        <nav class="site-header__nav" aria-label="Primary">
-            {
-                NAV.map((item) => (
-                    <a
-                        class="site-header__link"
-                        href={href(item.path)}
-                        aria-current={isCurrent(item.path) ? "page" : undefined}
-                    >
-                        {item.label}
-                    </a>
-                ))
-            }
-        </nav>
-    </div>
+    <a class="site-header__mark" href={href("/")}>
+        <span class="site-header__name">{name}</span>
+        <span class="site-header__role">{role}</span>
+    </a>
+    <nav class="site-header__nav" aria-label="Primary">
+        {
+            NAV.map((item) => (
+                <a
+                    class="site-header__link"
+                    href={href(item.path)}
+                    aria-current={isCurrent(item.path) ? "page" : undefined}
+                >
+                    {item.label}
+                </a>
+            ))
+        }
+        <a class="site-header__contact" href={`mailto:${contact.email}`}>Contact</a>
+    </nav>
 </header>

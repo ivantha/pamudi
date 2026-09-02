@@ -216,9 +216,39 @@ const projects = defineCollection({
     }),
 })
 
+/**
+ * The framing copy the Website v2 design added around the career record: the
+ * hero lede, the Practice cards, the process band, the page ledes and the CV
+ * contents list.
+ *
+ * Website-only by construction, like `projects` — no Typst file reads
+ * `data/site.yaml`. It is kept apart from `personal.yaml` for a second reason
+ * too: everything in it is pending Pamudi's sign-off, and a separate file makes
+ * that boundary visible rather than a comment somebody has to notice. See the
+ * header of `data/site.yaml`.
+ */
+const site = defineCollection({
+    loader: () => loadYamlSingle("site.yaml"),
+    schema: z.object({
+        home: z.object({
+            lede: z.string(),
+            figures: z.array(z.object({ value: z.string(), label: z.string() })),
+        }),
+        practice: z.array(z.object({ label: z.string(), title: z.string(), text: markup })).min(1),
+        process: z.object({
+            lede: z.string(),
+            steps: z.array(z.object({ title: z.string(), text: markup })).min(1),
+        }),
+        pages: z.object({ systems: z.string(), about: z.string() }),
+        cv: z.object({ eyebrow: z.string(), contents: z.array(z.string()).min(1) }),
+        footer: z.object({ standfirst: z.string() }),
+    }),
+})
+
 export const collections = {
     work,
     personal,
+    site,
     experience,
     education,
     skills,

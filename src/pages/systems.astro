@@ -1,0 +1,87 @@
+---
+import { getCollection, getEntry } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Row from "@/components/Row.astro"
+import Markup from "@/components/Markup.astro"
+import { isWebVisible } from "@/lib/variants"
+import { groupSystems } from "@/lib/systems"
+
+const personal = await getEntry("personal", "personal")!
+const site = await getEntry("site", "site")!
+const { name, role } = personal.data
+
+const systems = (await getCollection("systems")).filter((s) => isWebVisible(s.data))
+const groups = groupSystems(systems)
+
+// The inventory is numbered straight through, across the group boundaries, so
+// a product keeps the same number wherever it is cited.
+let n = 0
+---
+
+<Layout
+    title="Design systems"
+    description={`The design-systems inventory of ${name}, ${role}: ${systems.length} products, the scope of each engagement and the stack each system was specified against.`}
+>
+    <div class="page-head">
+        <div>
+            <p class="eyebrow page-head__eyebrow">
+                Inventory<span class="page-head__sep">/</span>{systems.length} products
+            </p>
+            <h1 class="page-head__title">Design systems</h1>
+        </div>
+        <p class="page-head__lede">{site.data.pages.systems}</p>
+    </div>
+
+    {
+        groups.map((group, gi) => (
+            <Row
+                label={group.label}
+                note={group.note?.replace(", ", ",\n")}
+                rule="strong"
+                flush={gi === groups.length - 1}
+            >
+                <div class="inventory">
+                    {group.rows.map((s) => {
+                        n += 1
+                        return (
+                            <article class="inventory__row">
+                                <span
+                                    class:list={[
+                                        "inventory__num",
+                                        s.data.lead && "inventory__num--lead",
+                                    ]}
+                                >
+                                    {String(n).padStart(2, "0")}
+                                </span>
+                                <div>
+                                    <h3 class="inventory__title">{s.data.product}</h3>
+                                    {s.data.client && (
+                                        <p class="inventory__client">{s.data.client}</p>
+                                    )}
+                                    {s.data.description && (
+                                        <Markup
+                                            as="p"
+                                            class="inventory__desc"
+                                            text={s.data.description}
+                                        />
+                                    )}
+                                </div>
+                                <div class="inventory__aside">
+                                    <p
+                                        class:list={[
+                                            "inventory__scope",
+                                            s.data.lead && "inventory__scope--lead",
+                                        ]}
+                                    >
+                                        {s.data.scope}
+                                    </p>
+                                    <p class="inventory__stack">{s.data.stack}</p>
+                                </div>
+                            </article>
+                        )
+                    })}
+                </div>
+            </Row>
+        ))
+    }
+</Layout>

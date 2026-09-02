@@ -4,7 +4,8 @@ import SiteHeader from "@/components/SiteHeader.astro"
 import SiteFooter from "@/components/SiteFooter.astro"
 import { href } from "@/lib/url"
 import { plainMarkup } from "@/lib/markup"
-import displayFont from "@/assets/fonts/fraunces-latin-full-normal.woff2"
+import displayFont from "@/assets/fonts/cormorant-garamond-latin-wght-normal.woff2"
+import textFont from "@/assets/fonts/work-sans-latin-wght-normal.woff2"
 import "@/styles/global.scss"
 
 interface Props {
@@ -41,14 +42,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site)
         <meta name="description" content={description} />
         <link rel="canonical" href={canonical} />
 
-        <!-- Keep in sync with --paper in src/styles/_tokens.scss and with manifest.json. -->
-        <meta name="theme-color" content="#fbf9f4" />
+        <!-- Keep in sync with --ground in src/styles/_tokens.scss and with manifest.json. -->
+        <meta name="theme-color" content="#e2e5e4" />
         <meta name="color-scheme" content="light" />
 
-        <!-- The display face renders the largest thing on every page, so it is
-             the one worth a preload; Karla is small enough to arrive with the
-             stylesheet. -->
+        <!-- Both faces render above the fold on every page: the sticky header
+             sets the name in Cormorant and the nav in Work Sans, so neither can
+             wait for the stylesheet to be parsed. -->
         <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+        <link rel="preload" href={textFont} as="font" type="font/woff2" crossorigin />
 
         <link rel="icon" href={href("/favicon.svg")} type="image/svg+xml" />
         <link rel="manifest" href={href("/manifest.json")} />
@@ -62,10 +64,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site)
     </head>
     <body>
         <a class="skip-link" href="#main">Skip to content</a>
-        <SiteHeader />
-        <main id="main">
-            <slot />
-        </main>
-        <SiteFooter />
+        <!-- The sheet: one card on the ground, carrying header, page and footer
+             so the dark bands can run edge to edge inside it. -->
+        <div class="sheet">
+            <SiteHeader />
+            <main id="main">
+                <slot />
+            </main>
+            <SiteFooter />
+        </div>
     </body>
 </html>

@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content"
 import { Image } from "astro:assets"
 import Layout from "@/layouts/Layout.astro"
+import Row from "@/components/Row.astro"
 import { href } from "@/lib/url"
 
 export async function getStaticPaths() {
@@ -12,57 +13,53 @@ export async function getStaticPaths() {
 const { entry } = Astro.props
 const { Content } = await render(entry)
 const { title, summary, year, role, context, disciplines, tools, cover, coverAlt } = entry.data
+
+const FACTS = [
+    ["Year", String(year)],
+    ["Role", role],
+    ["Context", context],
+    ["Disciplines", disciplines.join(", ")],
+    ...(tools.length > 0 ? [["Tools", tools.join(", ")] as const] : []),
+] as const
 ---
 
 <Layout title={title} description={summary}>
     <article>
-        <header class="case__header wrap">
-            <a class="case__back" href={href("/")}>All work</a>
-            <h1 class="display case__title">{title}</h1>
-            <p class="lede case__summary">{summary}</p>
-            <dl class="case__facts">
-                <div>
-                    <dt>Year</dt>
-                    <dd>{year}</dd>
-                </div>
-                <div>
-                    <dt>Role</dt>
-                    <dd>{role}</dd>
-                </div>
-                <div>
-                    <dt>Context</dt>
-                    <dd>{context}</dd>
-                </div>
-                <div>
-                    <dt>Disciplines</dt>
-                    <dd>{disciplines.join(", ")}</dd>
-                </div>
+        <div class="page-head">
+            <div>
+                <p class="eyebrow page-head__eyebrow">
+                    <a href={href("/")}>Work</a><span class="page-head__sep">/</span>{year}
+                </p>
+                <h1 class="page-head__title">{title}</h1>
+            </div>
+            <p class="page-head__lede">{summary}</p>
+        </div>
+
+        <Row label="The brief" rule="strong">
+            <dl class="case-facts">
                 {
-                    tools.length > 0 && (
-                        <div>
-                            <dt>Tools</dt>
-                            <dd>{tools.join(", ")}</dd>
-                        </div>
-                    )
+                    FACTS.map(([term, value]) => (
+                        <>
+                            <dt>{term}</dt>
+                            <dd>{value}</dd>
+                        </>
+                    ))
                 }
             </dl>
-        </header>
+        </Row>
 
-        <div class="wrap">
+        <div class="case-cover">
             <Image
-                class="case__cover"
                 src={cover}
                 alt={coverAlt}
-                widths={[640, 1024, 1600]}
-                sizes="(min-width: 84rem) 78rem, 100vw"
+                widths={[640, 1024, 1600, 2048]}
+                sizes="(min-width: 84rem) 71rem, 100vw"
                 loading="eager"
             />
         </div>
 
-        <div class="wrap case__body">
-            <div class="prose">
-                <Content />
-            </div>
-        </div>
+        <Row label="The work" flush>
+            <div class="prose"><Content /></div>
+        </Row>
     </article>
 </Layout>

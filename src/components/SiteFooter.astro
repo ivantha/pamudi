@@ -1,28 +1,41 @@
 ---
 import { getEntry } from "astro:content"
+import { isWebVisible } from "@/lib/variants"
 
 const personal = await getEntry("personal", "personal")!
+const site = await getEntry("site", "site")!
+const { name, role, location } = personal.data
 const { email, links } = personal.data.contact
 const year = new Date().getFullYear()
 ---
 
 <footer class="site-footer">
-    <div class="wrap">
-        <div class="site-footer__inner">
+    <div class="site-footer__top">
+        <div>
+            <p class="eyebrow site-footer__standfirst">{site.data.footer.standfirst}</p>
             <a class="site-footer__cta" href={`mailto:${email}`}>Start a conversation &rarr;</a>
-            <nav class="site-footer__links" aria-label="Elsewhere">
-                {
-                    links.map((link) => (
-                        <a href={link.url} rel="me noopener">
-                            {link.label}
-                        </a>
-                    ))
-                }
-            </nav>
         </div>
-        <p class="site-footer__colophon">
-            &copy; {year}
-            {personal.data.name}. Set in Fraunces and Karla. Built with Astro.
-        </p>
+        <dl class="site-footer__contact">
+            <dt>Email</dt>
+            <dd><a href={`mailto:${email}`}>{email}</a></dd>
+            {
+                links.filter(isWebVisible).map((link) => (
+                    <>
+                        <dt>{link.label}</dt>
+                        <dd>
+                            <a href={link.url} rel="me noopener">
+                                {link.display ?? link.url}
+                            </a>
+                        </dd>
+                    </>
+                ))
+            }
+            <dt>Based in</dt>
+            <dd>{location}</dd>
+        </dl>
+    </div>
+    <div class="site-footer__colophon">
+        <p>&copy; {year} {name} &middot; {role}</p>
+        <p>Set in Cormorant Garamond and Work Sans</p>
     </div>
 </footer>

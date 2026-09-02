@@ -4,22 +4,46 @@
 // with the theme-color meta tag in src/layouts/Layout.astro and with
 // public/manifest.json.
 html {
-    background-color: var(--paper);
+    background-color: var(--ground);
     color-scheme: light;
 }
 
 body {
-    background-color: var(--paper);
+    background-color: var(--ground);
     color: var(--ink);
     font-family: var(--font-text);
-    font-size: var(--step-0);
-    font-weight: 400;
-    line-height: 1.55;
+    font-size: var(--fs-body);
+    font-weight: 300;
+    line-height: 1.6;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+}
+
+// Ground below the sheet, but only once the viewport is wide enough for the
+// sheet to be a card sitting on something. Below that the sheet is the page and
+// a strip of ground under the footer would read as a rendering fault.
+@media (min-width: 78.5rem) {
+    body {
+        padding-block-end: 2.5rem;
+    }
+}
+
+// ---- The sheet --------------------------------------------------------------
+// One card on the ground, carrying the header, the page and the footer. The
+// shadow is what makes it read as paper rather than as a max-width container;
+// below the sheet's own width there is no ground left to cast onto, so it goes.
+
+.sheet {
+    max-width: var(--sheet-max);
+    margin-inline: auto;
+    background: var(--sheet);
     min-height: 100svh;
     display: flex;
     flex-direction: column;
+
+    @media (min-width: 78.5rem) {
+        box-shadow: 0 2px 40px rgb(20 24 23 / 16%);
+    }
 }
 
 main {
@@ -27,8 +51,8 @@ main {
 }
 
 ::selection {
-    background: var(--accent);
-    color: var(--paper);
+    background: var(--mint);
+    color: var(--dark);
 }
 
 :focus-visible {
@@ -37,71 +61,124 @@ main {
     border-radius: 1px;
 }
 
+// Inside the dark bands the ink-green outline is invisible; the mint is the
+// same ring at 9:1 on that surface.
+.site-header :focus-visible,
+.site-footer :focus-visible,
+.hero :focus-visible,
+.band :focus-visible {
+    outline-color: var(--mint);
+}
+
 a {
-    color: inherit;
-    text-decoration-color: var(--rule);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.22em;
-    transition: text-decoration-color var(--dur) var(--ease);
+    color: var(--accent);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
 
     &:hover {
-        text-decoration-color: var(--accent);
+        color: var(--accent-strong);
     }
 }
 
 // ---- Layout primitives ------------------------------------------------------
 
-.wrap {
-    width: 100%;
-    max-width: 84rem;
-    margin-inline: auto;
-    padding-inline: var(--gutter);
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: var(--gutter);
+// Horizontal padding inside the sheet. Everything that is not a full-bleed dark
+// band sits on this.
+.pad {
+    padding-inline: var(--pad-x);
 }
 
 .measure {
     max-width: var(--measure);
 }
 
-.rule {
-    border: 0;
-    border-top: 1px solid var(--rule);
-}
-
 // ---- Type primitives --------------------------------------------------------
 
-.display {
-    font-family: var(--font-display);
-    font-weight: 600;
-    line-height: 0.92;
-    letter-spacing: -0.02em;
-    // opsz is what stops a display serif looking like a body serif blown up;
-    // WONK swaps in the alternate letterforms that make Fraunces recognisable.
-    font-variation-settings:
-        "opsz" 120,
-        "SOFT" 24,
-        "WONK" 1;
-    text-wrap: balance;
-}
-
 .eyebrow {
-    font-size: var(--step--1);
-    font-weight: 600;
-    letter-spacing: 0.14em;
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
     color: var(--muted);
     font-variant-numeric: tabular-nums;
 }
 
-.lede {
-    font-size: var(--step-1);
-    line-height: 1.42;
+// The Profile paragraph, set in the display face at reading size. It is the one
+// place on the site where the serif carries running prose, which is why it is
+// a shared class rather than a page-local rule.
+.profile {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--fs-lede);
+    line-height: 1.5;
+    max-width: var(--measure);
     text-wrap: pretty;
+}
+
+// A dated line: a tabular year in a fixed column, the entry beside it.
+.dated-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.dated {
+    display: grid;
+    grid-template-columns: 3.75rem 1fr;
+    column-gap: 1rem;
+    align-items: baseline;
+    padding-top: 0.625rem;
+    border-top: 1px solid var(--rule);
+
+    p {
+        margin: 0;
+    }
+}
+
+.dated__year {
+    font-size: var(--fs-year);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.dated--sm {
+    grid-template-columns: 3.25rem 1fr;
+    font-size: var(--fs-small);
+}
+
+// A labelled key/value block, used down the About page.
+.kv-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.375rem;
+}
+
+.kv {
+    display: grid;
+    grid-template-columns: 10.625rem 1fr;
+    column-gap: 1.75rem;
+    align-items: start;
+
+    p {
+        margin: 0;
+    }
+
+    @media (max-width: 48rem) {
+        grid-template-columns: 1fr;
+        row-gap: 0.5rem;
+    }
+}
+
+.kv__label {
+    margin: 0;
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--accent);
+    line-height: 1.5;
+    padding-top: 0.25rem;
 }
 
 // ---- Entrance ---------------------------------------------------------------
@@ -132,16 +209,26 @@ a {
     left: 0.5rem;
     z-index: 100;
     padding: 0.6rem 1rem;
-    background: var(--ink);
-    color: var(--paper);
-    text-decoration: none;
-    font-size: var(--step--1);
-    letter-spacing: 0.08em;
+    background: var(--mint);
+    color: var(--dark);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--tracking-label);
     text-transform: uppercase;
     transform: translateY(-200%);
     transition: transform var(--dur) var(--ease);
 
     &:focus-visible {
         transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }

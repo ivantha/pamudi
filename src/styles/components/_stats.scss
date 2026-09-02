@@ -1,50 +1,76 @@
-// The four verified figures from the CV masthead, carried onto the home page.
-//
-// Geometry follows cv/theme.typ's `stat-band`: figure over label, laid out as
-// two rows so the numerals share a baseline rather than being bottom-aligned
-// inside a fixed box.
-.stat-band {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(1.5rem, 1rem + 2vw, 2.5rem) var(--gutter);
-    padding-block: clamp(2rem, 1.4rem + 2.4vw, 3.5rem);
-    border-block: 1px solid var(--rule);
-    // The band closes with a rule, so it owns the space between that rule and
-    // whatever follows it — otherwise the next heading sits on the hairline.
-    margin-bottom: clamp(2.5rem, 1.8rem + 3vw, 4.5rem);
+// The four headline figures under the hero, and the band of second-order
+// counts under them. Both sit on the sheet, immediately after the dark hero.
 
-    @media (min-width: 48rem) {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+.figures {
+    padding-inline: var(--pad-x);
+}
+
+.figures__band {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 2rem 0 1.625rem;
+
+    @media (max-width: 48rem) {
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 1.75rem;
     }
 }
 
-.stat {
-    // Source order is `dt` then `dd`, which is the only order a `dl` allows.
-    // The figure has to read first, so the column is reversed here rather than
-    // the markup being bent to suit the design.
+.figure {
+    // The markup is label-then-value so the `dl` stays valid; the figure has to
+    // read on top, so the column is reversed here rather than in the HTML.
     display: flex;
     flex-direction: column-reverse;
-    align-items: start;
-    gap: 0.4rem;
+    gap: 0.625rem;
 
-    &__value {
-        font-size: var(--step-4);
-        font-weight: 600;
-        line-height: 1;
-        letter-spacing: -0.02em;
-        color: var(--accent);
-        font-variant-numeric: tabular-nums;
-        font-variation-settings:
-            "opsz" 96,
-            "SOFT" 20,
-            "WONK" 1;
+    & + & {
+        border-left: 1px solid var(--rule);
+        padding-left: 1.75rem;
     }
 
-    &__label {
-        font-size: var(--step--1);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--muted);
-        text-wrap: balance;
+    @media (max-width: 48rem) {
+        // With two per row the third cell starts a new row, so its left border
+        // would draw against the page edge rather than between two figures.
+        &:nth-child(odd) {
+            border-left: 0;
+            padding-left: 0;
+        }
+    }
+}
+
+.figure__value {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: var(--fs-stat);
+    line-height: 1;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+
+.figure__label {
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.figures__minor {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 1.625rem;
+    border-bottom: 1px solid var(--rule-strong);
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    font-size: var(--fs-figure);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+
+    span {
+        color: var(--accent);
+        font-variant-numeric: tabular-nums;
     }
 }

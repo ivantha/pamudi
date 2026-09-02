@@ -1,75 +1,125 @@
+// The home page's dark opening band: the headline at the largest size on the
+// site, a lede, and a definition list of standing facts beside it.
+
 .hero {
-    padding-block: clamp(3rem, 1.6rem + 6vw, 7rem) var(--rhythm);
+    background: var(--dark);
+    color: var(--on-dark);
+    padding: var(--band-y) var(--pad-x) calc(var(--band-y) * 0.7);
+}
 
-    &__eyebrow {
-        display: block;
-        margin-bottom: clamp(1.25rem, 0.9rem + 1.6vw, 2.25rem);
+.hero__meta-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: var(--fs-eyebrow);
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--on-dark-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.hero__sep {
+    margin: 0 0.7em;
+    color: var(--dark-rule);
+}
+
+.hero__title {
+    margin: 2rem 0 0;
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: var(--fs-hero);
+    line-height: 0.98;
+    letter-spacing: -0.012em;
+    color: var(--on-dark);
+    max-width: 15ch;
+    text-wrap: pretty;
+
+    em {
+        font-style: italic;
+        font-weight: 400;
+        color: var(--mint);
     }
+}
 
-    &__title {
-        font-size: var(--step-6);
-        margin-bottom: clamp(1.5rem, 1rem + 2.4vw, 3rem);
+.hero__body {
+    margin-top: 2.125rem;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    column-gap: 4rem;
+    row-gap: 2.5rem;
+    align-items: start;
 
-        // The accent lands on exactly one word in the whole hero. Spread across
-        // three or four, it stops being an accent.
-        em {
-            font-style: normal;
-            color: var(--accent);
-            font-variation-settings:
-                "opsz" 144,
-                "SOFT" 40,
-                "WONK" 1;
-        }
+    @media (max-width: 60rem) {
+        grid-template-columns: 1fr;
     }
+}
 
-    &__body {
-        display: grid;
-        grid-template-columns: repeat(12, minmax(0, 1fr));
-        column-gap: var(--gutter);
-        row-gap: 2rem;
+.hero__lede p {
+    margin: 0 0 0.75em;
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.1875rem, 1.0852rem + 0.45vw, 1.4375rem);
+    line-height: 1.5;
+    color: var(--on-dark-soft);
+    text-wrap: pretty;
+
+    &:last-child {
+        margin-bottom: 0;
     }
+}
 
-    &__lede {
-        grid-column: 1 / -1;
-        max-width: var(--measure);
+.hero__facts {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 1.5rem;
+    row-gap: 0.75rem;
+    align-items: baseline;
 
-        p + p {
-            margin-top: 0.8em;
-        }
-    }
-
-    &__meta {
-        grid-column: 1 / -1;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem 2.5rem;
-        font-size: var(--step--1);
-        color: var(--muted);
-    }
-
-    @media (min-width: 60rem) {
-        &__lede {
-            grid-column: 1 / span 7;
-        }
-
-        &__meta {
-            grid-column: 9 / -1;
-            flex-direction: column;
-            gap: 0.9rem;
-            border-left: 1px solid var(--rule);
-            padding-left: var(--gutter);
-        }
-    }
-
-    &__meta dt {
-        letter-spacing: 0.12em;
+    dt {
+        font-size: var(--fs-micro);
+        letter-spacing: var(--tracking-eyebrow);
         text-transform: uppercase;
-        font-size: 0.72em;
-        color: var(--muted);
+        color: var(--on-dark-muted);
+        white-space: nowrap;
     }
 
-    &__meta dd {
+    dd {
         margin: 0;
-        color: var(--ink);
+        font-size: var(--fs-meta);
+        color: var(--on-dark);
+    }
+
+    @media (max-width: 30rem) {
+        grid-template-columns: 1fr;
+        row-gap: 0.25rem;
+
+        dd {
+            margin-bottom: 0.75rem;
+        }
+    }
+}
+
+.hero__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+
+    a {
+        color: var(--mint);
+
+        &:hover {
+            color: var(--on-dark);
+        }
+
+        // A hairline middot between the links, drawn rather than typed so the
+        // list can gain or lose an entry without anyone editing punctuation.
+        &:not(:first-child)::before {
+            content: "·";
+            margin: 0 0.6em;
+            color: var(--dark-rule);
+        }
     }
 }

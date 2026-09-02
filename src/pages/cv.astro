@@ -3,9 +3,11 @@ import type { ImageMetadata } from "astro"
 import { Image } from "astro:assets"
 import { getEntry } from "astro:content"
 import Layout from "@/layouts/Layout.astro"
+import Row from "@/components/Row.astro"
 import { href } from "@/lib/url"
 
 const personal = await getEntry("personal", "personal")!
+const site = await getEntry("site", "site")!
 const { name, role } = personal.data
 
 // The page renders come out of cv/build.sh, from the same Typst compile as the
@@ -30,48 +32,68 @@ if (sheets.length === 0) {
 // than announcing that an image exists. The HTML equivalent is one link away
 // and named as such below.
 const CONTENTS = ["profile and experience", "design systems, toolkit, education and community"]
+
+// The PDF is rebuilt on every `pnpm build`, so "updated" is the build date
+// rather than a string somebody has to remember to bump.
+const updated = new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })
+
+// The contents list reads down its two columns, not across, so an eye following
+// 01, 02, 03 stays in the left one. That is a column-flow grid rather than a
+// reordered array: the list stays in document order, which is what a screen
+// reader announces and what the single-column phone layout shows.
+const contents = site.data.cv.contents
+const rows = Math.ceil(contents.length / 2)
 ---
 
 <Layout
     title="Curriculum vitae"
     description={`The two-page curriculum vitae of ${name}, ${role}, as a PDF and on the page.`}
 >
-    <article>
-        <header class="case__header wrap">
-            <h1 class="display case__title">Curriculum vitae</h1>
-            <p class="lede case__summary">
-                Two pages, typeset from the same data files this site reads, so the document and the
-                site cannot drift apart.
+    <div class="page-head page-head--cv">
+        <div>
+            <p class="eyebrow page-head__eyebrow">
+                {site.data.cv.eyebrow}<span class="page-head__sep">·</span>Updated {updated}
             </p>
-            <a class="cv-download" href={href("/cv/cv.pdf")}>Download the PDF</a>
-        </header>
-
-        <div class="wrap">
-            <div class="cv-spread">
-                {
-                    sheets.map((sheet, i) => (
-                        <figure class="cv-sheet">
-                            <Image
-                                src={sheet}
-                                alt={`Page ${i + 1} of the curriculum vitae: ${CONTENTS[i] ?? "further detail"}.`}
-                                widths={[480, 640, 900, 1280]}
-                                sizes="(min-width: 60rem) 42vw, 100vw"
-                                loading={i === 0 ? "eager" : "lazy"}
-                            />
-                            <figcaption class="eyebrow cv-sheet__folio">
-                                Page {String(i + 1).padStart(2, "0")} /{" "}
-                                {String(sheets.length).padStart(2, "0")}
-                            </figcaption>
-                        </figure>
-                    ))
-                }
-            </div>
-
-            <p class="cv-note">
-                Every fact on these two pages is also set as text on the{" "}
-                <a href={href("/about")}>About page</a>, which is the better place to read it on a
-                phone or with a screen reader.
-            </p>
+            <h1 class="page-head__title">Curriculum vitae</h1>
         </div>
-    </article>
+        <a class="cv-download" href={href("/cv/cv.pdf")}>Download PDF &darr;</a>
+    </div>
+
+    <Row label="What is in it" rule="strong">
+        <ol class="cv-contents" style={`--rows: ${rows}`}>
+            {
+                contents.map((text, i) => (
+                    <li>
+                        <span class="cv-contents__num">{String(i + 1).padStart(2, "0")}</span>
+                        {text}
+                    </li>
+                ))
+            }
+        </ol>
+        <p class="row__footnote">
+            The site carries the longer record: the earlier BSc projects, student event work and
+            societies are <a href={href("/about")}>on the About page</a> only, and the full inventory
+            is <a href={href("/systems")}>under Systems</a>.
+        </p>
+    </Row>
+
+    <div class="cv-spread">
+        {
+            sheets.map((sheet, i) => (
+                <figure class="cv-sheet">
+                    <Image
+                        src={sheet}
+                        alt={`Page ${i + 1} of the curriculum vitae: ${CONTENTS[i] ?? "further detail"}.`}
+                        widths={[480, 640, 900, 1280, 1720]}
+                        sizes="(min-width: 60rem) 54rem, 100vw"
+                        loading={i === 0 ? "eager" : "lazy"}
+                    />
+                    <figcaption class="cv-sheet__folio">
+                        Page {String(i + 1).padStart(2, "0")} /{" "}
+                        {String(sheets.length).padStart(2, "0")}
+                    </figcaption>
+                </figure>
+            ))
+        }
+    </div>
 </Layout>

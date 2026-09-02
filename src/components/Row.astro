@@ -1,0 +1,51 @@
+---
+/**
+ * One labelled row: an italic display label in a fixed left rail, the content
+ * beside it. This is the spine of the whole design — every section on every
+ * page is one of these, so the label column lines up from the top of the home
+ * page to the bottom of the CV page.
+ *
+ * Mirrors `sec()` in `cv/theme.typ`, which does the same job in the PDF.
+ */
+interface Props {
+    /** The rail label, e.g. "Profile". Set in the display italic. */
+    label: string
+    /** Optional uppercase note under the label. `\n` becomes a line break. */
+    note?: string
+    /** Heading level for the label. `h2` unless the row nests inside one. */
+    as?: "h2" | "h3"
+    /** Divider above the row: a hairline by default, `strong` for a page band. */
+    rule?: "hair" | "strong" | "none"
+    /** Drop the row's bottom padding, for the last row before a dark band. */
+    flush?: boolean
+    class?: string
+}
+
+const {
+    label,
+    note,
+    as: Tag = "h2",
+    rule = "hair",
+    flush = false,
+    class: className,
+}: Props = Astro.props
+---
+
+<section class:list={["row", `row--rule-${rule}`, flush && "row--flush", className]}>
+    <div class="row__rail">
+        <Tag class="row__label">{label}</Tag>
+        {
+            note && (
+                <p class="row__note">
+                    {note.split("\n").map((line, i) => (
+                        <>
+                            {i > 0 && <br />}
+                            {line}
+                        </>
+                    ))}
+                </p>
+            )
+        }
+    </div>
+    <div class="row__body"><slot /></div>
+</section>

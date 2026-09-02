@@ -1,69 +1,46 @@
-.case {
-    &__header {
-        padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) clamp(2rem, 1.4rem + 3vw, 3.5rem);
-    }
+// Case-study pages. They share the page head and the labelled row with every
+// other inner page; what is local to them is the fact table and the cover.
 
-    &__back {
-        display: inline-block;
-        margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
-        font-size: var(--step--1);
-        letter-spacing: 0.12em;
+.case-facts {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 1.75rem;
+    row-gap: 0.75rem;
+    align-items: baseline;
+
+    dt {
+        font-size: var(--fs-eyebrow);
+        letter-spacing: var(--tracking-label);
         text-transform: uppercase;
-        font-weight: 600;
-        text-decoration: none;
-        color: var(--muted);
-
-        &::before {
-            content: "\2190\00a0";
-        }
-
-        &:hover {
-            color: var(--accent);
-        }
+        color: var(--accent);
+        white-space: nowrap;
     }
 
-    &__title {
-        font-size: var(--step-5);
-        margin-bottom: 1.25rem;
+    dd {
+        margin: 0;
+        font-size: var(--fs-body);
+        color: var(--ink);
     }
 
-    &__summary {
-        max-width: var(--measure);
-        color: var(--muted);
-    }
-
-    // Facts as a rail, not a paragraph. A hiring manager scanning for "what did
-    // she actually do" should find it without reading the prose.
-    &__facts {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-        gap: 1.5rem var(--gutter);
-        margin-top: clamp(2rem, 1.4rem + 3vw, 3.5rem);
-        padding-top: 1.5rem;
-        border-top: 1px solid var(--rule);
-
-        dt {
-            font-size: var(--step--1);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 0.35rem;
-        }
+    @media (max-width: 30rem) {
+        grid-template-columns: 1fr;
+        row-gap: 0.25rem;
 
         dd {
-            margin: 0;
+            margin-bottom: 0.75rem;
         }
     }
+}
 
-    &__cover {
-        margin-block: clamp(2rem, 1.4rem + 3vw, 3.5rem);
-        border: 1px solid var(--rule);
-        background: var(--paper-2);
-    }
+.case-cover {
+    padding-inline: var(--pad-x);
+    padding-block-end: var(--row-y);
 
-    // No bottom padding: .site-footer already carries a --rhythm margin-top,
-    // and stacking the two leaves a dead screenful before the footer.
-    &__body {
-        padding-bottom: 0;
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: var(--ground);
     }
 }

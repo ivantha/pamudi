@@ -4,11 +4,15 @@ import { href } from "@/lib/url"
 ---
 
 <Layout title="Not found" description="That page does not exist.">
-    <section class="hero wrap">
-        <span class="eyebrow hero__eyebrow">Error 404</span>
-        <h1 class="display hero__title">Nothing <em>here</em>.</h1>
-        <p class="lede measure">
-            The page you asked for does not exist. <a href={href("/")}>Back to the work</a>.
+    <div class="page-head">
+        <div>
+            <p class="eyebrow page-head__eyebrow">Error 404</p>
+            <h1 class="page-head__title">Nothing <em>here</em>.</h1>
+        </div>
+        <p class="page-head__lede">
+            The page you asked for does not exist. Try <a href={href("/")}>the work</a>, the{" "}
+            <a href={href("/systems")}>systems inventory</a>, or{" "}
+            <a href={href("/about")}>the full record</a>.
         </p>
-    </section>
+    </div>
 </Layout>

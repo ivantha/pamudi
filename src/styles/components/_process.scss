@@ -1,0 +1,97 @@
+// "How it runs": the second dark band, five steps across. Same 1px-gap-over-a
+// -backing-plate trick as the Practice cards, in the dark palette.
+
+.band {
+    background: var(--dark);
+    color: var(--on-dark);
+    padding: calc(var(--band-y) * 0.95) var(--pad-x);
+}
+
+.band__inner {
+    display: grid;
+    grid-template-columns: var(--label-col) 1fr;
+    column-gap: var(--col-gap);
+
+    @media (max-width: 60rem) {
+        grid-template-columns: 1fr;
+        row-gap: 1rem;
+    }
+}
+
+.band__rail {
+    padding-top: 0.125rem;
+}
+
+.band__label {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--fs-label);
+    line-height: 1.1;
+    color: var(--on-dark);
+}
+
+.band__lede {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.375rem, 1.1705rem + 0.91vw, 1.875rem);
+    line-height: 1.4;
+    color: var(--on-dark-soft);
+    max-width: 52ch;
+    text-wrap: pretty;
+}
+
+.process {
+    list-style: none;
+    margin: 2.25rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--dark-rule);
+    border: 1px solid var(--dark-rule);
+    counter-reset: none;
+
+    @media (max-width: 64rem) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 30rem) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.process__step {
+    background: var(--dark);
+    padding: 1.375rem 1.25rem;
+}
+
+.process__num {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: var(--fs-step);
+    line-height: 1;
+    color: var(--mint);
+    font-variant-numeric: tabular-nums;
+}
+
+.process__title {
+    margin: 0.875rem 0 0;
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--on-dark);
+    line-height: 1.6;
+}
+
+.process__text {
+    margin: 0.5rem 0 0;
+    font-size: var(--fs-meta);
+    line-height: 1.6;
+    color: var(--on-dark-muted);
+    text-wrap: pretty;
+}

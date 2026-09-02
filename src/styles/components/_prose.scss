@@ -3,7 +3,7 @@
 .prose {
     display: grid;
     // Text is flush left at the measure and figures break out to the right,
-    // rather than the text being centred — the case header above it is flush
+    // rather than the text being centred — the page head above it is flush
     // left, and a centred body under a left-flush header reads as a mistake.
     grid-template-columns:
         [full-start text-start] minmax(0, var(--measure)) [text-end]
@@ -25,22 +25,19 @@
 
     h2 {
         font-family: var(--font-display);
-        font-size: var(--step-3);
-        font-weight: 600;
-        line-height: 1.05;
-        letter-spacing: -0.02em;
-        font-variation-settings:
-            "opsz" 60,
-            "SOFT" 12,
-            "WONK" 1;
-        margin-top: clamp(2.5rem, 1.8rem + 3vw, 4rem);
+        font-size: var(--fs-title-lg);
+        font-weight: 500;
+        line-height: 1.15;
+        margin-top: clamp(2.25rem, 1.6rem + 2.8vw, 3.5rem);
         text-wrap: balance;
     }
 
     h3 {
-        font-size: var(--step-1);
-        font-weight: 700;
-        margin-top: 2.25rem;
+        font-family: var(--font-display);
+        font-size: var(--fs-title-sm);
+        font-weight: 500;
+        line-height: 1.25;
+        margin-top: 2rem;
     }
 
     p,
@@ -58,32 +55,31 @@
     }
 
     blockquote {
-        border-left: 2px solid var(--accent);
+        border-left: 1px solid var(--accent);
         padding-left: 1.25rem;
         font-family: var(--font-display);
-        font-size: var(--step-2);
-        line-height: 1.2;
-        font-variation-settings:
-            "opsz" 40,
-            "SOFT" 20,
-            "WONK" 1;
+        font-weight: 400;
+        font-size: var(--fs-lede);
+        line-height: 1.4;
+        color: var(--ink);
         margin-block: clamp(2rem, 1.4rem + 3vw, 3rem);
     }
 
     figure img {
         width: 100%;
-        border: 1px solid var(--rule);
-        background: var(--paper-2);
+        height: auto;
+        background: var(--ground);
     }
 
     figcaption {
         margin-top: 0.75rem;
-        font-size: var(--step--1);
+        font-size: var(--fs-small);
         color: var(--muted);
         max-width: var(--measure);
     }
 
     strong {
-        font-weight: 700;
+        font-weight: 500;
+        color: var(--accent);
     }
 }

@@ -1,0 +1,113 @@
+# Website-only editorial copy: the framing text the Website v2 design added
+# around the career record. Website only by construction — no Typst file reads
+# this file, so nothing here can reach the PDF or cost it its two-page guard.
+#
+# ⚠ PROVENANCE, and the one thing to know before editing. Every string in this
+# file was transcribed verbatim from `Website v2.dc.html` in the Claude Design
+# project (imported 2026-09-02). Unlike the rest of `data/`, it is NOT traceable
+# to the archived career record at
+# ~/Documents/archives/pamudi-cv-data-2026-09-02/ — it is new writing that came
+# with the design. It is therefore PENDING PAMUDI'S SIGN-OFF: it says nothing
+# the sourced data does not already support, but the phrasing is not yet hers.
+# See CLAUDE.md, "Whose site this is". Do not extend this file with invented
+# copy; strings only enter it from a design she has approved, or from her.
+#
+# Counts that are derivable are derived in the page instead (the inventory
+# total, her start year), so they cannot drift from the data they describe.
+
+home:
+  # The hero lede. `personal.yaml`'s `intro` still outranks this when she writes
+  # one; this outranks the `summary` fallback. src/pages/index.astro, in order.
+  lede: >-
+    Design systems built and owned end to end, then specified for the framework
+    that has to consume them: Flutter, React, Kendo UI, Ant Design.
+    Accessibility from the first token. Implementation done in the codebase
+    rather than handed over the wall.
+
+  # The band under the four headline figures in `personal.yaml`. These four are
+  # second-order: each is a count drawn from the experience bullets rather than
+  # a headline claim, which is why they are set small and in one line.
+  figures:
+    # `value` is rendered in accent, `label` follows it inline.
+    - value: "10"
+      label: style guides written inside the Figma files
+    - value: "4"
+      label: target frameworks specified
+    - value: "4"
+      label: client products shipped as frontend code
+
+# The four cards under "Practice". Each compresses one experience bullet into a
+# claim plus its evidence; the bullets themselves stay in experience.yaml.
+practice:
+  - label: Design system ownership
+    title: Tokens, components, the whole library
+    text: >-
+      Three systems owned from scratch, every component, screen and prototype.
+      Six more extended across banking, manufacturing, mining-site tooling,
+      biometric identity and warehouse management.
+  - label: Design-to-code
+    title: Specified for the stack that consumes it
+    text: >-
+      Flutter-ready components on the ag-tech app; React with Ant Design, Kendo
+      UI and Material UI elsewhere. Styling implemented directly, measured on
+      rework and UI defects avoided.
+  - label: Accessibility
+    title: WCAG at token level, not at review
+    text: >-
+      Colour-contrast and content-sizing standards embedded into the ag-tech,
+      photo-ID and banking systems from the first token, plus a dedicated
+      research pass for a consumer delivery platform.
+  - label: AI-assisted delivery
+    title: Direction set earlier, handoffs removed
+    text: >-
+      Wireframing and testing before production commitment, and design changes
+      implemented without dedicated frontend support. Cursor, Claude,
+      Visily.ai, Builder.ai and Figma AI.
+
+# "How it runs" — the dark band. Five steps, in order.
+process:
+  lede: >-
+    The same five moves on every product, whether the system is new or
+    inherited.
+  steps:
+    - title: UX direction
+      text: Consultation during the requirements phase, before scope hardens.
+    - title: Wireframe and test
+      text: >-
+        Direction settled with AI-assisted wireframes before production
+        commitment.
+    - title: Source of truth
+      text: "Sole ownership of the Figma file: tokens, components, screens, prototypes."
+    - title: Spec for the stack
+      text: >-
+        Components written against Flutter, React, Kendo UI or Ant Design as
+        required.
+    - title: Build and transfer
+      text: Styling implemented directly, style guide left in-file for onboarding.
+
+# Page ledes. Each sits beside its page title, in the right-hand column.
+pages:
+  systems: >-
+    Product names are anonymised with domain descriptors; the client column
+    describes the industry context. Scope says what the engagement was, the last
+    column what the design was specified against.
+  about: >-
+    The full record: roles and what each one covered, the earlier project work,
+    degrees and training, and eight years of community work that the two-page CV
+    has no room for.
+
+# The CV page's contents list, describing the PDF section by section. Ordered as
+# the document is; the page lays them out in two columns reading down.
+cv:
+  eyebrow: Two pages · PDF
+  contents:
+    - Profile and the four headline figures
+    - Two roles at Zone24x7, 2018 to present
+    - Thirteen-product design systems inventory
+    - Toolkit, from AI tooling to component libraries
+    - Degrees and professional training
+    - Mentoring, speaking, judging and events
+
+# The line above the footer's invitation.
+footer:
+  standfirst: Open to design system and product work

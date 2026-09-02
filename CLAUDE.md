@@ -43,6 +43,22 @@ If a contact form, gated NDA work, or anything else needs a server, that is the
 signal to move hosting to Vercel — not to bolt a third-party form widget onto
 Pages. Static Pages is the default until something real breaks it.
 
+### The four pages
+
+`/` (Work), `/systems`, `/about`, `/cv`, plus `/work/[slug]` for a published
+case study and a `/404`. The home page carries the argument (hero, figures,
+Profile, Practice, selected work, process, Toolkit, community); `/systems` is
+the full inventory, grouped; `/about` is the career record. The inventory used
+to sit on About and moved out in the Website v2 import, so a link to
+`/about#systems` from anywhere is stale.
+
+**`groupSystems` in `src/lib/systems.ts` deliberately duplicates `system-groups`
+in `cv/common/loaders.typ`** — same tests, same order: `lead`, then an
+`"Extended"` prefix, then an exact `"Contributed"`, then everything else. A
+`group:` key in `data/systems.yaml` that only the website read would let the
+PDF's grouping drift silently, which is the failure the shared-data arrangement
+exists to prevent. Change one branch, change the other in the same commit.
+
 ## Domain
 
 The site is **pamudi.com**, served by GitHub Pages. `public/CNAME` is what sets
@@ -64,12 +80,13 @@ component, a page, or a `.typ` file.
 | ----------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `personal.yaml`   | site identity, hero, contact, CV masthead and Profile                                                                |
 | `experience.yaml` | About-page roles, CV Experience                                                                                      |
-| `systems.yaml`    | the design-systems table, both places                                                                                |
+| `systems.yaml`    | the Systems page inventory, and the CV's grouped table                                                               |
 | `skills.yaml`     | Toolkit                                                                                                              |
 | `projects.yaml`   | About-page "Earlier projects". **Website only** — no Typst file reads it                                             |
 | `education.yaml`  | degrees + professional training                                                                                      |
 | `community.yaml`  | speaking, mentoring, events, judging, competitions, and the website-only `writing`, `student_events` and `societies` |
 | `private.yaml`    | phone number only. **Gitignored**, never in this repo                                                                |
+| `site.yaml`       | the design's framing copy: hero lede, Practice, process, page ledes. **Website only**, and pending her sign-off      |
 
 Two conventions, enforced by `zod` in `src/content.config.ts` and mirrored in
 `cv/common/loaders.typ`:
@@ -127,12 +144,21 @@ one with plausible-looking career history. Ask.
 
 What that leaves, as of September 2026:
 
+- **`data/site.yaml` is awaiting her sign-off.** It holds the framing copy that
+  arrived with the Website v2 design: the hero lede, the four Practice cards,
+  the five process steps, the Systems and About page ledes, the CV contents
+  list and the footer standfirst. It says nothing the sourced data does not
+  support, but the phrasing came from the design rather than from her, which is
+  why it sits in its own file with the provenance in its header rather than
+  being mixed into `personal.yaml`. **Do not extend it with invented copy** —
+  strings enter it from a design she has approved, or from her.
 - **`tagline`, `intro` and `availability` are optional and absent** from
   `data/personal.yaml`. Each has a verified fallback — the meta description is
   assembled from `role`, `location` and the first sentence of `summary`; the
-  hero lede and the About opening fall back to `summary`, the Profile paragraph
-  the CV also prints. A placeholder that ships is worse than a field that is
-  not there, so add them back only with her words in them.
+  About opening falls back to `summary`, the Profile paragraph the CV also
+  prints, and the hero lede goes to `site.yaml`'s line before `summary`. A
+  placeholder that ships is worse than a field that is not there, so add them
+  back only with her words in them.
 - **`headline` is the one placeholder still on the page.** It is a layout
   stand-in and makes no claim about her career, which is why it survives.
 - **The three case studies in `src/content/work/` are `draft: true`.** They are
@@ -163,34 +189,36 @@ separate sentences instead.
 
 ## Visual system
 
-**Currently: Direction A, "Annual".** Paper-and-ink editorial. Everything
-distinctive comes from type and structure — Fraunces at display sizes with its
-`opsz`, `SOFT` and `WONK` axes driven, against Karla at text sizes — not from
-ornament. Measured L\* range across the four surfaces is 92.2.
+**Currently: "Website v2"**, imported from the Claude Design project on
+2026-09-02 and replacing the earlier Direction A ("Annual", Fraunces + Karla),
+which is gone from the repo along with the two directions pitched beside it.
 
-Every colour, typeface, step of the type scale, and spacing value lives in
-`src/styles/_tokens.scss`, one value per role. Change the palette there; do not
-introduce a second value for the same role anywhere else.
+A printed sheet laid on a darker ground, banded with full-bleed ink sections.
+Cormorant Garamond carries every heading, every numeral and every section label
+(the labels in italic); Work Sans carries the text sizes. There is no ornament.
 
-**This is round one of the design process, not a settled decision.** Two
-alternatives were pitched alongside it and can still win:
+Three things do the structural work, and breaking any of them is what makes the
+page stop looking like itself:
 
-- **B — "Index"**: Archivo + JetBrains Mono, `#f2f2ef` ground, acid `#d8ff3e`
-  used only as a block behind ink (it measures 1.02:1 as text). Visible grid.
-- **C — "Pramudita"**: Bricolage Grotesque + Instrument Sans, warm ground, an
-  ordered four-step colour arc where each case study takes the next ground.
+- **The sheet.** `.sheet` in `_base.scss` is a 1240px card holding the header,
+  the page and the footer, so the dark bands can run edge to edge inside it. The
+  shadow only appears once the viewport is wider than the sheet; below that
+  there is no ground to cast onto.
+- **The label rail.** `Row.astro` is a 180px italic label beside its content,
+  and nearly every section on every page is one. That is what lines the pages up
+  with each other and with the CV's `sec()`. Do not hand-roll a section.
+- **Two palettes, not one.** Header, hero, "How it runs" and the footer are
+  reversed out on `--dark`, and the paper palette's `--muted` measures 3.10:1
+  there. `--on-dark-muted` is its counterpart. The contrast gate below covers
+  both surfaces so this cannot be got wrong quietly.
 
-Switching is a rewrite of `_tokens.scss` and `_fonts.scss` plus a font swap in
-`src/assets/fonts/` — the `@fontsource-variable/*` packages for all three
-directions are installed as devDependencies for exactly this reason. **Prune
-them to the winner's two once a direction is accepted**, and rewrite this
-section to describe only that direction. Stale visual rules in a CLAUDE.md
-actively mislead the next session.
+Every colour, typeface, size and spacing value lives in `src/styles/_tokens.scss`,
+one value per role. The display sizes are named for what each one sets rather
+than as an abstract step scale, because the design uses eleven of them and means
+all eleven. Change values there; do not introduce a second value for the same
+role anywhere else.
 
-Expect a second round of five to seven variants inside whichever direction wins,
-with the version above kept in the set for comparison.
-
-Two rules that hold regardless of direction:
+Two rules that would hold in any direction:
 
 - **Contrast is not a matter of taste.** `scripts/check-contrast.mjs` reads the
   palette out of `_tokens.scss` and fails `pnpm lint` if a pair drops below its
@@ -202,7 +230,7 @@ Two rules that hold regardless of direction:
   `src/layouts/Layout.astro` and with `public/manifest.json`.
 
 Whether the site gets a dark mode at all is a real decision to make with her,
-not a default to assume in either direction.
+not a default to assume.
 
 ## Images
 
@@ -233,6 +261,13 @@ on the page.
 The woff2 files are Google's own `latin` slices taken byte-for-byte and are not
 subset. Both families are OFL-1.1 with a Reserved Font Name, so modifying the
 binaries would force a family rename. Copy new versions in verbatim.
+
+Three faces, both variable on `wght` alone: Cormorant Garamond roman and italic,
+Work Sans roman. The Cormorant italic is a real face doing real work — every
+section label is set in it — not a synthesised slant. Work Sans italic is
+deliberately absent; nothing on the site asks for one. Both roman faces are
+preloaded in `Layout.astro` because the sticky header sets one of each above the
+fold on every page.
 
 ## Git workflow
 

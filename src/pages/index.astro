@@ -1,13 +1,17 @@
 ---
 import { getCollection, getEntry } from "astro:content"
 import Layout from "@/layouts/Layout.astro"
+import Row from "@/components/Row.astro"
 import WorkItem from "@/components/WorkItem.astro"
 import Markup from "@/components/Markup.astro"
 import { href } from "@/lib/url"
 import { isWebVisible } from "@/lib/variants"
 
 const personal = await getEntry("personal", "personal")!
-const { headline, intro, role, location, availability, specialisms, stats, summary } = personal.data
+const site = await getEntry("site", "site")!
+const education = await getEntry("education", "education")!
+const { headline, intro, role, location, availability, specialisms, stats, summary, contact } =
+    personal.data
 
 // `order` is the editorial sequence; year only breaks ties so that adding a
 // study without setting `order` still lands somewhere sensible.
@@ -16,77 +20,136 @@ const work = (await getCollection("work", ({ data }) => !data.draft)).sort(
 )
 
 // Until the case studies exist, the work section carries the three systems she
-// built from scratch and owned end to end. Same file the About table reads, so
+// built from scratch and owned end to end. Same file the inventory reads, so
 // the two cannot drift, and it means the page never stands empty.
 const systems = (await getCollection("systems")).filter((s) => isWebVisible(s.data))
 const led = systems.filter((s) => s.data.lead)
+
+const skills = (await getCollection("skills")).filter((s) => isWebVisible(s.data))
+const community = await getEntry("community", "community")!
+const experience = (await getCollection("experience")).filter((e) => isWebVisible(e.data))
+
+// The hero lede, in order of provenance: her own `intro` when she writes one,
+// then the design's line, then the Profile paragraph the CV prints. Every rung
+// is real copy — see data/site.yaml and CLAUDE.md, "Whose site this is".
+const lede = intro ?? [site.data.home.lede]
+
+// Derived rather than written down, so neither can drift from the record. The
+// earliest year across every role, not the last entry's — the list is ordered
+// newest-first by role seniority, and the freelance work that sorts last began
+// in 2020, well after the career did.
+const years = experience.flatMap((e) => e.data.dates.match(/\d{4}/g) ?? []).map(Number)
+const startYear = years.length > 0 ? String(Math.min(...years)) : ""
+const thisYear = String(new Date().getFullYear())
+const highestDegree = education.data.entries[0]
+
+// "Beyond the desk": the same three community lists the About page renders in
+// full, counted here.
+const mentoring = community.data.mentoring.filter(isWebVisible)
+const speaking = community.data.speaking.filter(isWebVisible)
+const judgingCount = community.data.judging.split("·").length
+
+const beyond = [
+    { value: String(mentoring.length), label: "Mentoring engagements" },
+    { value: String(speaking.length), label: "Talks and workshops" },
+    { value: String(judgingCount), label: "Judging panels" },
+]
+
+// Three entries as a sample of the community work, before the page hands off to
+// the full record on About. Taking the three most recent outright would show two
+// mentoring rows from the same year and no speaking at all, so each strand seeds
+// one entry first and the last slot goes to whatever is next most recent.
+const byYearDesc = <T extends { year: string }>(a: T, b: T) => b.year.localeCompare(a.year)
+const seeds = [mentoring, speaking].map((list) => [...list].sort(byYearDesc)[0]).filter(Boolean)
+const rest = [...mentoring, ...speaking].filter((row) => !seeds.includes(row)).sort(byYearDesc)
+const recent = [...seeds, ...rest].slice(0, 3).sort(byYearDesc)
 ---
 
 <Layout>
-    <section class="hero wrap">
-        <span class="eyebrow hero__eyebrow rise" style="--i: 0">
-            {role} &nbsp;/&nbsp; {location}
-        </span>
-        <h1 class="display hero__title rise" style="--i: 1">
+    <section class="hero">
+        <div class="hero__meta-top">
+            <span>Portfolio<span class="hero__sep">/</span>{startYear} &ndash; {thisYear}</span>
+            <span>{location}</span>
+        </div>
+        <h1 class="hero__title">
             {headline.before}
             <em>{headline.accent}</em>
             {headline.after}
         </h1>
         <div class="hero__body">
-            <div class="hero__lede rise" style="--i: 2">
-                {
-                    // `intro` is Pamudi's to write. Until it exists the lede is
-                    // the Profile paragraph the CV prints — real, and already
-                    // hers, rather than a placeholder.
-                    intro ? (
-                        intro.map((line) => <p class="lede">{line}</p>)
-                    ) : (
-                        <Markup as="p" class="lede" text={summary} />
-                    )
-                }
+            <div class="hero__lede">
+                {lede.map((line) => <p>{line}</p>)}
             </div>
-            <dl class="hero__meta rise" style="--i: 3">
-                <div>
-                    <dt>Currently</dt>
-                    <dd>{role}</dd>
-                </div>
-                <div>
-                    <dt>Based in</dt>
-                    <dd>{location}</dd>
-                </div>
-                <div>
-                    <dt>Focus</dt>
-                    <dd>{specialisms.join(" · ")}</dd>
-                </div>
-                {
-                    availability && (
-                        <div>
-                            <dt>Availability</dt>
-                            <dd>{availability}</dd>
-                        </div>
-                    )
-                }
+            <dl class="hero__facts">
+                <dt>Currently</dt>
+                <dd>{role}, {experience[0]?.data.org.replace(/\s*\(Pvt\)\s*Ltd/, "")}</dd>
+                <dt>Focus</dt>
+                <dd>{specialisms.join(" · ")}</dd>
+                <dt>Study</dt>
+                <dd>{highestDegree.degree}, {highestDegree.institute.split(" · ").at(-1)}</dd>
+                {availability && <dt>Availability</dt>}
+                {availability && <dd>{availability}</dd>}
+                <dt>Elsewhere</dt>
+                <dd class="hero__links">
+                    <a href={`mailto:${contact.email}`}>Email</a>
+                    {
+                        contact.links.filter(isWebVisible).map((link) => (
+                            <a href={link.url} rel="me noopener">
+                                {link.label}
+                            </a>
+                        ))
+                    }
+                </dd>
             </dl>
         </div>
     </section>
 
-    <section class="wrap" aria-label="The work in figures">
-        <dl class="stat-band">
+    <section class="figures" aria-label="The work in figures">
+        <dl class="figures__band">
             {
                 stats.map((stat) => (
                     // Label first, value second, so the `dl` stays valid; the
                     // stylesheet reverses them so the figure reads on top.
-                    <div class="stat">
-                        <dt class="stat__label">{stat.label}</dt>
-                        <dd class="stat__value display">{stat.value}</dd>
+                    <div class="figure">
+                        <dt class="figure__label">{stat.label}</dt>
+                        <dd class="figure__value">{stat.value}</dd>
                     </div>
                 ))
             }
         </dl>
+        <ul class="figures__minor">
+            <li><span>{systems.length}</span> products in the systems inventory</li>
+            {
+                site.data.home.figures.map((f) => (
+                    <li>
+                        <span>{f.value}</span> {f.label}
+                    </li>
+                ))
+            }
+        </ul>
     </section>
 
-    <section class="wrap" aria-labelledby="work-heading">
-        <h2 id="work-heading" class="eyebrow" style="margin-bottom: 2.5rem">Selected work</h2>
+    <Row label="Profile" rule="none">
+        <Markup as="p" class="profile" text={summary} />
+    </Row>
+
+    <Row label="Practice" note={"Four things\nthe work is"}>
+        <div class="practice">
+            {
+                site.data.practice.map((card, i) => (
+                    <article class="practice__card">
+                        <p class="practice__label">
+                            {String(i + 1).padStart(2, "0")} / {card.label}
+                        </p>
+                        <h3 class="practice__title">{card.title}</h3>
+                        <Markup as="p" class="practice__text" text={card.text} />
+                    </article>
+                ))
+            }
+        </div>
+    </Row>
+
+    <Row label="Selected work" note={"Owned,\nfrom scratch"} flush>
         {
             work.length > 0 ? (
                 <div class="work-index">
@@ -95,30 +158,98 @@ const led = systems.filter((s) => s.data.lead)
                     ))}
                 </div>
             ) : (
-                <div class="lead-systems">
+                <div class="selected">
                     {led.map((system, i) => (
-                        <article class="lead-system">
-                            <span class="eyebrow lead-system__num">
-                                {String(i + 1).padStart(2, "0")}
+                        <a class="selected__row" href={href("/systems")}>
+                            <span class="selected__num">{String(i + 1).padStart(2, "0")}</span>
+                            <span class="selected__main">
+                                <span class="selected__title">{system.data.product}</span>
+                                {system.data.client && (
+                                    <span class="selected__client">{system.data.client}</span>
+                                )}
+                                {system.data.description && (
+                                    <Markup
+                                        as="span"
+                                        class="selected__desc"
+                                        text={system.data.description}
+                                    />
+                                )}
                             </span>
-                            <h3 class="lead-system__title display">{system.data.product}</h3>
-                            {system.data.description && (
-                                <Markup
-                                    as="p"
-                                    class="lead-system__desc"
-                                    text={system.data.description}
-                                />
-                            )}
-                            <p class="lead-system__scope">{system.data.scope}</p>
-                            <p class="lead-system__stack">{system.data.stack}</p>
-                        </article>
+                            <span class="selected__aside">
+                                <span class="selected__scope">{system.data.scope}</span>
+                                <span class="selected__stack">{system.data.stack}</span>
+                            </span>
+                        </a>
                     ))}
-                    <p class="lead-systems__note">
-                        The full inventory ({systems.length} products, with the stack each was
-                        specified for) is <a href={href("/about")}>on the About page</a>.
+                    <p class="selected__note">
+                        {systems.length - led.length} further products, with the scope and stack
+                        each was specified for, are{" "}
+                        <a href={href("/systems")}>in the systems inventory</a>.
                     </p>
                 </div>
             )
         }
+    </Row>
+
+    <section class="band">
+        <div class="band__inner">
+            <div class="band__rail">
+                <h2 class="band__label">How it runs</h2>
+            </div>
+            <div>
+                <p class="band__lede">{site.data.process.lede}</p>
+                <ol class="process">
+                    {
+                        site.data.process.steps.map((step, i) => (
+                            <li class="process__step">
+                                <span class="process__num">{String(i + 1).padStart(2, "0")}</span>
+                                <h3 class="process__title">{step.title}</h3>
+                                <Markup as="p" class="process__text" text={step.text} />
+                            </li>
+                        ))
+                    }
+                </ol>
+            </div>
+        </div>
     </section>
+
+    <Row label="Toolkit" rule="none">
+        <div class="toolkit">
+            {
+                skills.map((s) => (
+                    <div class="toolkit__item">
+                        <h3 class="toolkit__label">{s.data.category}</h3>
+                        <Markup as="p" class="toolkit__stack" text={s.data.stack} />
+                    </div>
+                ))
+            }
+        </div>
+    </Row>
+
+    <Row label="Beyond the desk">
+        <dl class="beyond">
+            {
+                beyond.map((item) => (
+                    <div class="beyond__item">
+                        <dt class="beyond__label">{item.label}</dt>
+                        <dd class="beyond__value">{item.value}</dd>
+                    </div>
+                ))
+            }
+        </dl>
+        <div class="dated-list">
+            {
+                recent.map((row) => (
+                    <div class="dated">
+                        <span class="dated__year">{row.year}</span>
+                        <Markup as="p" text={row.text} />
+                    </div>
+                ))
+            }
+        </div>
+        <p class="row__footnote">
+            The full record of speaking, mentoring, events and judging is{" "}
+            <a href={href("/about")}>on the About page</a>.
+        </p>
+    </Row>
 </Layout>

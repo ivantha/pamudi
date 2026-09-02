@@ -10,13 +10,36 @@
  */
 import { readFile } from "node:fs/promises"
 
-/** Foreground/background token pairs, each with the ratio it must clear. */
+/**
+ * Foreground/background token pairs, each with the ratio it must clear.
+ *
+ * Both surfaces are listed. Half of this site is reversed out on `--dark`, and
+ * the paper palette's `--muted` measures 3.10:1 there — the pairs below are
+ * what stops that swap being made by hand and shipped.
+ *
+ * Hairlines (`--rule`, `--rule-strong`, `--chip`) are absent on purpose. WCAG
+ * 1.4.11 covers UI components and meaningful graphics; a decorative divider,
+ * and a chip outline drawn around text that already clears 4.5:1 on its own,
+ * are neither.
+ */
 const PAIRS = [
-    { fg: "ink", bg: "paper", min: 7, note: "body text" },
-    { fg: "ink", bg: "paper-2", min: 7, note: "text on inset panels" },
-    { fg: "muted", bg: "paper", min: 4.5, note: "secondary text" },
-    { fg: "accent", bg: "paper", min: 4.5, note: "accent text and links" },
-    { fg: "paper", bg: "accent", min: 4.5, note: "text reversed out of accent" },
+    // The paper side.
+    { fg: "ink", bg: "sheet", min: 7, note: "body text" },
+    { fg: "ink", bg: "ground", min: 7, note: "text on the outer ground" },
+    { fg: "ink", bg: "sheet-hover", min: 7, note: "text on a hovered row" },
+    { fg: "body", bg: "sheet", min: 4.5, note: "secondary paragraphs" },
+    { fg: "muted", bg: "sheet", min: 4.5, note: "labels and meta" },
+    { fg: "muted", bg: "sheet-hover", min: 4.5, note: "meta on a hovered row" },
+    { fg: "accent", bg: "sheet", min: 4.5, note: "accent text and links" },
+    { fg: "accent-strong", bg: "sheet", min: 4.5, note: "link hover" },
+    { fg: "sheet", bg: "accent", min: 4.5, note: "text reversed out of accent" },
+
+    // The ink side.
+    { fg: "on-dark", bg: "dark", min: 7, note: "headings on the dark bands" },
+    { fg: "on-dark-soft", bg: "dark", min: 4.5, note: "ledes on the dark bands" },
+    { fg: "on-dark-muted", bg: "dark", min: 4.5, note: "labels on the dark bands" },
+    { fg: "mint", bg: "dark", min: 4.5, note: "the accent, reversed" },
+    { fg: "dark", bg: "mint", min: 4.5, note: "text reversed out of the accent" },
 ]
 
 const source = await readFile(new URL("../src/styles/_tokens.scss", import.meta.url), "utf-8")
