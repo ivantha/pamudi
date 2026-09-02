@@ -440,6 +440,15 @@ shown. Whether to bring the PDF across is a decision for Pamudi, not a tidy-up;
     may be touched, the frame must still pass every other part of the check, and
     the page's frontmatter must record exactly what was covered.
     `src/assets/systems/mining-site-tool-platform/` is the worked example.
+- **`design-archive/` holds all 950 exported frames, used or not**, foldered by
+  the `data/systems.yaml` product rather than by Figma page so it lines up with
+  `/systems/<slug>`. Lossless WebP, long edge capped at 1600px. It is **an
+  archive, not a publication queue**: nothing in it has been through the
+  frame-by-frame check, and moving a file from there into `src/assets/` still
+  means looking at it first. 76 frames were withheld from it by an OCR pass over
+  every frame, because they carry a client or product name and this repo is
+  public; `design-archive/README.md` names each one and says how to re-export it.
+  Astro never imports from this directory, so it costs nothing at build time.
 - `src/assets/work/placeholder-*.png` and `scripts/make-placeholders.mjs` are
   scaffolding. Delete both once real covers land.
 
