@@ -666,7 +666,7 @@ const PAGES = [
         key: "community",
         figmaPage: "5:36602",
         title: "Volunteering Speeches & Mentoring",
-        product: "About page, Community section",
+        product: "/off-hours, Teaching and mentoring",
         mode: "fill",
         nodes: [
             {
@@ -779,7 +779,7 @@ const PAGES = [
         key: "extra",
         figmaPage: "5:36603",
         title: "Extra",
-        product: "About page, Event design section",
+        product: "/plates, Identity and event design",
         mode: "fill",
         nodes: [
             // Student-conference identity work, all of it published event
@@ -838,7 +838,7 @@ const PAGES = [
         key: "hobbies",
         figmaPage: "5:36604",
         title: "Hobbies",
-        product: "About page, Sketches and paintings section",
+        product: "/plates (drawings) and /off-hours (photographs)",
         mode: "fill",
         nodes: [
             // Her own drawings and paintings. Several are signed, and two
@@ -902,66 +902,134 @@ const PAGES = [
                 note: "Tiger cub, digital",
             },
 
-            // Fan art of characters someone else owns. Fine on a personal site,
-            // and none of it is doing work the originals above are not, so it
-            // is not worth putting someone else's IP on a portfolio for.
+            // Studies after characters someone else owns. Dropped until the
+            // Plinth design (2026-09-03), which publishes them under titles
+            // that name what they show rather than the character, and carries
+            // the attribution line under the gallery: the character belongs to
+            // its owner, the drawing is hers. That line is the condition on
+            // publishing them, not decoration.
             {
                 id: "24:295227",
                 slug: "pennywise-graphite",
-                verdict: "dropped",
-                note: "Fan art, graphite",
+                verdict: "published",
+                asset: "art/study-pennywise-graphite.jpg",
+                note: "Study after a film character — titled by what it shows, and the plates page carries the attribution line",
             },
             {
                 id: "24:295229",
                 slug: "venom-graphite",
-                verdict: "dropped",
-                note: "Fan art, graphite",
+                verdict: "published",
+                asset: "art/study-venom-graphite.jpg",
+                note: "Study after a comics character — see the attribution line",
             },
-            { id: "24:295236", slug: "navi-digital", verdict: "dropped", note: "Fan art, digital" },
-            { id: "31:295260", slug: "dune-digital", verdict: "dropped", note: "Fan art, digital" },
+            {
+                id: "24:295236",
+                slug: "navi-digital",
+                verdict: "published",
+                asset: "art/study-navi-digital.jpg",
+                note: "Study after a film character — see the attribution line",
+            },
+            {
+                id: "31:295260",
+                slug: "dune-digital",
+                verdict: "published",
+                asset: "art/study-dune-digital.jpg",
+                note: "Study after a film character — see the attribution line",
+            },
             {
                 id: "24:295237",
                 slug: "kimono-digital",
-                verdict: "dropped",
+                verdict: "published",
+                asset: "art/kimono-digital.jpg",
                 note: "Character study, digital",
             },
             {
                 id: "24:295235",
                 slug: "night-landscape",
-                verdict: "dropped",
-                note: "Night landscape, digital",
+                verdict: "published",
+                asset: "art/night-cubs-digital.jpg",
+                note: "Cubs in moonlit undergrowth, digital",
             },
 
             // Personal life, not work: pets, gaming, puzzles, travel, the desk.
             // Her own page groups them under Music, Gaming, Pets, Traveling,
-            // Stargazing and Reading, so a section for them is her idea and not
-            // an invention — but 31:295261 has another person in it, and none
-            // of the rest says anything a portfolio needs to say. Hers to add.
-            { id: "24:295224", slug: "music-desk", verdict: "dropped", note: "At the keyboard" },
-            { id: "24:295232", slug: "lego-build", verdict: "dropped", note: "Lego build" },
+            // Stargazing and Reading, so the sections are her idea rather than
+            // an invention. All of these were dropped until the Plinth design
+            // (2026-09-03) gave them a page; nine are now on /off-hours. Two
+            // needed a crop and one a redaction — the notes say which and why.
+            //
+            // 31:295261 is still out, and for the original reason: another
+            // person is in frame, so it is not hers alone to publish.
+            {
+                id: "24:295224",
+                slug: "music-desk",
+                verdict: "published",
+                asset: "hobbies/keyboard.jpg",
+                note: "At the keyboard — CROPPED: the social player's avatar, name plate and search icon are overlay, not photograph",
+            },
+            {
+                id: "24:295232",
+                slug: "lego-build",
+                verdict: "published",
+                asset: "hobbies/falcon-build.jpg",
+                note: "Lego build, step 1,379",
+            },
             {
                 id: "24:295238",
                 slug: "drawing-with-cat",
-                verdict: "dropped",
-                note: "Drawing on an iPad, cat asleep behind — the attribution evidence for the owl",
+                verdict: "published",
+                asset: "hobbies/drawing-with-cat.jpg",
+                note: "Drawing on an iPad, cat asleep behind — the attribution evidence for the owl. ⚠ REDACTED: a third party's full name is legible on the laptop screen behind it and is painted out in the app's own panel colour. Re-export means re-redacting; see CLAUDE.md, the fifth pass.",
             },
-            { id: "24:295241", slug: "game-screenshot", verdict: "dropped", note: "Game capture" },
-            { id: "24:295242", slug: "kittens", verdict: "dropped", note: "Two kittens" },
-            { id: "24:295243", slug: "window-desk", verdict: "dropped", note: "Desk by a window" },
-            { id: "24:295244", slug: "puzzles", verdict: "dropped", note: "Jigsaw puzzles" },
+            {
+                id: "24:295241",
+                slug: "game-screenshot",
+                verdict: "published",
+                asset: "hobbies/sea-of-thieves.jpg",
+                note: "Game capture — the only gamertag in frame is her own",
+            },
+            {
+                id: "24:295242",
+                slug: "kittens",
+                verdict: "published",
+                asset: "hobbies/kittens.jpg",
+                note: "Two kittens at the door",
+            },
+            {
+                id: "24:295243",
+                slug: "window-desk",
+                verdict: "published",
+                asset: "hobbies/window-coffee.jpg",
+                note: "Coffee and headphones at a hill-country window",
+            },
+            {
+                id: "24:295244",
+                slug: "puzzles",
+                verdict: "published",
+                asset: "hobbies/puzzles.jpg",
+                note: "Two 1,000-piece jigsaws",
+            },
             {
                 id: "28:295246",
                 slug: "portrait-in-progress",
-                verdict: "dropped",
+                verdict: "published",
+                asset: "art/portrait-in-progress.jpg",
                 note: "A portrait mid-draw on an iPad",
             },
             {
                 id: "28:295249",
                 slug: "stargazing",
-                verdict: "dropped",
-                note: "Telescope setup",
+                verdict: "published",
+                asset: "hobbies/telescope.jpg",
+                note: "Telescope setup — CROPPED: the social player's mute button is overlay, not photograph. A second figure is in frame and is not identifiable (the tube covers the face); the one identifiable person is Pamudi.",
             },
-            { id: "30:295259", slug: "gaming-setup", verdict: "dropped", note: "Gaming setup" },
+            {
+                id: "30:295259",
+                slug: "gaming-setup",
+                verdict: "published",
+                asset: "hobbies/two-rigs.jpg",
+                note: "Two rigs, two cats",
+            },
             {
                 id: "31:295261",
                 slug: "travel-selfie",
