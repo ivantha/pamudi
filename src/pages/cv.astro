@@ -1,6 +1,6 @@
 ---
 import type { ImageMetadata } from "astro"
-import { Image } from "astro:assets"
+import { Image, getImage } from "astro:assets"
 import { getEntry } from "astro:content"
 import Layout from "@/layouts/Layout.astro"
 import { href } from "@/lib/url"
@@ -26,6 +26,18 @@ if (sheets.length === 0) {
         "No CV page renders in src/assets/cv/. Run `pnpm build:cv`; `pnpm dev` and `pnpm build` both do it for you.",
     )
 }
+
+// Each sheet at its own full size, for the link the figure below wraps around.
+// On a phone the rendered sheet is about 335px wide, which puts the CV's 9pt
+// body type at roughly 3px: legible as a picture of a document, not as a
+// document. Tapping one opens the render at 1323px, where it can be
+// pinch-zoomed, and the PDF download above stays the primary route.
+//
+// `getImage` rather than the raw `ImageMetadata.src`, so the target is a URL
+// the build is guaranteed to have emitted.
+const fullSheets = await Promise.all(
+    sheets.map((sheet) => getImage({ src: sheet, width: sheet.width, format: "png" })),
+)
 
 // What each sheet actually carries, so the alt text describes the page rather
 // than announcing that an image exists.
@@ -86,13 +98,19 @@ const rows = Math.ceil(contents.length / 2)
         {
             sheets.map((sheet, i) => (
                 <figure class="cv-sheet">
-                    <Image
-                        src={sheet}
-                        alt={`Page ${i + 1} of the curriculum vitae: ${CONTENTS[i] ?? "further detail"}.`}
-                        widths={[480, 640, 900, 1280, 1720]}
-                        sizes="(min-width: 60rem) 54rem, 100vw"
-                        loading={i === 0 ? "eager" : "lazy"}
-                    />
+                    <a
+                        class="cv-sheet__open"
+                        href={fullSheets[i].src}
+                        aria-label={`Open page ${i + 1} of the curriculum vitae at full size`}
+                    >
+                        <Image
+                            src={sheet}
+                            alt={`Page ${i + 1} of the curriculum vitae: ${CONTENTS[i] ?? "further detail"}.`}
+                            widths={[480, 640, 900, 1280, 1720]}
+                            sizes="(min-width: 60rem) 54rem, 100vw"
+                            loading={i === 0 ? "eager" : "lazy"}
+                        />
+                    </a>
                     <figcaption class="cv-sheet__folio">
                         Page {String(i + 1).padStart(2, "0")} /{" "}
                         {String(sheets.length).padStart(2, "0")}

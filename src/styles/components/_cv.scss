@@ -72,6 +72,17 @@
     }
 }
 
+// The sheet is a link to its own full-size render, which is what makes the CV
+// readable on a phone rather than merely visible. It is a block so the whole
+// page is the target, and it says so on hover.
+.cv-sheet__open {
+    display: block;
+
+    &:hover img {
+        border-color: var(--accent);
+    }
+}
+
 .cv-sheet__folio {
     margin-top: 0.875rem;
     text-align: center;

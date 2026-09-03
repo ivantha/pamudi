@@ -45,6 +45,25 @@
     font-weight: 600;
     letter-spacing: var(--tracking-micro);
     text-transform: uppercase;
+
+    // Seven anchors, and on a phone they wrap to three lines at 16px each: the
+    // smallest targets on the site, in the one nav that exists to be tapped.
+    // The row gap opens to make room, and the hit area is an overlay so the
+    // labels keep their own rhythm.
+    @media (max-width: 52rem) {
+        row-gap: 1.5rem;
+
+        a {
+            position: relative;
+
+            &::after {
+                content: "";
+                position: absolute;
+                inset-block: -0.75rem;
+                inset-inline: -0.5rem;
+            }
+        }
+    }
 }
 
 // ---- Headline figures -------------------------------------------------------
@@ -139,6 +158,20 @@
 // it is set from the page rather than guessed at here.
 .row--last {
     border-bottom: 1px solid var(--rule);
+
+    // The page marks the last row of BOTH columns, because a two-column list
+    // has two feet to draw. Collapsed to one column it has one, and the rule
+    // that closed the left column lands in the middle of the list, closing it a
+    // row early and doubling the hairline above the final row.
+    //
+    // The correction belongs here rather than in the page: the media query is
+    // the thing that knows how many columns there are, and `isLast` in
+    // src/pages/work/index.astro cannot.
+    @media (max-width: 52rem) {
+        &:not(:last-child) {
+            border-bottom: 0;
+        }
+    }
 }
 
 .row__name {

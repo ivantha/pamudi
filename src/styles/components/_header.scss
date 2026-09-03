@@ -1,10 +1,17 @@
-// The masthead: four links, the name, two links. It is symmetrical on purpose —
+// The masthead: four links, the name, two links. It is symmetrical on purpose:
 // the name is the centre of the sheet, not a logo pinned to one corner.
 //
 // The background is a gradient rather than a flat fill so the page fades out
 // under a sticky bar instead of being cut off by a hard edge.
 
 .masthead {
+    // The fade band under the bar. It is a length rather than the percentage it
+    // used to be, because the bar is three different heights and a percentage
+    // makes the fade three different softnesses: 76% of the old desktop bar was
+    // 17.7px and 76% of the mobile bar was 30px, which is why content under the
+    // phone bar read as veiled rather than faded.
+    --masthead-fade: 1.125rem;
+
     position: sticky;
     top: 0;
     z-index: 20;
@@ -13,14 +20,46 @@
     align-items: center;
     gap: 1.5rem;
     padding-block: 1.25rem;
-    background: linear-gradient(var(--page) 76%, transparent);
+    background: linear-gradient(var(--page) calc(100% - var(--masthead-fade)), transparent);
 
+    // Below the split the bar is a wrap container rather than a grid: the name
+    // takes row one whole and the two navs share row two. Grid cannot do that,
+    // because two grid items can never merge into one evenly spaced run, so it
+    // is the `display` that changes here and not the template.
+    //
+    // This replaced a three-row stack (name, then each nav on its own row) that
+    // stood 125px tall and stayed pinned, which is a fifth of an iPhone SE and
+    // a third of the same phone in landscape.
     @media (max-width: 56rem) {
-        grid-template-columns: minmax(0, 1fr);
-        justify-items: center;
-        gap: 0.875rem;
-        padding-block: 1rem 0.875rem;
+        // The one number that makes two `nav` elements read as a single line.
+        // It is the gap BETWEEN them here and the gap INSIDE them below; if the
+        // two ever diverge the seam shows and the row stops reading as one.
+        --nav-gap: clamp(0.75rem, -0.4375rem + 3.75vw, 1.25rem);
+        --nav-row: 0.875rem;
+        --masthead-fade: 0.75rem;
+
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        column-gap: var(--nav-gap);
+        row-gap: var(--nav-row);
+        padding-block: 0.875rem;
         text-align: center;
+    }
+
+    // A tighter gap for the narrowest phones, so the four-link half still makes
+    // one line at a 280px viewport (the Galaxy Fold cover screen, and the floor
+    // this bar is designed to).
+    //
+    // 22rem and not the 26.5rem below it, deliberately. Changing the gap moves
+    // the width at which the six links stop fitting one line, and `--header-h`
+    // is pinned to that width; if the two breakpoints were the same value, the
+    // gap would widen at exactly the point the token stopped allowing for a
+    // second row, and every anchor in the band between would land under the
+    // bar. Keeping them apart is what stops one from moving the other.
+    @media (max-width: 22rem) {
+        --nav-gap: 0.625rem;
     }
 }
 
@@ -38,8 +77,18 @@
     }
 
     // On a phone the name leads, because the nav below it is what scrolls.
+    // `flex-basis: 100%` is what forces the break after it, so the two navs
+    // flow onto the row beneath rather than beside it.
     @media (max-width: 56rem) {
         order: -1;
+        flex: 0 0 100%;
+        margin-block-end: 0.25rem;
+
+        // Pins the row to a number instead of to whichever face has loaded.
+        // Both families are `font-display: swap`, so the bar is first drawn in
+        // Georgia; an explicit line-height means the swap cannot change the
+        // bar's height and shift the page under it.
+        line-height: 1.25;
     }
 }
 
@@ -50,16 +99,37 @@
     font-weight: 600;
     letter-spacing: var(--tracking-nav);
     text-transform: uppercase;
-
-    @media (max-width: 56rem) {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.75rem 1.125rem;
-    }
 }
 
 .masthead__nav--end {
     justify-content: flex-end;
+}
+
+// This block sits AFTER `--end` rather than nested inside `.masthead__nav`
+// above it, and that is load-bearing for the same reason the `.split` collapse
+// in _base.scss is arranged the way it is. Both selectors are (0,1,0) and a
+// media query adds no specificity, so a mobile rule written inside
+// `.masthead__nav` loses to `.masthead__nav--end` at every width. That was
+// already live here: the old mobile `justify-content: center` never applied,
+// and it went unnoticed only because a grid sized the nav to its content.
+@media (max-width: 56rem) {
+    .masthead__nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        column-gap: var(--nav-gap);
+        row-gap: var(--nav-row);
+
+        // The footer already sets a nav row at this size in `--tracking-micro`;
+        // borrowing that rather than inventing a value buys 10px across six
+        // links, which is the difference between one line and two on a large
+        // phone. The type is unchanged: only the letterspacing steps down one
+        // notch on the scale the design already uses at this size.
+        letter-spacing: var(--tracking-micro);
+    }
+
+    .masthead__nav--end {
+        justify-content: center;
+    }
 }
 
 .masthead__link {
@@ -74,6 +144,49 @@
     &[aria-current="page"] {
         color: var(--ink);
         border-bottom-color: var(--accent-bright);
+    }
+
+    @media (max-width: 56rem) {
+        position: relative;
+
+        // Letterspacing puts a full unit after the LAST glyph of every word, so
+        // six links carry six units the row cannot spend. This takes them out
+        // of layout only: the border box, and with it the aria-current
+        // underline, is exactly as wide as it was.
+        margin-inline-end: calc(var(--tracking-micro) * -1);
+
+        // A 44px hit area that costs the row no height. The type cannot grow
+        // (see the note on the fixed UI sizes in _tokens.scss) and vertical
+        // padding would drag the aria-current underline down with it, so the
+        // target is an out-of-flow overlay instead: the line stays 20.8px, the
+        // underline does not move, and `--header-h` is unaffected.
+        //
+        // 12px is a ceiling rather than a preference. Downward it has to stay
+        // inside the bar's 14px bottom padding: an overlay that escaped would
+        // be an invisible strip lying across the top of every page swallowing
+        // taps, and it would win, because the masthead is z-index 20.
+        &::after {
+            content: "";
+            position: absolute;
+            inset-block: -0.75rem;
+            inset-inline: calc(var(--nav-gap) / -2);
+        }
+    }
+}
+
+// Two nav rows now, 34.8px apart, so a centred 44px overlay on each would
+// overlap by 9px and the lower row would win every tap in the band. The space
+// is split by which row a nav lands on instead: row one reaches up into the gap
+// under the name, row two down into the bar's bottom padding. That is only safe
+// because the wrap below this width always falls at the nav boundary, the four
+// links fitting one line down to a 280px viewport.
+@media (max-width: 26.5rem) {
+    .masthead__nav .masthead__link::after {
+        inset-block: -1.0625rem -0.4375rem;
+    }
+
+    .masthead__nav--end .masthead__link::after {
+        inset-block: -0.4375rem -0.875rem;
     }
 }
 

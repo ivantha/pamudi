@@ -91,7 +91,34 @@
     --section-y: clamp(2rem, 1.3182rem + 3vw, 3.5rem); // a ruled section
     --section-y-lg: clamp(2.5rem, 1.5909rem + 4vw, 4rem); // one that opens a page
     --head-y: clamp(2rem, 0.8636rem + 5vw, 4rem); // above a page title
-    --header-h: 3.75rem; // the sticky header, and the scroll offset
+    // The sticky header, and the scroll offset every in-page link lands
+    // against. The bar is three different heights, so this is three values, and
+    // every one of them is measured rather than estimated:
+    //
+    //   > 56rem      70 to 74px   the name between two navs, all on one row
+    //   <= 56rem     87 to 90px   the name over a single nav row
+    //   <= 26.5rem   122px        the six links stop fitting one line
+    //
+    // Rounded up, leaving 2 to 6px of air. Over-shooting drops an anchored
+    // heading a little lower than it needs to be and nobody notices;
+    // under-shooting hides it under the bar, which is the bug these three
+    // values replaced. One fixed 3.75rem buried every anchored heading on a
+    // phone by 49px, and cleared the desktop bar by 2px only thanks to the
+    // `+ 1rem` in the `scroll-padding-top` that consumes it.
+    //
+    // 26.5rem is derived, not chosen: the six links stop making one line at
+    // 413px, and this sits 11px above that so a font swap cannot cross it. See
+    // the note beside `--nav-gap` in components/_header.scss.
+    --header-h: 4.75rem;
+
+    @media (max-width: 56rem) {
+        --header-h: 6rem;
+    }
+
+    // Last, deliberately: same selector, same specificity, narrower condition.
+    @media (max-width: 26.5rem) {
+        --header-h: 7.75rem;
+    }
 
     // ---- Motion -------------------------------------------------------------
     --ease: cubic-bezier(0.2, 0.7, 0.3, 1);

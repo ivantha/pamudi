@@ -6,8 +6,9 @@
 // on the right.
 .case-bar {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 0.25rem 1rem;
     padding-block: 0.75rem;
     border-bottom: 1px solid var(--rule);
     font-size: var(--fs-micro);
@@ -18,6 +19,26 @@
 
     a {
         color: var(--body);
+
+        // Three short words that are one control, so they break as a block or
+        // not at all. Without this the row still fits, but on a narrow phone it
+        // fits by splitting the back link down the middle into "ALL" over
+        // "WORK", and the standing note beside it can be long: the widest is
+        // "UX and accessibility research", set at this tracking.
+        white-space: nowrap;
+
+        // The link is 17px of uppercase micro-type, and the type cannot grow.
+        // The bar's own 12px of vertical padding is room the target can borrow
+        // without changing the layout, so the hit area is an out-of-flow
+        // overlay rather than padding on the link.
+        position: relative;
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset-block: -0.8125rem;
+            inset-inline: -0.5rem;
+        }
 
         &:hover {
             color: var(--ink);
@@ -267,8 +288,12 @@
 
 // ---- Other cases ------------------------------------------------------------
 
+// A display title against a micro-link. It fits at every width the site is
+// built for, but the title comes from the page and the link never shrinks, so
+// the row wraps rather than trusting that to stay true.
 .other__head {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: baseline;
     gap: 1rem;

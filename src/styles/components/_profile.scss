@@ -246,6 +246,11 @@
     dd {
         margin: 0;
         color: var(--ink);
+
+        // This cell carries the three profile handles and the email address.
+        // They are the longest unbroken strings on the page, and unlike the
+        // Contact tiles they had no guard.
+        overflow-wrap: anywhere;
     }
 
     @media (max-width: 34rem) {

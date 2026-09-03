@@ -51,6 +51,11 @@
     margin: 1.5rem 0 0;
     font-size: var(--fs-text);
     color: var(--muted);
+
+    // The same 27-character address the Contact tiles guard. It fits at every
+    // width the site is built for, but it is the one string here long enough
+    // not to, and the guard costs nothing until it is needed.
+    overflow-wrap: anywhere;
 }
 
 // The colophon row. It is a single flex line that wraps, so the copyright
@@ -66,11 +71,30 @@
     text-transform: uppercase;
     color: var(--muted);
 
+    // The row gap opens up on a phone, where this row wraps to three lines and
+    // each link is 17px of micro-type. It is what gives the hit areas below
+    // room to reach 41px without overlapping the line above; on a desktop the
+    // row is one line and a row gap never applies.
+    @media (max-width: 52rem) {
+        row-gap: 1.5rem;
+    }
+
     a {
         color: var(--body);
 
         &:hover {
             color: var(--ink);
+        }
+
+        @media (max-width: 52rem) {
+            position: relative;
+
+            &::after {
+                content: "";
+                position: absolute;
+                inset-block: -0.75rem;
+                inset-inline: -0.5rem;
+            }
         }
     }
 }

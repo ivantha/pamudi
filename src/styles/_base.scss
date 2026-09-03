@@ -318,7 +318,10 @@ main {
 
 .btn {
     display: inline-block;
-    padding: 0.8125rem 1.375rem;
+    // 14px of padding around 16.8px of line box is 44.8px tall. It was 13px,
+    // which came to 42.8px: a hair under the comfortable-target floor, and the
+    // one place on the site where a pixel of padding fixed it outright.
+    padding: 0.875rem 1.375rem;
     font-size: var(--fs-nav);
     font-weight: 600;
     letter-spacing: var(--tracking-micro);
@@ -363,6 +366,21 @@ main {
     font-weight: 600;
     letter-spacing: var(--tracking-micro);
     text-transform: uppercase;
+
+    // 17px of micro-type, and the type is fixed by design. Every `.more` on the
+    // site sits alone with at least 24px of margin above it and a section rule
+    // below, so the hit area is taken from that space with an out-of-flow
+    // overlay: nothing moves, and there is no neighbouring target to overlap.
+    @media (max-width: 52rem) {
+        position: relative;
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset-block: -0.8125rem;
+            inset-inline: -0.5rem;
+        }
+    }
 }
 
 // ---- Plates and captions ----------------------------------------------------
@@ -542,6 +560,16 @@ main {
 // bottom edge has to be drawn on the final row of *both* columns.
 .def--last {
     border-bottom: 1px solid var(--rule);
+
+    // Once `.defs` is one column there is only one such row, and the other
+    // rule lands mid-list. Same artefact as `.row--last`, same reasoning for
+    // fixing it in CSS: `isLastSkill` in src/pages/profile.astro marks the row,
+    // but only the media query knows whether the second column still exists.
+    @media (max-width: 52rem) {
+        &:not(:last-child) {
+            border-bottom: 0;
+        }
+    }
 }
 
 // A dated line: a tabular year in a fixed column, the entry beside it.
