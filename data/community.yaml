@@ -17,14 +17,20 @@ mentoring:
     text: >-
       Mentor, *IEEE Young Protégé 2026*: twelve weeks from June, guiding two
       mentees on industry practice and on improving user experience
+  # The three designers who reported to her across the senior role, not a
+  # standing team of three: she carried one at a time. The 2025 appraisal names
+  # only the then-current report, so this row spans the role rather than that
+  # cycle. Experience states the line-management fact and stops there; the
+  # mentoring itself is detailed here, which is the section that is about it.
+  - year: "2022–26"
+    text: >-
+      Internal mentoring at Zone24x7: three direct reports over the period, one
+      at a time, each taken through design reviews, skill-gap assessment and a
+      curated learning path
   - year: "2025"
     text: >-
       Knowledge Partner, *Young Protégé 2025*: guided a young professional
       through a full UI/UX project lifecycle
-  - year: "2025"
-    text: >-
-      Internal mentoring at Zone24x7: design reviews, skill-gap assessment,
-      curated learning paths
   - year: "2023"
     text: Knowledge-transfer sessions for two client project teams
 
@@ -39,10 +45,14 @@ events:
   # PDF, kept on the site. Rows here honour include_in, same as everywhere else.
   - year: "2017–18"
     include_in: [web]
+    # The trailing "design lead across twelve student conferences including IEEE
+    # SLSYW Congress" was removed on 2026-09-03: `student_events` below is the
+    # section dedicated to them and names all twelve, and the summary also
+    # overstated the role, since she was Design Lead on SLSYW alone and
+    # Designer on the rest.
     text: >-
       Head of Designing, *IEEE Student Branch, UCSC*; Head of Marketing,
-      *Pahasara*; design lead across twelve student conferences including *IEEE
-      SLSYW Congress*.
+      *Pahasara*
 
 judging: >-
   *Codescape* 2022 · *ReidCon* Ideathon and How Series 2021 · *Creative Eye* web
@@ -69,8 +79,10 @@ writing:
   - text: Technology articles for *Windows Geek*
   - text: Articles for *Pahasara*, the UCSC students’ blog
 
-# The student conferences behind the "twelve student conferences" line in
-# `events` above, named individually.
+# The twelve student conferences, named individually. This is the section
+# dedicated to them, so it carries them in full and `events` above no longer
+# summarises them. Eleven rows, twelve events: IEEE Day ran in both 2016 and
+# 2017.
 student_events:
   - year: "2018"
     text: Designer, *IEEE SS12 (Age of Innovation)*, IEEE Asia Pacific Region 10
@@ -95,9 +107,15 @@ student_events:
   - year: "2016"
     text: Logistics, *Reid Cyber Wars*, Compsoc UOC
 
+# "Member, *IEEE Student Branch UCSC*" was removed from this string on
+# 2026-09-03. The branch is named two blocks up under Event design and
+# office-holding, where she is Head of Designing, so repeating it here as plain
+# membership both duplicated the organisation and undersold the role. She is
+# still on the record as a member; IEEE WIE UCSC keeps the membership line
+# because no office is recorded there.
 societies: >-
   Designer, *IEEE Sri Lanka Section* · *UCSC WIE* · *UCSC ISACA Student Group*
   · *UCSC Exploration Club* · *Compsoc Forum*, Compsoc UOC · *Codestudy* ·
-  Student Ambassador, *UCSC Mozilla Club* · Member, *IEEE Student Branch UCSC*
-  and *IEEE WIE UCSC* · Singer and keyboardist, *UCSC Music Circle* ·
-  University representative, *Anula Abhiman Educational Exhibition* 2016
+  Student Ambassador, *UCSC Mozilla Club* · Member, *IEEE WIE UCSC* · Singer
+  and keyboardist, *UCSC Music Circle* · University representative, *Anula
+  Abhiman Educational Exhibition* 2016
