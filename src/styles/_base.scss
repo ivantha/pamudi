@@ -494,11 +494,15 @@ main {
 
 // A definition list drawn as ruled rows: a fixed term column, the value beside
 // it. Used for the capability list, the hero facts and the case metadata.
+//
+// Deliberately declares no margin. `_reset.scss` already zeroes the UA `dl`
+// margin at zero specificity, so a `margin: 0` here would only be redundant
+// with it — and, sitting later in the cascade than `.measure`, would silently
+// beat that utility's `margin-inline: auto` and un-centre the list.
 .defs {
     display: grid;
     grid-template-columns: repeat(var(--def-cols, 2), minmax(0, 1fr));
     column-gap: var(--gap-lg);
-    margin: 0;
 
     @media (max-width: 52rem) {
         grid-template-columns: minmax(0, 1fr);
