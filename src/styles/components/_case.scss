@@ -27,21 +27,26 @@
         // "UX and accessibility research", set at this tracking.
         white-space: nowrap;
 
+        &:hover {
+            color: var(--ink);
+        }
+
         // The link is 17px of uppercase micro-type, and the type cannot grow.
         // The bar's own 12px of vertical padding is room the target can borrow
         // without changing the layout, so the hit area is an out-of-flow
-        // overlay rather than padding on the link.
-        position: relative;
+        // overlay rather than padding on the link. Scoped the same way the
+        // footer row and `.more` are: it is a touch concern, and leaving it
+        // unscoped would put an invisible 43px box on the desktop bar for no
+        // reason.
+        @media (max-width: 52rem) {
+            position: relative;
 
-        &::after {
-            content: "";
-            position: absolute;
-            inset-block: -0.8125rem;
-            inset-inline: -0.5rem;
-        }
-
-        &:hover {
-            color: var(--ink);
+            &::after {
+                content: "";
+                position: absolute;
+                inset-block: -0.8125rem;
+                inset-inline: -0.5rem;
+            }
         }
     }
 }
