@@ -10,9 +10,15 @@ import type { Heading } from "@/content.config"
  *
  * The space before the accent is added here rather than being carried as
  * trailing whitespace in the YAML, where it would be invisible and would not
- * survive a reformat. The markup below is deliberately unbroken: a newline
- * between the `<span>` and `{after}` is rendered as a space, which is how a
- * full stop ends up floating away from the word it belongs to.
+ * survive a reformat.
+ *
+ * The markup below looks contorted and has to stay that way. A newline BETWEEN
+ * two things inside the tag is a text node and renders as a space — that is how
+ * a full stop ends up floating away from the word it belongs to, and it is why
+ * the opening `>` and the closing `</Tag` hug the content. A newline INSIDE an
+ * expression container, as Prettier has put one around `after`, is not a text
+ * node and renders nothing; that one is safe. Change the shape and check a
+ * title with a full stop after the accent, such as the home page's.
  */
 interface Props {
     heading: Heading
@@ -30,7 +36,7 @@ const lead = before && accent ? `${before} ` : before
 ---
 
 <Tag class={className}
-    >{lead}{
-        accent && <span class={tone === "bright" ? "accent-word" : "italic"}>{accent}</span>
-    }{after}</Tag
+    >{lead}{accent && <span class={tone === "bright" ? "accent-word" : "italic"}>{accent}</span>}{
+        after
+    }</Tag
 >
