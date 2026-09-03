@@ -13,131 +13,135 @@
 #     kb/projects.md ("Aroya"). They are not paraphrased upward.
 #   - Everything else describes what is visibly in the screens beside it.
 # No outcomes, no metrics, no adoption claims: no source carries any.
+#
+# ⚠ The prose was rewritten on 2026-09-03 from the "Plinth" artboards in the
+# Claude Design project, replacing the longer MDX body this file used to carry
+# (it is in git). Same two kinds of claim and no third; the design is shorter,
+# not looser. Treat it the way data/site.yaml is treated: pending her sign-off.
 system: Precision agriculture app
-facts:
-  - label: Platform
-    value: Flutter, phone and tablet
+plate: 2
+kind: owned
+eyebrow: US ag-tech company · Controlled-environment agriculture
+title:
+  before: Precision
+  accent: agriculture
+  after: " app"
+standfirst: >-
+  Substrate sensor hardware, precision irrigation and crop management for indoor
+  growing, brought into a single Flutter app. Designed from nothing: tokens,
+  components, screens, prototypes and the interaction spec the Flutter team
+  built against.
+meta:
   - label: Role
-    value: Senior UI/UX Engineer, Zone24x7
-  - label: Recorded
-    value: "2024, 2025"
-cover: ../../assets/systems/precision-agriculture-app/room-chart-landscape.png
-coverAlt: Landscape room dashboard on a dark ground, six coloured sensor chips reading Light 1.7k, Temp 72.3, VWC 60, EC 5.08, RH 60 and VPD 1.5 above a six-line chart spanning three days, with a white scrubber at 12:06 PM.
-coverCaption: Six sensor series over three days, each keeping the colour it was given in the chip row above. Turning the phone sideways is not a different screen, it is more chart.
+    value: Sole designer, system owner
+  - label: Scope
+    value: Design system, app, prototypes
+  - label: Stack
+    value: Figma → Flutter
+  - label: Surfaces
+    value: Tablet and phone, on-site
+index:
+  summary: >-
+    Substrate sensor hardware, precision irrigation and controlled-environment
+    crop management in one Flutter app, built so dense field data reads at a
+    glance. Design system, screens and interaction specs owned from the first
+    token.
+  facts:
+    - label: Role
+      value: Sole designer · system owner
+    - label: Stack
+      value: Figma → Flutter
+  shape: tall
+  ground: dark
+  src: ../../assets/systems/precision-agriculture-app/facility-dashboard.png
+  alt: "Facility dashboard on a dark ground: a list of rooms, each a row of moisture, EC, temperature, VPD, humidity and CO₂ readings with the out-of-range values filled rather than tinted."
+figures:
+  - layout: split
+    ground: dark
+    number: Figure 1
+    title: Facility dashboard
+    note: Phone, on the floor
+    shot: 19rem
+    src: ../../assets/systems/precision-agriculture-app/facility-dashboard.png
+    alt: "Facility dashboard on a dark ground: a list of rooms, each a row of moisture, EC, temperature, VPD, humidity and CO₂ readings with the out-of-range values filled rather than tinted."
+    notes:
+      - term: One row, one room
+        text: >-
+          Moisture, EC, temperature, VPD, humidity and CO₂ in a fixed order, so
+          the row is scanned rather than read.
+      - term: Out of range
+        text: >-
+          The failing metric fills rather than merely tints — readable in bright
+          rooms and without colour vision.
+      - term: Crop state
+        text: >-
+          Harvest group, task and lighting sit on the room header, where a
+          grower looks first.
+  - layout: split-end
+    ground: dark
+    number: Figure 2
+    title: Room dashboard
+    note: One level down
+    shot: 16rem
+    src: ../../assets/systems/precision-agriculture-app/room-dashboard.png
+    alt: "Room dashboard on a dark ground: six sensor chips above a multi-series chart of the last three days, with irrigation events marked along the foot."
+    notes:
+      - term: Same six metrics
+        text: >-
+          Pinned above the chart in the order used on the facility view, so
+          nothing has to be relearned on entry.
+      - term: Scrubbed history
+        text: >-
+          A dragged line reads exact values at a moment; 24h, three-day, week
+          and from-start windows sit under the thumb.
+      - term: Dark by default
+        text: >-
+          Contrast pairs were set for low-light grow rooms, then verified
+          against the same tokens in daylight.
+argument:
+  - label: The problem
+    lead: Growers were reading hardware, not crops.
+    paragraphs:
+      - >-
+        Substrate sensors, irrigation controllers and crop records each had
+        their own tool and their own vocabulary. A grower deciding whether to
+        irrigate a room had to hold three readings in their head and translate
+        between units, in a building where they are standing up, gloved, and in
+        a hurry.
+      - >-
+        The data was not the constraint. Density was: everything mattered,
+        nothing could be hidden behind a tab, and the screen had to be legible
+        at arm's length.
+  - label: The approach
+    lead: One room, one row, one glance.
+    paragraphs:
+      - >-
+        The facility view reduces each room to a single line that answers the
+        only question being asked on the floor: is this room within range.
+        Detail lives one level down, in a room view that keeps the same reading
+        order so the eye does not have to relearn the layout.
+      - >-
+        Status is carried by value and label as well as colour, so the system
+        holds up in bright rooms and for colour-blind users. Contrast and
+        content sizing were checked at token level, before any screen was drawn.
+shipped:
+  - term: Token set
+    text: >-
+      Colour, type, spacing and state tokens defined for Flutter theming, with
+      contrast pairs fixed at definition time.
+  - term: Component library
+    text: >-
+      Data rows, gauges, range indicators, irrigation controls and empty states,
+      each with an interaction spec.
+  - term: Screen set and prototypes
+    text: >-
+      Facility, room, crop and device flows, prototyped for review before the
+      build committed.
+  - term: Style guide in-file
+    text: >-
+      Left inside the Figma file so new engineers and designers could onboard
+      without a walkthrough.
+related:
+  - Photo-ID compliance app
+  - Freight logistics cockpit
 ---
-
-import Figure from "@/components/Figure.astro"
-import facilityDashboard from "../../assets/systems/precision-agriculture-app/facility-dashboard.png"
-import facilityEcExpanded from "../../assets/systems/precision-agriculture-app/facility-ec-expanded.png"
-import roomDashboard from "../../assets/systems/precision-agriculture-app/room-dashboard.png"
-import sensorPicker from "../../assets/systems/precision-agriculture-app/sensor-picker.png"
-import roomSelection from "../../assets/systems/precision-agriculture-app/room-selection.png"
-
-## The brief
-
-Substrate sensors produce more numbers than anyone can read. A grower walking a
-controlled-environment facility needs to know which room is drifting, and needs to know
-it from a phone held in one hand, in a room where the light is wrong for reading a
-screen.
-
-The application pairs sensor hardware with irrigation and crop-management software. The
-design problem is not the data, which already exists. It is compression: how much of a
-facility can be made legible at a glance, and where the glance has to turn into a
-proper look.
-
-## The system
-
-There was no system to inherit, and it had to survive being built in Flutter.
-
-<div class="spec">
-  <div class="spec__item">
-    <h3>Owned end to end</h3>
-    <p>
-      Led the end-to-end creation and maintenance of the Figma design system from scratch: every
-      component, screen and prototype.
-    </p>
-  </div>
-  <div class="spec__item">
-    <h3>Built for its framework</h3>
-    <p>
-      Components were specified for Flutter compatibility rather than drawn first and reconciled
-      with the framework afterwards.
-    </p>
-  </div>
-  <div class="spec__item">
-    <h3>Accessibility in the tokens</h3>
-    <p>
-      WCAG-compliant colour contrast, content sizing and readability integrated into the design
-      system and applied across every screen.
-    </p>
-  </div>
-  <div class="spec__item">
-    <h3>UI/UX ownership of the team</h3>
-    <p>
-      Led the project team through complete UI/UX ownership, gave UX input during requirements, and
-      contributed to the frontend build.
-    </p>
-  </div>
-</div>
-
-## A facility on one screen
-
-Every room in the facility is a row, and every row carries the same six readings in the
-same six positions and the same six colours. Scanning down the column is what finds the
-outlier, which is why the values are never re-ordered per room.
-
-Colour does the first pass and is never the only signal: each reading keeps its unit
-under the number, so a value that reads wrong can be checked without tapping.
-
-<div class="figure-grid">
-  <Figure
-    width="half"
-    src={facilityDashboard}
-    alt="Dark facility dashboard listing rooms named Blackfin, Prop 2, Flower 1 and Flower 2, each row carrying six coloured readings with units beneath, under a header reading Vandelay Industries."
-    caption="Four rooms, six readings each, fixed positions. One red chip in a column of green is the whole point of the layout."
-  />
-  <Figure
-    width="half"
-    src={facilityEcExpanded}
-    alt="The same dashboard with one room's EC panel expanded in place, showing a room average of 1.5 dS/m and three zone readings beneath it."
-    caption="A reading opens where it sits rather than pushing to a new screen: room average first, then the three zones under it."
-  />
-</div>
-
-## The room, and what the chart is allowed to say
-
-Inside a room the same values become series. The chart is drawn dark because these
-rooms are dark, and the lines keep the colours the chips used a screen earlier, so the
-legend is something you already learned rather than something you have to read.
-
-The range switcher sits at the foot, in thumb reach, with the growing period itself
-("From Start") offered beside the calendar ranges. A grower's question is more often
-"since when did this start" than "what did the last 24 hours do".
-
-<div class="figure-grid">
-  <Figure
-    width="half"
-    src={roomDashboard}
-    alt="Portrait room dashboard for a room named Blackfin, a horizontally scrolling row of sensor value chips above a six-line chart, with 24h, 3d, 1w and From Start range buttons at the foot."
-    caption="Portrait: the chip row scrolls sideways so the chart keeps its height. Ranges sit at the bottom where the thumb is."
-  />
-  <Figure
-    width="half"
-    src={roomSelection}
-    alt="A room picker sheet with large rows for Blackfin, Prop 2 and Flower 1, each with a radio control and an icon."
-    caption="Switching rooms is a sheet with rows sized for gloves, not a dropdown in the header."
-  />
-</div>
-
-## Choosing what to plot
-
-Six series on one chart is the maximum this design will draw, so which six is a real
-decision and gets a real screen. The picker splits climate from soil and substrate,
-because that is how the sensors are physically installed, and it puts the current
-target band under each name so the choice is informed.
-
-<Figure
-  src={sensorPicker}
-  alt="A sensor selection sheet in two columns, Climate listing Light, Temp and VPD, and Soil/Substrate listing VWC, EC and Temp Substrate, each with a checkbox, its target range beneath, and a Show Range control."
-  caption="Climate on the left, substrate on the right, target bands under each name, and a per-series Show Range toggle so a band can be drawn on the chart rather than remembered."
-/>

@@ -1,0 +1,318 @@
+---
+import { getCollection, getEntry } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Heading from "@/components/Heading.astro"
+import Markup from "@/components/Markup.astro"
+import { href } from "@/lib/url"
+import { careerSpan } from "@/lib/career"
+import { isWebVisible, pickField } from "@/lib/variants"
+
+const site = await getEntry("site", "site")!
+const personal = await getEntry("personal", "personal")!
+const education = await getEntry("education", "education")!
+const community = await getEntry("community", "community")!
+const experience = (await getCollection("experience")).filter(isWebVisible)
+const skills = (await getCollection("skills")).filter(isWebVisible)
+const projects = (await getCollection("projects")).filter(isWebVisible)
+
+const profile = site.data.profile
+const { location, contact } = personal.data
+const city = location.split(",")[0].trim()
+const span = careerSpan(experience.map((e) => e.data.dates))
+
+const degrees = education.data.entries.filter(isWebVisible)
+const mentoring = community.data.mentoring.filter(isWebVisible)
+const speaking = community.data.speaking.filter(isWebVisible)
+const events = community.data.events.filter(isWebVisible)
+const studentEvents = community.data.student_events.filter(isWebVisible)
+
+// The training row is one string in data/education.yaml because the CV prints
+// it as one line. On the page it is a heading over its detail, so it is split
+// at the first sentence rather than having the programme name typed out here —
+// which would put the same fact in two files.
+const [trainingName, ...trainingRest] = education.data.training.split(/\.\s+/)
+const trainingDetail = trainingRest.join(". ")
+
+// The capability list is a two-column grid filled row by row, so the rule that
+// closes it belongs on the final pair rather than on the last row alone.
+const isLastSkill = (i: number) => i >= skills.length - 2
+---
+
+<Layout
+    title="Profile"
+    description="Eight years of UI/UX engineering at Zone24x7: two roles, the capabilities behind them, the degrees, and the mentoring, speaking and judging the two-page CV has no room for."
+    current="/profile"
+>
+    <section class="intro rule-bottom-ink" style="--intro-measure: 28ch">
+        <p class="eyebrow">
+            {profile.eyebrow} &nbsp;·&nbsp; {city} &nbsp;·&nbsp; {span}
+        </p>
+        <Heading as="h1" class="display intro__title" heading={profile.headline} />
+        <div class="btn-row btn-row--center">
+            <a class="btn btn--solid" href={href("/cv")}>The two-page CV</a>
+        </div>
+    </section>
+
+    <section class="sec" id="experience">
+        <h2 class="prof-title">Experience</h2>
+        <ol class="roles">
+            {
+                experience.map((role) => (
+                    <li class="role">
+                        <div>
+                            <p class="micro">{role.data.dates}</p>
+                            <p class="role__place">{role.data.place}</p>
+                        </div>
+                        <div>
+                            <p class="role__name">
+                                {pickField(role.data, "role")} &nbsp;·&nbsp; {role.data.org}
+                            </p>
+                            <ul class="role__bullets">
+                                {role.data.bullets.filter(isWebVisible).map((bullet) => (
+                                    <Markup
+                                        as="li"
+                                        text={pickField(bullet, "text") ?? bullet.text}
+                                    />
+                                ))}
+                            </ul>
+                        </div>
+                    </li>
+                ))
+            }
+        </ol>
+    </section>
+
+    <section class="prof-sec" id="capabilities">
+        <h2 class="prof-title">Capabilities</h2>
+        <dl class="defs measure" style="--def-term: 7.5rem; --measure: 64rem">
+            {
+                skills.map((skill, i) => (
+                    <div class:list={["def", isLastSkill(i) && "def--last"]}>
+                        <dt>{skill.data.category}</dt>
+                        <Markup as="dd" text={skill.data.stack} />
+                    </div>
+                ))
+            }
+        </dl>
+    </section>
+
+    <section class="prof-sec" id="education">
+        <h2 class="prof-title">Education</h2>
+        <ol class="entries">
+            {
+                degrees.map((degree) => (
+                    <li class="entry">
+                        <span class="entry__dates">{pickField(degree, "dates")}</span>
+                        <div>
+                            <p class="entry__name">{degree.degree}</p>
+                            <p class="entry__meta">{degree.institute}</p>
+                        </div>
+                    </li>
+                ))
+            }
+            <li class="entry">
+                <span class="entry__dates entry__dates--accent">Training</span>
+                <div>
+                    <p class="entry__name">{trainingName}</p>
+                    <Markup as="p" class="entry__meta" text={trainingDetail} />
+                </div>
+            </li>
+        </ol>
+    </section>
+
+    {
+        /* Website only: no Typst file reads data/projects.yaml, so the earlier
+        degree work lives here and cannot push the CV onto a third page. */
+    }
+    <section class="prof-sec" id="projects">
+        <h2 class="prof-title">Earlier projects</h2>
+        <ol class="entries">
+            {
+                projects.map((project) => (
+                    <li class="entry">
+                        <span class="entry__dates">{project.data.dates}</span>
+                        <div>
+                            <p class="entry__name">{project.data.title}</p>
+                            <p class="entry__meta">
+                                {project.data.context} &nbsp;·&nbsp; {project.data.stack}
+                            </p>
+                            <ul class="entry__bullets">
+                                {project.data.bullets.filter(isWebVisible).map((bullet) => (
+                                    <Markup as="li" text={bullet.text} />
+                                ))}
+                            </ul>
+                        </div>
+                    </li>
+                ))
+            }
+        </ol>
+    </section>
+
+    <section class="prof-sec" id="teaching">
+        <div class="oh-head">
+            <Heading
+                as="h2"
+                class="display sec-title"
+                heading={profile.teaching.title}
+                tone="ink"
+            />
+            <p class="oh-head__text">
+                {profile.teaching.text_before}{" "}
+                <a href={href("/off-hours#teaching")}>{profile.teaching.text_link}</a>.
+            </p>
+        </div>
+    </section>
+
+    <section class="prof-sec" id="record">
+        <h2 class="prof-title">The full record</h2>
+        <div class="record">
+            <div class="record__block">
+                <p class="label record__label">Mentoring</p>
+                <ul>
+                    {
+                        mentoring.map((item, i) => (
+                            <li class:list={["dated", i === mentoring.length - 1 && "dated--last"]}>
+                                <span class="dated__year">{item.year}</span>
+                                <Markup text={item.text} />
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
+
+            <div class="record__block">
+                <p class="label record__label">Speaking</p>
+                <ul>
+                    {
+                        speaking.map((item, i) => (
+                            <li class:list={["dated", i === speaking.length - 1 && "dated--last"]}>
+                                <span class="dated__year">{item.year}</span>
+                                <Markup text={item.text} />
+                            </li>
+                        ))
+                    }
+                </ul>
+                <p class="label record__label" style="margin-top: 1.5rem">Writing</p>
+                <ul>
+                    <li class="dated dated--plain">
+                        <a href={personal.data.blog.url}>{personal.data.blog.title}</a>, the {
+                            personal.data.blog.where
+                        } UX design blog
+                    </li>
+                    {
+                        community.data.writing.map((item, i) => (
+                            <li
+                                class:list={[
+                                    "dated",
+                                    "dated--plain",
+                                    i === community.data.writing.length - 1 && "dated--last",
+                                ]}
+                            >
+                                {item.url ? (
+                                    <a href={item.url}>
+                                        <Markup text={item.text} />
+                                    </a>
+                                ) : (
+                                    <Markup text={item.text} />
+                                )}
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
+
+            <div class="record__block">
+                <p class="label record__label">Event design and office-holding</p>
+                <ul>
+                    {
+                        events.map((item, i) => (
+                            <li class:list={["dated", i === events.length - 1 && "dated--last"]}>
+                                <span class="dated__year">{item.year}</span>
+                                <Markup text={item.text} />
+                            </li>
+                        ))
+                    }
+                </ul>
+                <p class="label record__label" style="margin-top: 1.5rem">Student conferences</p>
+                <ul>
+                    {
+                        studentEvents.map((item, i) => (
+                            <li
+                                class:list={[
+                                    "dated",
+                                    i === studentEvents.length - 1 && "dated--last",
+                                ]}
+                            >
+                                <span class="dated__year">{item.year}</span>
+                                <Markup text={item.text} />
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
+
+            <div class="record__block">
+                <p class="label record__label">Judging and competitions</p>
+                <ul>
+                    <li class="dated dated--plain">
+                        Judge: <Markup text={community.data.judging} />
+                    </li>
+                    <li class="dated dated--plain dated--last">
+                        Competitor: <Markup text={community.data.competitions} />
+                    </li>
+                </ul>
+                {
+                    community.data.societies && (
+                        <p class="record__coda">
+                            Society roles: <Markup text={community.data.societies} />. The artwork
+                            is <a href={href("/plates#identity")}>on the plates page</a>.
+                        </p>
+                    )
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="prof-sec split-even" id="how">
+        <div>
+            <p class="label">{profile.how.label}</p>
+            <p class="how__title">{profile.how.title}</p>
+            <p class="text how__text">
+                {profile.how.text_before}{" "}
+                <a href={href("/work#process")}>{profile.how.text_link}</a>.
+            </p>
+        </div>
+        <div>
+            <p class="label">Details</p>
+            <dl class="how__list">
+                <dt>Based in</dt>
+                <dd>{location}</dd>
+                <dt>Focus</dt>
+                <dd>{personal.data.specialisms.join(" · ")}</dd>
+                <dt>Languages</dt>
+                <dd>{profile.languages}</dd>
+                <dt>Away from it</dt>
+                <dd>
+                    Watercolour and graphite &mdash; <a href={href("/plates")}>the plates</a>{" "}
+                    &nbsp;·&nbsp; keyboard, cats, telescope and Lego &mdash;{" "}
+                    <a href={href("/off-hours")}>off hours</a>
+                </dd>
+                <dt>Elsewhere</dt>
+                <dd>
+                    {
+                        contact.links.filter(isWebVisible).map((link, i) => (
+                            <>
+                                {i > 0 && <> &nbsp;·&nbsp; </>}
+                                <a href={link.url} rel="me noopener">
+                                    {link.display ?? link.url}
+                                </a>
+                            </>
+                        ))
+                    }
+                </dd>
+                <dt>Email</dt>
+                <dd><a href={`mailto:${contact.email}`}>{contact.email}</a></dd>
+            </dl>
+        </div>
+    </section>
+</Layout>

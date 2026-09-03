@@ -1,0 +1,176 @@
+---
+import { Image } from "astro:assets"
+import { getCollection, getEntry } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Heading from "@/components/Heading.astro"
+import Process from "@/components/Process.astro"
+import { href } from "@/lib/url"
+import { systemSlug } from "@/lib/slug"
+import { roman } from "@/lib/roman"
+import { spell } from "@/lib/words"
+import { isWebVisible } from "@/lib/variants"
+
+const site = await getEntry("site", "site")!
+const personal = await getEntry("personal", "personal")!
+const systems = (await getCollection("systems")).filter(isWebVisible)
+const pages = await getCollection("systemPages")
+
+const work = site.data.work
+const pageOf = new Map(pages.map((p) => [p.data.system, p.data]))
+
+// The inventory the design counts is the client record: the one personal group
+// project is not a client engagement and sits on the plates page instead, with
+// the rest of her own work. `system-groups` in cv/common/loaders.typ draws the
+// same line, by the same test on the same field.
+const client = systems.filter((s) => s.data.scope !== "Personal project")
+const owned = client.filter((s) => s.data.lead)
+const rest = client.filter((s) => !s.data.lead)
+
+// "Thirteen of twenty-four products". Both counts are derived so that adding a
+// product cannot leave the eyebrow describing an inventory that no longer
+// exists.
+const designed = Number(personal.data.stats[0].value)
+const eyebrow = `${work.eyebrow} · ${spell(client.length, true)} of ${spell(designed)} products`
+
+// The two extended systems that carry screens sit above the list, because a
+// row cannot hold a picture.
+const plated = rest.filter((s) => pageOf.get(s.data.product)?.index)
+
+// The right-hand cell of each row: the sourced scope, and the plate number
+// where one exists. "Extended, 4 modules" becomes "Extended" once a plate
+// number follows it, because the modules are stated on the page it opens.
+const rows = rest.map((s) => {
+    const page = pageOf.get(s.data.product)
+    const base = s.data.scope.split(",")[0].trim()
+    return {
+        product: s.data.product,
+        to: `/work/${systemSlug(s.data.product)}`,
+        scope: page?.plate ? `${base} · Plate ${roman(page.plate)}` : s.data.scope,
+    }
+})
+
+// The list is a two-column grid filled row by row, so the rule that closes it
+// belongs on the final pair rather than on the midpoint and the end.
+const isLast = (i: number) => i >= rows.length - 2
+---
+
+<Layout
+    title="Work"
+    description="Three design systems owned from scratch and ten more extended, across agriculture, identity, logistics, banking, manufacturing and warehousing."
+    current="/work"
+>
+    <section class="intro rule-bottom-ink" style="--intro-measure: 26ch">
+        <p class="eyebrow">{eyebrow}</p>
+        <Heading as="h1" class="display intro__title" heading={work.headline} />
+        <p class="intro__lede">{work.lede}</p>
+    </section>
+
+    <section class="sec" id="owned">
+        {
+            owned.map((system) => {
+                const page = pageOf.get(system.data.product)
+                const index = page?.index
+                const to = href(`/work/${systemSlug(system.data.product)}`)
+                if (!index) return null
+                return (
+                    <article class="split owned">
+                        <a
+                            class:list={[
+                                "plate",
+                                "owned__plate",
+                                index.shape === "tall"
+                                    ? "owned__plate--tall"
+                                    : "owned__plate--wide",
+                                index.ground === "dark" && "plate--dark",
+                            ]}
+                            href={to}
+                        >
+                            <Image
+                                src={index.src}
+                                alt={index.alt}
+                                widths={[480, 720, 1024, 1440]}
+                                sizes="(max-width: 52rem) 90vw, 52vw"
+                                loading="lazy"
+                            />
+                        </a>
+                        <div>
+                            <p class="micro">
+                                {page.plate && <>Plate {roman(page.plate)} &nbsp;·&nbsp; </>}
+                                {system.data.client}
+                            </p>
+                            <h2 class="owned__title">
+                                <a href={to}>{system.data.product}</a>
+                            </h2>
+                            <p class="owned__text">{index.summary}</p>
+                            <dl class="owned__facts">
+                                {index.facts.map((fact) => (
+                                    <>
+                                        <dt>{fact.label}</dt>
+                                        <dd>{fact.value}</dd>
+                                    </>
+                                ))}
+                            </dl>
+                            <a class="more owned__more" href={to}>
+                                Read the case &rarr;
+                            </a>
+                        </div>
+                    </article>
+                )
+            })
+        }
+    </section>
+
+    <section class="sec rule-top-ink" id="inventory">
+        <div class="sec-head">
+            <h2 class="sec-title">{work.inventory.title}</h2>
+            <p class="sec-note">{work.inventory.note}</p>
+            <p class="micro sec-note">{work.inventory.aside}</p>
+        </div>
+
+        <div class="plated" style={`--plated: ${plated.length}`}>
+            {
+                plated.map((system) => {
+                    const page = pageOf.get(system.data.product)!
+                    const index = page.index!
+                    return (
+                        <figure class="plated__item">
+                            <a
+                                class="plated__link"
+                                href={href(`/work/${systemSlug(system.data.product)}`)}
+                            >
+                                <span class="plate plated__plate">
+                                    <Image
+                                        src={index.src}
+                                        alt={index.alt}
+                                        widths={[320, 480, 720]}
+                                        sizes="(max-width: 40rem) 80vw, 22rem"
+                                        loading="lazy"
+                                    />
+                                </span>
+                                <figcaption class="plated__caption">
+                                    {page.plate && <>Plate {roman(page.plate)} &nbsp;·&nbsp; </>}
+                                    {system.data.product} &nbsp;&rarr;
+                                </figcaption>
+                            </a>
+                        </figure>
+                    )
+                })
+            }
+        </div>
+
+        <div class="rows">
+            {
+                rows.map((row, i) => (
+                    <div class:list={["row", isLast(i) && "row--last"]}>
+                        <a class="row__name" href={href(row.to)}>
+                            {row.product}
+                        </a>
+                        <span class="row__scope">{row.scope}</span>
+                    </div>
+                ))
+            }
+        </div>
+    </section>
+
+    <Process id="process" />
+</Layout>

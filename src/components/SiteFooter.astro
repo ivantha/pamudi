@@ -1,61 +1,80 @@
 ---
 import { getEntry } from "astro:content"
+import { href } from "@/lib/url"
 import { isWebVisible } from "@/lib/variants"
 
 interface Props {
     /**
-     * `full` is the invitation plus the contact list. `rule` is the colophon
-     * alone, for a page that is already an ending — the 404.
+     * `full` is the invitation at display size over the link row. `slim` drops
+     * the invitation for a page that has just made the same offer above it.
+     * `rule` is the link row alone, for a detail page whose job is to send the
+     * reader on rather than to close the visit.
      */
-    variant?: "full" | "rule"
+    variant?: "full" | "slim" | "rule"
+    /**
+     * Which standfirst sits above the invitation. The design changes the offer
+     * on the two pages that are not about client work.
+     */
+    offer?: "default" | "off_hours" | "plates"
+    /** The page the footer is on, so its own link is left out of the row. */
+    current?: string
 }
 
-const { variant = "full" }: Props = Astro.props
+const { variant = "full", offer = "default", current }: Props = Astro.props
 
 const personal = await getEntry("personal", "personal")!
 const site = await getEntry("site", "site")!
-const { name, role, location } = personal.data
+const { name, location } = personal.data
 const { email, links } = personal.data.contact
 const year = new Date().getFullYear()
+
+const STANDFIRST = {
+    default: site.data.footer.standfirst,
+    off_hours: site.data.footer.standfirst_off_hours,
+    plates: site.data.footer.standfirst_plates,
+} as const
+
+// The whole site in one row, minus wherever you already are.
+const PAGES = [
+    { label: "Home", path: "/" },
+    { label: "Work", path: "/work" },
+    { label: "Plates", path: "/plates" },
+    { label: "Off hours", path: "/off-hours" },
+    { label: "Profile", path: "/profile" },
+]
+
+const pages = PAGES.filter((p) => p.path !== current)
+const city = location.split(",")[0].trim()
 ---
 
-<footer class:list={["site-footer", `site-footer--${variant}`]}>
+<footer class:list={["footer", `footer--${variant}`]}>
+    {variant !== "rule" && <p class="footer__standfirst">{STANDFIRST[offer]}</p>}
     {
         variant === "full" && (
-            <div class="site-footer__top grid pad">
-                <div class="site-footer__invite">
-                    <p class="site-footer__standfirst">{site.data.footer.standfirst}</p>
-                    <a class="site-footer__cta" href={`mailto:${email}`}>
-                        Start a conversation &rarr;
-                    </a>
-                </div>
-                <dl class="site-footer__contact facts">
-                    <div class="facts__row">
-                        <dt>Email</dt>
-                        <dd>
-                            <a href={`mailto:${email}`}>{email}</a>
-                        </dd>
-                    </div>
-                    {links.filter(isWebVisible).map((link) => (
-                        <div class="facts__row">
-                            <dt>{link.label}</dt>
-                            <dd>
-                                <a href={link.url} rel="me noopener">
-                                    {link.display ?? link.url}
-                                </a>
-                            </dd>
-                        </div>
-                    ))}
-                    <div class="facts__row">
-                        <dt>Based in</dt>
-                        <dd>{location}</dd>
-                    </div>
-                </dl>
-            </div>
+            <>
+                <a class="footer__cta" href={`mailto:${email}`}>
+                    Start a <span class="italic">conversation</span>
+                </a>
+                <p class="footer__email">{email}</p>
+            </>
         )
     }
-    <div class="site-footer__colophon pad">
-        <p>&copy; {year} {name} &middot; {role}</p>
-        <p>Set in Archivo</p>
+    <div class="footer__links">
+        {
+            variant === "rule" && (
+                <a class="footer__invite" href={`mailto:${email}`}>
+                    Start a conversation
+                </a>
+            )
+        }
+        {pages.map((page) => <a href={href(page.path)}>{page.label}</a>)}
+        {
+            links.filter(isWebVisible).map((link) => (
+                <a href={link.url} rel="me noopener">
+                    {link.label}
+                </a>
+            ))
+        }
+        <span>&copy; {year} {name} &middot; {city}</span>
     </div>
 </footer>

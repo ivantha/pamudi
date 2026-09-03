@@ -19,8 +19,7 @@
         "preview": "astro preview",
         "lint": "astro check && eslint . && prettier --check . && node scripts/check-contrast.mjs",
         "format": "prettier --write .",
-        "check:contrast": "node scripts/check-contrast.mjs",
-        "build:placeholders": "node scripts/make-placeholders.mjs"
+        "check:contrast": "node scripts/check-contrast.mjs"
     },
     "dependencies": {
         "@astrojs/mdx": "^4.0.0",

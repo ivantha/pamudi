@@ -39,13 +39,14 @@ Everything on the site and the CV comes from `data/`:
 
 | File              | Holds                                                                                                          |
 | ----------------- | -------------------------------------------------------------------------------------------------------------- |
-| `personal.yaml`   | name, role, hero copy, contact, CV masthead, Profile                                                           |
+| `personal.yaml`   | name, role, contact, the four headline figures, CV masthead, Profile                                           |
 | `experience.yaml` | roles and their bullets                                                                                        |
 | `systems.yaml`    | the design-systems inventory                                                                                   |
 | `skills.yaml`     | toolkit, grouped by category                                                                                   |
 | `projects.yaml`   | the UCSC degree projects — website only                                                                        |
 | `education.yaml`  | degrees and professional training                                                                              |
 | `community.yaml`  | speaking, mentoring, events, judging, competitions, and — website only — writing, student events and societies |
+| `site.yaml`       | every page's headline and framing copy — website only, and pending Pamudi's sign-off                           |
 
 Three things to know when editing:
 
@@ -75,38 +76,62 @@ pnpm build:cv                # or: cd cv && ./build.sh
 cd cv && ./build.sh --preview  # PNG proofs of both pages
 ```
 
-## Adding a system page
+## Adding a product page
 
-Every product in `data/systems.yaml` already has a page at
-`/systems/<slug>`, whether or not anyone has written it. With no file it shows
-the sourced facts — client, scope, what it was specified for — and stops there.
+Every product in `data/systems.yaml` already has a page at `/work/<slug>`,
+whether or not anyone has written it. With no file it shows the sourced facts —
+client, scope, what it was specified for — and says so.
 
-To write one, create `src/content/systems/<slug>.mdx`. `system` must match the
+To write one, create `src/content/systems/<slug>.mdx`. It is frontmatter only:
+the Plinth design argues a case in a fixed set of parts, so the parts are fields
+and `src/pages/work/[slug].astro` lays them out. `system` must match the
 `product` field in `data/systems.yaml` exactly, or the build fails.
 
 ```mdx
 ---
 system: Freight logistics cockpit
-facts:
-  - label: Platform
-    value: Web
-cover: "../../assets/systems/freight/cover.png"
-coverAlt: Describe the image.
+plate: 4 # the Roman numeral in the bar above the title
+kind: owned # or `extended`, which sets a shorter title and a shorter page
+eyebrow: Freight forwarding and 3PL · Global distribution network
+title: # `after` carries its own leading space; a full stop attaches directly
+  before: Freight logistics
+  accent: cockpit
+standfirst: One paragraph under the title.
+meta: # the ink-ruled strip: three or four cells
+  - label: Role
+    value: Sole designer, system owner
+index: # how it appears on /work; omit and it stays a row in the inventory
+  summary: A longer blurb for the index.
+  facts: [{ label: Stack, value: "Figma, specified for React" }]
+  shape: wide # or `tall`, for a phone screen
+  ground: panel # or `dark`, for a product drawn dark-first
+  src: ../../assets/systems/freight-logistics-cockpit/racks.png
+  alt: Describe the image.
+figures:
+  - layout: full # `full`, `split`, `split-end` or `pair`
+    number: Figure 1
+    title: Rack detection
+    note: Location state across aisles and bays
+    tall: true # cap the height so the caption stays on the fold
+    src: ../../assets/systems/freight-logistics-cockpit/racks.png
+    alt: Describe the image.
+argument: # exactly two columns: problem and approach, or constraint and change
+  - label: The problem
+    lead: One line, set in the display face.
+    paragraphs: ["…"]
+  - label: The approach
+    lead: One line.
+    paragraphs: ["…"]
+shipped: [{ term: Token set, text: "…" }] # owned systems only
+related: [Precision agriculture app, Photo-ID compliance app]
 ---
-
-import Figure from "@/components/Figure.astro"
-import shot from "../../assets/systems/freight/flow.png"
-
-## The brief
-
-What the product had to do.
-
-<Figure src={shot} alt="What the image shows." caption="What to look at." />
 ```
 
-`<h2>` becomes a rust section label. Put two figures side by side by wrapping
-them in `<div class="figure-grid">` and giving each `width="half"`. `draft:
-true` keeps a written page out and leaves the sourced scaffold in its place.
+A `split` figure sets its plate beside a three-row detail list; `shot: 19rem`
+caps the screenshot so a phone screen stays phone-sized and sizes the column
+around it. `split-end` is the same with the plate on the right. `pair` takes two
+`items`, each with its own caption and paragraph. `draft: true` keeps a written
+page out and leaves the sourced scaffold in its place.
 
 `src/content/systems/photo-id-compliance-app.mdx` is the worked example, and its
 header explains what may and may not go in one of these.
@@ -131,44 +156,10 @@ verdict back in the script.
 Exporting a UI screen needs Figma to rasterise a vector artboard, and that is
 metered separately from reading the file. **That budget is currently spent**, on
 the REST endpoint and the Figma MCP both, so the product pages cannot be
-exported at all right now; the script says so when you try. Pages made of
-uploaded bitmaps come through a different quota and still work.
-
-## Adding a case study
-
-Create `src/content/work/<slug>.mdx`. The frontmatter schema lives in
-`src/content.config.ts` and the build fails on a missing field, so start by
-copying an existing file.
-
-```mdx
----
-title: Queue-length forecasting
-summary: One sentence on the problem and the outcome.
-year: 2025
-role: What you actually did
-context: Team, company, or client
-disciplines: ["Product design"]
-tools: ["Figma"]
-cover: "../../assets/work/queue-forecasting/cover.png"
-coverAlt: Describe the image.
-order: 10
----
-```
-
-Images go in `src/assets/work/` and are imported, never referenced by URL:
-
-```mdx
-import { Image } from "astro:assets"
-import shot from "@/assets/work/queue-forecasting/flow.png"
-
-<figure>
-  <Image src={shot} alt="What the image shows." widths={[640, 960, 1400]} />
-  <figcaption>Caption.</figcaption>
-</figure>
-```
-
-`order` sets the sequence on the index page; `draft: true` keeps a study out of
-the build entirely.
+exported that way right now; the script says so when you try. The Figma web
+app's own Export command is not metered and is how every screen on the site was
+obtained. Pages made of uploaded bitmaps come through a different quota and
+still work.
 
 ## Domain
 
@@ -187,9 +178,9 @@ contract, the theme, the fonts, the image discipline, and what not to write on
 Pamudi's behalf. `cv/CLAUDE.md` covers the CV's visual system, its vendored
 fonts and its two-page guard. Read both before making changes.
 
-The hero headline in `data/personal.yaml`, the three `draft: true` files in
-`src/content/work/`, and twelve of the thirteen system pages are waiting on
-Pamudi. Do not fill one in with
-a plausible guess. `tagline`, `intro` and `availability` are hers too; they are
-optional and currently absent, and every page falls back to verified material
-rather than rendering a placeholder.
+`data/site.yaml` and the seven written product pages carry writing that came
+with the design rather than from Pamudi, and both are waiting on her sign-off.
+Seven products have no page at all; that is the resting state, not a gap to fill
+with a plausible guess. `tagline`, `intro` and `availability` are hers too; they
+are optional and currently absent, and every page falls back to verified
+material rather than rendering a placeholder.

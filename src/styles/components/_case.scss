@@ -1,0 +1,320 @@
+// A case page. Three of them argue a system owned from scratch; three are
+// shorter notes on a system that was inherited. Both use the same parts, so a
+// reader moving between them is reading one document.
+
+// The bar above the title: where you came from on the left, which plate this is
+// on the right.
+.case-bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-nav);
+    text-transform: uppercase;
+    color: var(--muted);
+
+    a {
+        color: var(--body);
+
+        &:hover {
+            color: var(--ink);
+        }
+    }
+}
+
+.case-head {
+    text-align: center;
+    padding-block: var(--head-y) clamp(1.5rem, 1.2159rem + 1.25vw, 2.25rem);
+}
+
+.case-head__title {
+    margin: clamp(1.25rem, 0.9091rem + 1.5vw, 2rem) auto 0;
+    max-width: 24ch;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: var(--fs-page-title);
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+    color: var(--ink);
+    text-wrap: balance;
+}
+
+// The extended notes carry a longer product name and no room to set it at the
+// full display size.
+.case-head__title--long {
+    font-size: var(--fs-title);
+    line-height: 1.05;
+}
+
+.case-head__lede {
+    margin: clamp(1.25rem, 0.9091rem + 1.5vw, 2rem) auto 0;
+    max-width: 62ch;
+    font-size: var(--fs-lede);
+    line-height: 1.8;
+    color: var(--body);
+    text-wrap: pretty;
+}
+
+// ---- The metadata strip -----------------------------------------------------
+// Role, scope, stack, surfaces. Ink above and below, because it is the page's
+// statement of fact and everything after it is argument.
+
+.case-meta {
+    display: grid;
+    grid-template-columns: repeat(var(--meta-cols, 4), minmax(0, 1fr));
+    margin: 0;
+    border-block: 1px solid var(--rule-strong);
+
+    @media (max-width: 52rem) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (max-width: 26rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.case-meta__cell {
+    padding: clamp(1rem, 0.7727rem + 1vw, 1.5rem) 1rem;
+    text-align: center;
+    border-right: 1px solid var(--rule);
+
+    &:last-child {
+        border-right: 0;
+    }
+
+    @media (max-width: 52rem) {
+        &:nth-child(2n) {
+            border-right: 0;
+        }
+
+        &:nth-child(n + 3) {
+            border-top: 1px solid var(--rule);
+        }
+    }
+
+    @media (max-width: 26rem) {
+        border-right: 0;
+
+        & + & {
+            border-top: 1px solid var(--rule);
+        }
+    }
+}
+
+.case-meta__term {
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-nav);
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.case-meta__value {
+    margin: 0.625rem 0 0;
+    font-size: var(--fs-text);
+    color: var(--ink);
+}
+
+// ---- Figures ----------------------------------------------------------------
+// Three layouts and no fourth: a plate across the page, a plate beside its own
+// detail list, and two plates side by side.
+
+.fig {
+    margin: 0;
+    padding-block: clamp(1.75rem, 1.4091rem + 1.5vw, 3rem);
+}
+
+.fig--split {
+    display: grid;
+    gap: var(--gap-lg);
+    align-items: center;
+    // The plate column is the screenshot's own cap plus its padding, so a
+    // phone screen sits at phone size rather than being blown up to fill a
+    // column and misreporting the device it runs on.
+    grid-template-columns: minmax(0, calc(var(--shot, 19rem) + 5rem)) minmax(0, 1fr);
+
+    @media (max-width: 56rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+// Plate on the right. The picture is still the first child in the source, so a
+// screen reader meets the caption after it rather than before.
+.fig--split-end {
+    grid-template-columns: minmax(0, 1fr) minmax(0, calc(var(--shot, 19rem) + 5rem));
+
+    > .plate {
+        order: 2;
+    }
+
+    @media (max-width: 56rem) {
+        grid-template-columns: minmax(0, 1fr);
+
+        > .plate {
+            order: 0;
+        }
+    }
+}
+
+// A plate inside a split holds a screenshot at its own scale rather than
+// stretching it. `--shot` is set per figure from the frontmatter and drives
+// both this cap and the column width above it.
+.fig__shot {
+    width: 100%;
+    max-width: var(--shot, 19rem);
+    height: auto;
+}
+
+// A plate across the page, capped so a tall screen cannot push the caption off
+// the fold.
+.fig__wide img {
+    max-height: min(76vh, 820px);
+}
+
+.fig-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap);
+    padding-block: clamp(1.75rem, 1.4091rem + 1.5vw, 3rem);
+
+    @media (max-width: 52rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.fig-pair__item {
+    margin: 0;
+
+    .plate {
+        display: block;
+        padding: clamp(0.5rem, 0.3864rem + 0.5vw, 0.875rem);
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+}
+
+.fig-pair__text {
+    margin: 0.75rem 0 0;
+    font-size: var(--fs-text);
+    line-height: 1.75;
+    color: var(--body);
+    text-wrap: pretty;
+}
+
+// The detail list beside a figure: what to look at, three rows of it.
+.fig__notes {
+    margin: 0;
+}
+
+.fig__note {
+    display: grid;
+    grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+    gap: 0.375rem 1.5rem;
+    align-items: baseline;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--rule);
+
+    &:last-child {
+        border-bottom: 0;
+    }
+
+    dt {
+        font-size: var(--fs-text);
+        font-weight: 600;
+        color: var(--ink);
+    }
+
+    dd {
+        margin: 0;
+        font-size: var(--fs-text);
+        line-height: 1.75;
+        color: var(--body);
+    }
+
+    @media (max-width: 34rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+// ---- The argument -----------------------------------------------------------
+// Two columns: the problem and the approach, or the constraint and what
+// changed. Never three, and never one.
+
+.argument {
+    align-items: start;
+}
+
+.argument__lead {
+    margin: 1.25rem 0 0;
+}
+
+.argument__text {
+    margin: 1.25rem 0 0;
+
+    & + & {
+        margin-top: 1rem;
+    }
+}
+
+// ---- Other cases ------------------------------------------------------------
+
+.other__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: clamp(1.25rem, 1.0227rem + 1vw, 1.75rem);
+}
+
+.other__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap);
+
+    @media (max-width: 52rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.other__link {
+    display: block;
+    color: var(--ink);
+
+    &:hover {
+        color: var(--accent);
+    }
+}
+
+.other__plate {
+    aspect-ratio: 16 / 10;
+    padding: clamp(0.75rem, 0.5227rem + 1vw, 1.25rem);
+}
+
+.other__eyebrow {
+    display: block;
+    margin-top: 0.875rem;
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-nav);
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.other__title {
+    display: block;
+    margin-top: 0.4375rem;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: var(--fs-role);
+    line-height: 1.2;
+}

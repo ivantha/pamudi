@@ -12,37 +12,28 @@ const includeIn = z.array(z.enum(["cv", "web"]))
 const markup = z.string()
 
 /**
- * Case studies. Frontmatter carries everything the index and the case header
- * need so neither has to parse the body, and `zod` fails the build rather than
- * letting a half-filled study ship.
+ * A display heading split around the phrase that takes the italic brass.
  *
- * Deliberately MDX rather than YAML: a case study is prose and images, not a
- * list of fields. The `data/*.yaml` collections below are the opposite case.
+ * Every page title, section title and lead-in on the site is one of these. It
+ * is three fields rather than one string with a marker in it because the accent
+ * is a design decision about where the eye lands, not emphasis inside a
+ * sentence — and because `renderMarkup` would then have to know about a third
+ * token that only the website understands.
+ *
+ * The space before the accent is inserted by the component. `after` carries its
+ * own leading space when the phrase continues (`" app"`); a full stop or a
+ * comma attaches directly (`"."`, `", one iPad"`).
  */
-const work = defineCollection({
-    loader: glob({ base: "./src/content/work", pattern: "**/*.{md,mdx}" }),
-    schema: ({ image }) =>
-        z.object({
-            title: z.string(),
-            summary: z.string(),
-            year: z.number().int(),
-            // What she actually did, not the team's job title.
-            role: z.string(),
-            context: z.string(),
-            disciplines: z.array(z.string()).min(1),
-            tools: z.array(z.string()).default([]),
-            cover: image(),
-            coverAlt: z.string(),
-            // Lower sorts first on the index; ties fall back to year descending.
-            order: z.number().int().default(100),
-            draft: z.boolean().default(false),
-        }),
+const heading = z.object({
+    before: z.string(),
+    accent: z.string(),
+    after: z.string().default(""),
 })
 
 /**
  * Long-form pages for entries in the design-systems inventory.
  *
- * Optional by construction: `src/pages/systems/[slug].astro` builds a page for
+ * Optional by construction: `src/pages/work/[slug].astro` builds a page for
  * every product in `data/systems.yaml` whether or not a file exists here, and
  * an entry with no file renders the sourced facts alone. That is deliberate —
  * the inventory is the record, and a product without a written page should
@@ -53,25 +44,115 @@ const work = defineCollection({
  * silently: the page throws at build time when a file names a product the
  * inventory does not have.
  *
- * The body is MDX because a project page is prose and images, not a list of
- * fields — the same reasoning as `work` above.
+ * The frontmatter is the whole page. In the direction this replaced these were
+ * MDX bodies of running prose; the Plinth design argues a case in a fixed set
+ * of parts instead — a metadata strip, numbered figures, two columns, a list of
+ * what shipped — so the parts are fields and the layout is one component. The
+ * previous bodies are in git if a longer treatment is ever wanted back.
  */
 const systemPages = defineCollection({
     loader: glob({ base: "./src/content/systems", pattern: "**/*.{md,mdx}" }),
-    schema: ({ image }) =>
-        z.object({
+    schema: ({ image }) => {
+        const figure = z
+            .object({
+                /**
+                 * `full` is a plate across the page under a three-part caption;
+                 * `split` and `split-end` set a plate beside its own detail
+                 * list, on the left and on the right; `pair` is two plates side
+                 * by side, each with a paragraph.
+                 */
+                layout: z.enum(["full", "split", "split-end", "pair"]),
+                /**
+                 * The ground the picture sits on. `dark` is for a product drawn
+                 * dark-first — putting those screens on paper would misreport
+                 * them — and `white` for a colour board whose swatches include
+                 * white.
+                 */
+                ground: z.enum(["panel", "dark", "white"]).default("panel"),
+                number: z.string(),
+                title: z.string(),
+                /** The right-hand cell of the caption. */
+                note: z.string().optional(),
+                src: image().optional(),
+                alt: z.string().optional(),
+                /** Cap for a phone or handheld screen inside a split, e.g. "19rem". */
+                shot: z.string().optional(),
+                /** Constrain a full-width plate's height so its caption stays on the fold. */
+                tall: z.boolean().default(false),
+                /** The detail list beside a split. */
+                notes: z.array(z.object({ term: z.string(), text: z.string() })).default([]),
+                /** The two halves of a pair. */
+                items: z
+                    .array(
+                        z.object({
+                            src: image(),
+                            alt: z.string(),
+                            number: z.string(),
+                            title: z.string(),
+                            note: z.string().optional(),
+                            text: z.string(),
+                        }),
+                    )
+                    .default([]),
+            })
+            .refine((f) => (f.layout === "pair" ? f.items.length === 2 : Boolean(f.src && f.alt)), {
+                message: "A pair needs two items; every other layout needs `src` and `alt`.",
+            })
+
+        return z.object({
             /** The `product` field of the inventory entry this page belongs to. */
             system: z.string(),
-            /** One paragraph under the title, above the metadata list. */
-            standfirst: z.string().optional(),
-            /** Rows appended to the metadata list, beyond what the inventory carries. */
-            facts: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
-            cover: image().optional(),
-            coverAlt: z.string().optional(),
-            coverCaption: z.string().optional(),
-            /** A drafted page keeps its URL but renders the blank scaffold. */
+            /**
+             * Which plate this is, as an arabic number; the page prints the
+             * Roman numeral. Absent for a product outside the plated sequence.
+             */
+            plate: z.number().int().positive().optional(),
+            /**
+             * `owned` argues a system built from scratch and runs the full
+             * length; `extended` is a shorter note on a system that was
+             * inherited. The difference is in the sourced scope, not in how
+             * much there was to say.
+             */
+            kind: z.enum(["owned", "extended"]).default("extended"),
+            /** The line above the title: client context, then domain. */
+            eyebrow: z.string(),
+            title: heading,
+            standfirst: z.string(),
+            /** The metadata strip under the title. Three or four cells. */
+            meta: z.array(z.object({ label: z.string(), value: z.string() })).min(1),
+            /** Where this appears in the work index. */
+            index: z
+                .object({
+                    summary: z.string(),
+                    facts: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
+                    /** Plate shape in the index; a phone screen wants the tall one. */
+                    shape: z.enum(["tall", "wide"]).default("wide"),
+                    /** Ground, as on the case figures: a dark-first product keeps its own. */
+                    ground: z.enum(["panel", "dark"]).default("panel"),
+                    src: image(),
+                    alt: z.string(),
+                })
+                .optional(),
+            figures: z.array(figure).default([]),
+            /** The two-column argument: problem and approach, or constraint and change. */
+            argument: z
+                .array(
+                    z.object({
+                        label: z.string(),
+                        lead: z.string(),
+                        paragraphs: z.array(z.string()).min(1),
+                    }),
+                )
+                .length(2)
+                .optional(),
+            /** What shipped. Only the owned systems carry one. */
+            shipped: z.array(z.object({ term: z.string(), text: z.string() })).default([]),
+            /** Two other products, by `product` name, to send the reader to next. */
+            related: z.array(z.string()).default([]),
+            /** A drafted page keeps its URL but renders the sourced facts alone. */
             draft: z.boolean().default(false),
-        }),
+        })
+    },
 })
 
 /**
@@ -87,7 +168,8 @@ const systemPages = defineCollection({
  * than rendering a placeholder. See the comment block in data/personal.yaml.
  *
  * `phone` is absent on purpose. It lives in the gitignored `data/private.yaml`
- * and never reaches this repo or the site.
+ * and never reaches this repo. The Contact page reads it through
+ * `loadPrivate()` and drops the row when it is empty.
  */
 const personal = defineCollection({
     loader: () => loadYamlSingle("personal.yaml"),
@@ -97,12 +179,21 @@ const personal = defineCollection({
         location: z.string(),
         eyebrow: z.string(),
         tagline: z.string().optional(),
-        headline: z.object({ before: z.string(), accent: z.string(), after: z.string() }),
         intro: z.array(z.string()).optional(),
         availability: z.string().optional(),
         specialisms: z.array(z.string()).min(1),
-        stats: z.array(z.object({ value: z.string(), label: z.string() })),
+        stats: z.array(
+            z.object({
+                value: z.string(),
+                label: z.string(),
+                // Invisible to the PDF by construction: cv/common/loaders.typ
+                // reads `value` and `label` directly. See data/personal.yaml.
+                value_web: z.string().optional(),
+                label_web: z.string().optional(),
+            }),
+        ),
         summary: markup,
+        summary_cv: markup.optional(),
         blog: z.object({
             title: z.string(),
             title_cv: z.string().optional(),
@@ -179,7 +270,8 @@ const skills = defineCollection({
 
 /**
  * The design-systems inventory. `lead` marks a system she built from scratch
- * and owned end to end; the CV colours those rows in accent.
+ * and owned end to end; the CV colours those rows in accent and the website
+ * gives each one a full case.
  */
 const systems = defineCollection({
     loader: () => loadYamlList("systems.yaml"),
@@ -189,7 +281,9 @@ const systems = defineCollection({
         client: z.string().optional(),
         description: markup.optional(),
         scope: z.string(),
+        detail: z.string().optional(),
         stack: z.string(),
+        stack_cv: z.string().optional(),
         lead: z.boolean().default(false),
     }),
 })
@@ -205,7 +299,7 @@ const systems = defineCollection({
  * `writing`, `student_events` and `societies` are website-only, and optional so
  * the page renders without them. They stay separate keys rather than becoming
  * `include_in: [web]` rows in the lists above because they are distinct
- * subsections on the About page, not filtered-out members of an existing one —
+ * subsections on the Profile page, not filtered-out members of an existing one —
  * and because no Typst file reads them by name, so they cannot reach the PDF.
  */
 const datedRow = z.object({ include_in: includeIn.optional(), year: z.string(), text: markup })
@@ -230,7 +324,7 @@ const community = defineCollection({
  *
  * Website-only by construction: no Typst file reads `data/projects.yaml`, so
  * nothing here can push the CV onto a third page. Shaped like `experience` so
- * the About page can render both through the same markup.
+ * the Profile page can render both through the same markup.
  */
 const projects = defineCollection({
     loader: () => loadYamlList("projects.yaml"),
@@ -252,9 +346,9 @@ const projects = defineCollection({
 })
 
 /**
- * The framing copy the Website v2 design added around the career record: the
- * hero lede, the Practice cards, the process band, the page ledes and the CV
- * contents list.
+ * The framing copy the Plinth design added around the career record: every page
+ * headline, the hero lede, the process band, the section notes and the footer
+ * standfirsts.
  *
  * Website-only by construction, like `projects` — no Typst file reads
  * `data/site.yaml`. It is kept apart from `personal.yaml` for a second reason
@@ -266,22 +360,124 @@ const site = defineCollection({
     loader: () => loadYamlSingle("site.yaml"),
     schema: z.object({
         home: z.object({
+            headline: heading,
             lede: z.string(),
-            figures: z.array(z.object({ value: z.string(), label: z.string() })),
+            actions: z
+                .array(
+                    z.object({
+                        label: z.string(),
+                        to: z.string(),
+                        style: z.enum(["solid", "ghost"]).default("ghost"),
+                    }),
+                )
+                .min(1),
+            plate: z.object({ title: z.string(), note: z.string() }),
+            picks: z.object({
+                title: heading,
+                items: z
+                    .array(
+                        z.object({
+                            /** The `product` in data/systems.yaml this card shows. */
+                            system: z.string(),
+                            title: z.string(),
+                            text: z.string(),
+                            more: z.string(),
+                            /** Overrides the link to that product's own page. */
+                            to: z.string().optional(),
+                        }),
+                    )
+                    .length(3),
+                note_before: z.string(),
+                note_link: z.string(),
+            }),
+            plates: z.object({ title: heading, text: z.string(), more: z.string() }),
+            profile: z.object({ label: z.string(), text: z.string(), more: z.string() }),
         }),
-        practice: z.array(z.object({ label: z.string(), title: z.string(), text: markup })).min(1),
+        work: z.object({
+            eyebrow: z.string(),
+            headline: heading,
+            lede: z.string(),
+            inventory: z.object({ title: z.string(), note: z.string(), aside: z.string() }),
+        }),
         process: z.object({
+            title: heading,
             lede: z.string(),
             steps: z.array(z.object({ title: z.string(), text: markup })).min(1),
         }),
-        pages: z.object({ systems: z.string(), about: z.string() }),
-        cv: z.object({ eyebrow: z.string(), contents: z.array(z.string()).min(1) }),
-        footer: z.object({ standfirst: z.string() }),
+        plates: z.object({
+            eyebrow: z.string(),
+            headline: heading,
+            lede_before: z.string(),
+            lede_link: z.string(),
+            attribution: z.string(),
+            identity: z.object({ title: z.string(), note: z.string() }),
+        }),
+        off_hours: z.object({
+            eyebrow: z.string(),
+            headline: heading,
+            lede_before: z.string(),
+            lede_link: z.string(),
+            lede_after: z.string(),
+            teaching: z.object({
+                title: heading,
+                text_before: z.string(),
+                text_link: z.string(),
+            }),
+            music: z.object({ label: z.string(), title: z.string(), text: z.string() }),
+            cats: z.object({
+                title: heading,
+                text_before: z.string(),
+                text_link: z.string(),
+                text_after: z.string(),
+            }),
+            games: z.object({ label: z.string(), title: heading, text: z.string() }),
+            bricks: z.object({ title: heading, text: z.string() }),
+            traveling: z.object({ label: z.string(), title: heading, text: z.string() }),
+            stargazing: z.object({
+                label: z.string(),
+                title: heading,
+                text: z.string(),
+                coda: z.string(),
+            }),
+        }),
+        profile: z.object({
+            eyebrow: z.string(),
+            headline: heading,
+            teaching: z.object({
+                title: heading,
+                text_before: z.string(),
+                text_link: z.string(),
+            }),
+            languages: z.string(),
+            how: z.object({
+                label: z.string(),
+                title: z.string(),
+                text_before: z.string(),
+                text_link: z.string(),
+            }),
+        }),
+        contact: z.object({
+            eyebrow_suffix: z.string(),
+            headline: heading,
+            enquiry: z.object({ label: z.string(), title: z.string(), text: z.string() }),
+        }),
+        cv: z.object({
+            eyebrow: z.string(),
+            title: z.string(),
+            contents: z.array(z.string()).min(1),
+        }),
+        footer: z.object({
+            standfirst: z.string(),
+            standfirst_off_hours: z.string(),
+            standfirst_plates: z.string(),
+        }),
+        not_found: z.object({ headline: heading, lede: z.string() }),
     }),
 })
 
+export type Heading = z.infer<typeof heading>
+
 export const collections = {
-    work,
     systemPages,
     personal,
     site,

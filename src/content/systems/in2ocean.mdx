@@ -15,132 +15,103 @@
 # it, owned it, or built the system, because no source says so and it is a
 # GROUP project. Do not close that gap with a guess. If she tells you what her
 # part was, put it in `data/systems.yaml` and rewrite the standfirst here.
+#
+# ⚠ There is no Plinth artboard for this product: the design does not plate it
+# with the client work, and reaches it from the Plates page instead, where its
+# identity sheets sit among the other brand work. This page was therefore
+# rebuilt into the new shape from the MDX body it used to carry rather than
+# transcribed from a design, and the alt text and captions below are the ones
+# that body already carried — verified against the frames on 2026-09-03.
 system: IN2Ocean
+kind: extended
+eyebrow: Personal group project · Volunteer beach cleanup
+title:
+  before: IN2Ocean
+  accent: ""
 standfirst: >-
   A beach cleanup companion, designed end to end as a personal group project:
   its own identity and style guides, a collection flow built around what
   volunteers actually pick up, and a reward ladder that counts weight and
   distance rather than screen time.
-facts:
+meta:
   - label: Kind
     value: Personal group project
   - label: Themes
     value: Light and dark, both specified
   - label: Recorded
     value: Not in the appraisal record
-cover: ../../assets/systems/in2ocean/splash.png
-coverAlt: "The IN2Ocean launch screen: the wordmark IN2OCEAN in white capitals above a coral dolphin arcing over coral seaweed on a deep blue ground, with a white Get started button at the foot."
-coverCaption: A dolphin, seaweed, two colours and one weight of type. The identity is doing the work a logo has to do on a volunteering app, which is to look like something you would wear on a t-shirt.
+index:
+  summary: >-
+    A beach cleanup companion with its own identity, a collection flow built
+    around what volunteers actually pick up, and a seven-level badge ladder.
+  shape: tall
+  src: ../../assets/systems/in2ocean/splash.png
+  alt: "The IN2Ocean launch screen: the wordmark IN2OCEAN in white capitals above a coral dolphin arcing over coral seaweed on a deep blue ground, with a white Get started button at the foot."
+figures:
+  - layout: split
+    number: Figure 1
+    title: Collect trash
+    note: The taxonomy is the interface
+    shot: 15rem
+    src: ../../assets/systems/in2ocean/collect-trash.png
+    alt: "The Collect Trash screen: a three-column grid of illustrated tiles for cigarette buds, balloons, toys, fishing gear, plastic bags, food wrappers, containers, beverage cans, cups, plates, lids, straws and utensils, each with a counter, then an Other Trash section bucketed under 2.5cm, under 5cm and larger than 5cm."
+    notes:
+      - term: Thirteen named types
+        text: >-
+          Each is a tile with its own illustration and its own counter, so
+          logging an item is one tap rather than a search through a list.
+      - term: Everything else, sized
+        text: >-
+          What is not on the grid falls into three size buckets rather than into
+          a free-text field that nobody would total afterwards.
+      - term: Counting, not typing
+        text: >-
+          The screen is built for one hand in a glove on a beach, which is the
+          same constraint the warehouse work has.
+  - layout: pair
+    number: Figures 2 and 3
+    title: Progress and the event
+    items:
+      - number: Figure 2
+        title: Explore
+        note: Progress above events
+        src: ../../assets/systems/in2ocean/explore.jpg
+        alt: The Explore screen showing a My Progress card reading 3500 points at Level 5, a My Events row of event cards with beach photographs, and a Nearby Events row below.
+        text: >-
+          Progress sits above events, not below them: the reason to open the app
+          is what you have already done.
+      - number: Figure 3
+        title: Session summary
+        note: Physical numbers first
+        src: ../../assets/systems/in2ocean/session-summary.png
+        alt: "A session summary headed Congratulations reading: number of items collected 34, total weight 1.25 kg, distance covered 1.2 km, time elapsed 02:14:00, and a line awarding 125 ocean points with three stars and a Level 5 to Level 6 progress bar."
+        text: >-
+          The close-out counts items, weight, distance and time before it counts
+          points. The physical numbers come first, and the game sits underneath
+          them.
+  - layout: full
+    ground: white
+    number: Figure 4
+    title: Logo guide
+    note: Four lockups, one specimen, one palette
+    src: ../../assets/systems/in2ocean/logo-guide.png
+    alt: "The IN2Ocean logo guide: the wordmark in blue, in coral, reversed out of blue and reversed out of coral, with a dolphin mark, a type specimen reading Aa Bb, and a row of colour swatches."
+argument:
+  - label: What it is
+    lead: A cleanup, logged item by item.
+    paragraphs:
+      - >-
+        Find or create an event, log what comes off the beach as you pick it up,
+        and close the session on a weight, a distance and a badge. The artefact
+        is a complete product: identity, light and dark style guides, a
+        component set and the screens that use them.
+  - label: What is not recorded
+    lead: Whose hand did which part.
+    paragraphs:
+      - >-
+        This is a group project and the split of work is not written down
+        anywhere the site can cite — not in an appraisal, not on a CV, not in a
+        handover. The page therefore describes the thing that exists rather than
+        claiming a role in making it. That gap is hers to close, and it is left
+        open rather than guessed at.
 ---
-
-import Figure from "@/components/Figure.astro"
-import explore from "../../assets/systems/in2ocean/explore.jpg"
-import collectTrash from "../../assets/systems/in2ocean/collect-trash.png"
-import badges from "../../assets/systems/in2ocean/badges.png"
-import event from "../../assets/systems/in2ocean/event.jpg"
-import sessionSummary from "../../assets/systems/in2ocean/session-summary.png"
-import logoGuide from "../../assets/systems/in2ocean/logo-guide.png"
-import styleGuide from "../../assets/systems/in2ocean/style-guide.png"
-
-## What it is
-
-Volunteers turn up to a beach cleanup, spend a morning filling bags, and go
-home. IN2Ocean is the app around that morning: find an event or create one, log
-what comes off the sand while you are picking it up, and finish with a number
-that means something rather than a thank-you screen.
-
-It is the one project in this inventory with no client behind it, and it is the
-one where the whole surface was designed rather than maintained: identity, style
-guides in both themes, illustration, and the flows below.
-
-**What is not recorded is who did which part.** It is a group project, her own
-Figma file is the only source, and no appraisal or CV mentions it. Everything on
-this page describes the design; none of it apportions credit.
-
-## The identity comes first
-
-There is a logo guide, and it exists because the mark has to survive being small
-on a phone, large on a splash screen, and reversed out on a photograph of a
-beach. It carries the horizontal lockup, the stacked one, the wordmark alone,
-and the palette that the rest of the product inherits.
-
-<Figure
-  src={logoGuide}
-  alt="The IN2Ocean logo guide: the wordmark in blue, in coral, reversed out of blue and reversed out of coral, with a dolphin mark, a type specimen reading Aa Bb, and a row of colour swatches."
-  caption="Four lockups, one type specimen, one palette. Coral and deep blue carry the whole product, and the dolphin is the only illustration allowed to be a mark rather than a picture."
-/>
-
-## Collecting is counting, so make counting the screen
-
-This is the screen the rest of the app exists to serve, and it refuses to be a
-text field. Trash is a fixed vocabulary (cigarette butts, balloons, toys,
-fishing gear, plastic bags, food wrappers, containers, cans, cups, plates, lids,
-straws, utensils), so every one of them is a tile with its own counter, tapped
-with wet hands while crouching.
-
-What does not fit the vocabulary falls through to "Other Trash", bucketed by
-size rather than by name, because a volunteer should not have to classify a
-fragment to record it.
-
-<div class="figure-grid">
-  <Figure
-    width="half"
-    src={collectTrash}
-    alt="The Collect Trash screen: a three-column grid of illustrated tiles for cigarette buds, balloons, toys, fishing gear, plastic bags, food wrappers, containers, beverage cans, cups, plates, lids, straws and utensils, each with a counter, then an Other Trash section bucketed under 2.5cm, under 5cm and larger than 5cm."
-    caption="Thirteen named types, then three size buckets for everything else. The taxonomy is the interface."
-  />
-  <Figure
-    width="half"
-    src={explore}
-    alt="The Explore screen showing a My Progress card reading 3500 points at Level 5, a My Events row of event cards with beach photographs, and a Nearby Events row below."
-    caption="Progress sits above events, not below them: the reason to open the app is what you have already done."
-  />
-</div>
-
-## An event is a commitment, so it reads like one
-
-The event screen leads with the photograph and then gets specific: date, a
-start and end time, a named beach, and how many people are already going. The
-participant count is the persuasive part and it is stated plainly rather than
-dressed up, which is the right call for something that asks for a Saturday
-morning.
-
-<div class="figure-grid">
-  <Figure
-    width="half"
-    src={event}
-    alt="An event screen showing a photograph of a rocky tropical beach, the title WA Beach Clean Up 2022, a date of 13 March 2023, a time of 7:00 AM to 12:00 PM, the location Mount Lavinia Beach, 23 participants, and a Start Collecting button."
-    caption="Photograph, date, time, place, headcount, one button. Nothing between reading it and joining it."
-  />
-  <Figure
-    width="half"
-    src={sessionSummary}
-    alt="A session summary headed Congratulations reading: number of items collected 34, total weight 1.25 kg, distance covered 1.2 km, time elapsed 02:14:00, and a line awarding 125 ocean points with three stars and a Level 5 to Level 6 progress bar."
-    caption="The close-out counts items, weight, distance and time before it counts points. The physical numbers come first, and the game sits underneath them."
-  />
-</div>
-
-## Rewards that name the thing you did
-
-Seven levels, each with its own illustration and its own sentence about what it
-was for. The copy is written to the ocean rather than to the user's ego: the
-level-three note thanks you on behalf of sea turtles, which is a small choice
-that tells you what the product thinks it is for.
-
-<Figure
-  src={badges}
-  alt="A Badges screen reading 5 of 7 earned, listing Ahoy!, Newbie, Pick Up, Buster, Survivor, Warrior and Master, each with a colour illustration of sea life or volunteers and a sentence explaining what earned it."
-  caption="Seven badges, each illustrated separately rather than recoloured from one template, and each carrying the reason it was awarded."
-/>
-
-## Both themes, specified rather than derived
-
-The style guide exists in light and dark as two full documents. Dark is not a
-palette swap applied late; it is drawn out at the same length as light, which is
-what makes it a specification rather than an intention.
-
-<Figure
-  src={styleGuide}
-  alt="The IN2Ocean light-theme style guide board: colour palette, type scale specimens, buttons in several states, form fields, cards, list rows, navigation bars and illustration examples laid out down one tall sheet."
-  caption="One sheet, the whole system: palette, type ramp, controls in their states, cards, navigation. There is a second one exactly like it for dark."
-/>

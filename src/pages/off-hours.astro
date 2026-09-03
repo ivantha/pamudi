@@ -1,0 +1,323 @@
+---
+import { Image } from "astro:assets"
+import { getEntry } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Heading from "@/components/Heading.astro"
+import { href } from "@/lib/url"
+
+// ── The teaching photographs ──────────────────────────────────────────────
+// Published September 2026 and checked then: two photographs of her speaking,
+// and two speaker cards she is named on.
+import protege from "@/assets/community/young-protege-2025.jpg"
+import designThinking from "@/assets/community/design-thinking-talk.jpg"
+import revoux from "@/assets/community/revoux-workshop-card.jpg"
+import creativeEye from "@/assets/community/creative-eye-speakers.jpg"
+
+// ── The off-hours photographs ─────────────────────────────────────────────
+//
+// Her own, out of the Music, Pets, Lego and puzzles, Gaming, Traveling and
+// Stargazing rows of her Figma file, and looked at one by one before being
+// committed. Three carried something that had to be dealt with first:
+//
+//   - `drawing-with-cat` had a third party's full name legible on the laptop
+//     screen behind the drawing, on a games profile page. The name is painted
+//     out in the app's own panel colour, so it reads as an empty header row
+//     rather than as a censor bar, and NOTHING else in the frame is touched.
+//     That is the same redaction rule the mining-site screens follow.
+//   - `keyboard` and `telescope` are stills from social video and carried the
+//     player's own chrome — an avatar and name plate, a search icon, a mute
+//     button. Cropped off. The chrome is overlay, not photograph.
+//
+// One further travel photograph was left in staging and is not published: it
+// has another person in frame, so it is not hers alone to publish. The design
+// uses the other frame from the same trip, which is why the section has a
+// window rather than a face.
+import keyboard from "@/assets/hobbies/keyboard.jpg"
+import kittens from "@/assets/hobbies/kittens.jpg"
+import drawingWithCat from "@/assets/hobbies/drawing-with-cat.jpg"
+import seaOfThieves from "@/assets/hobbies/sea-of-thieves.jpg"
+import twoRigs from "@/assets/hobbies/two-rigs.jpg"
+import falconBuild from "@/assets/hobbies/falcon-build.jpg"
+import puzzles from "@/assets/hobbies/puzzles.jpg"
+import windowCoffee from "@/assets/hobbies/window-coffee.jpg"
+import telescope from "@/assets/hobbies/telescope.jpg"
+
+const site = await getEntry("site", "site")!
+const personal = await getEntry("personal", "personal")!
+const oh = site.data.off_hours
+const city = personal.data.location.split(",")[0].trim()
+
+const JUMP = [
+    { label: "Teaching", id: "teaching" },
+    { label: "Music", id: "music" },
+    { label: "Cats", id: "cats" },
+    { label: "Games", id: "games" },
+    { label: "Bricks and pieces", id: "bricks" },
+    { label: "Traveling", id: "traveling" },
+    { label: "Stargazing", id: "stargazing" },
+]
+---
+
+<Layout
+    title="Off hours"
+    description="Teaching, a keyboard, two cats, a telescope and a very large box of bricks."
+    offer="off_hours"
+    current="/off-hours"
+>
+    <section class="intro rule-bottom-ink" style="--intro-measure: 26ch">
+        <p class="eyebrow">{oh.eyebrow} &nbsp;·&nbsp; {city}</p>
+        <Heading as="h1" class="display intro__title" heading={oh.headline} />
+        <p class="intro__lede">
+            {oh.lede_before}{" "}
+            <a href={href("/plates")}>{oh.lede_link}</a>{oh.lede_after}
+        </p>
+        <nav class="intro__jump" aria-label="Sections on this page">
+            {JUMP.map((item) => <a href={`#${item.id}`}>{item.label}</a>)}
+        </nav>
+    </section>
+
+    <section class="oh-sec oh-sec--first" id="teaching">
+        <div class="oh-head">
+            <Heading as="h2" class="display sec-title" heading={oh.teaching.title} tone="ink" />
+            <p class="oh-head__text">
+                {oh.teaching.text_before}{" "}
+                <a href={href("/profile#record")}>{oh.teaching.text_link}</a>.
+            </p>
+        </div>
+
+        <div class="oh-pair">
+            <figure class="oh-fig oh-fig--wide oh-fig--protege">
+                <Image
+                    src={protege}
+                    alt="Pamudi Dahanayake on stage receiving the IEEE Young Protégé 2025 token of appreciation."
+                    widths={[480, 720, 1024]}
+                    sizes="(max-width: 52rem) 90vw, 44vw"
+                    loading="eager"
+                />
+                <figcaption class="figcap">
+                    <span>Young Protégé final summit &nbsp;·&nbsp; Knowledge Partner</span>
+                    <em>2025</em>
+                </figcaption>
+            </figure>
+            <figure class="oh-fig oh-fig--wide">
+                <Image
+                    src={designThinking}
+                    alt="Pamudi Dahanayake presenting a design thinking process slide during a Zone24x7 session."
+                    widths={[480, 720, 1024]}
+                    sizes="(max-width: 52rem) 90vw, 44vw"
+                    loading="lazy"
+                />
+                <figcaption class="figcap">
+                    <span>Design thinking session &nbsp;·&nbsp; Zone24x7</span>
+                    <em>Internal</em>
+                </figcaption>
+            </figure>
+        </div>
+
+        <div class="oh-pair oh-pair--narrow oh-pair--stacked">
+            <figure class="oh-fig">
+                <span class="plate oh-fig__plate">
+                    <Image
+                        src={revoux}
+                        alt="RevolUX 2.0 speaker card announcing her workshop on branding and marketing in the design process."
+                        widths={[360, 540, 720]}
+                        sizes="(max-width: 52rem) 90vw, 26rem"
+                        loading="lazy"
+                    />
+                </span>
+                <figcaption class="figcap">
+                    <span>RevolUX 2.0 &nbsp;·&nbsp; Branding in the design process</span>
+                    <em>2022</em>
+                </figcaption>
+            </figure>
+            <figure class="oh-fig">
+                <span class="plate oh-fig__plate">
+                    <Image
+                        src={creativeEye}
+                        alt="Creative Eye speaker card listing her as a speaker alongside a colleague."
+                        widths={[360, 540, 720]}
+                        sizes="(max-width: 52rem) 90vw, 26rem"
+                        loading="lazy"
+                    />
+                </span>
+                <figcaption class="figcap">
+                    <span>Creative Eye &nbsp;·&nbsp; UI/UX talk and Adobe XD workshop</span>
+                    <em>2020</em>
+                </figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section class="oh-sec split oh-sec--aside" id="music">
+        <figure class="oh-fig oh-fig--wide oh-fig--keyboard">
+            <Image
+                src={keyboard}
+                alt="Pamudi Dahanayake seated at a digital keyboard in a home studio corner, playing with both hands."
+                widths={[480, 720, 1024, 1440]}
+                sizes="(max-width: 52rem) 90vw, 52vw"
+                loading="lazy"
+            />
+            <figcaption class="figcap">
+                <strong>At the keyboard</strong>
+                <span>{city}</span>
+            </figcaption>
+        </figure>
+        <div>
+            <p class="label">{oh.music.label}</p>
+            <p class="oh-aside__title">{oh.music.title}</p>
+            <p class="text oh-aside__text">{oh.music.text}</p>
+        </div>
+    </section>
+
+    <section class="oh-sec" id="cats">
+        <div class="oh-head">
+            <Heading as="h2" class="display sec-title" heading={oh.cats.title} tone="ink" />
+            <p class="oh-head__text">
+                {oh.cats.text_before}{" "}
+                <a href={href("/plates")}>{oh.cats.text_link}</a>{oh.cats.text_after}
+            </p>
+        </div>
+        <div class="oh-pair oh-pair--cats">
+            <figure class="oh-fig oh-fig--tall">
+                <Image
+                    src={kittens}
+                    alt="Two long-haired kittens with blue eyes at a doorway, one white and one seal-point, looking up at the camera."
+                    widths={[360, 540, 720]}
+                    sizes="(max-width: 52rem) 90vw, 26rem"
+                    loading="lazy"
+                />
+                <figcaption class="figcap">
+                    <strong>The pair</strong>
+                    <span>At the door</span>
+                </figcaption>
+            </figure>
+            <figure class="oh-fig oh-fig--tall">
+                <Image
+                    src={drawingWithCat}
+                    alt="Drawing a green crested bird in Procreate on an iPad, with a seal-point cat asleep on the desk behind."
+                    widths={[360, 540, 720]}
+                    sizes="(max-width: 52rem) 90vw, 26rem"
+                    loading="lazy"
+                />
+                <figcaption class="figcap">
+                    <strong>Mid-drawing</strong>
+                    <span>Procreate</span>
+                </figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section class="oh-sec" id="games">
+        <div class="oh-games__head">
+            <div>
+                <p class="label">{oh.games.label}</p>
+                <Heading class="oh-aside__title" heading={oh.games.title} tone="ink" />
+            </div>
+            <p class="text">{oh.games.text}</p>
+        </div>
+        <figure class="oh-fig oh-fig--panorama">
+            <Image
+                src={seaOfThieves}
+                alt="Sea of Thieves screenshot at sunset: a pirate carrying a cat walks up a beach, a burning ship and an island tavern behind, gamertag Pamsdemic overhead."
+                widths={[640, 960, 1360, 1920]}
+                sizes="(max-width: 85rem) 96vw, 1300px"
+                loading="lazy"
+            />
+            <figcaption class="figcap">
+                <strong>Sea of Thieves &nbsp;·&nbsp; Sailor of the Blue Horizon</strong>
+                <em>In-game capture</em>
+            </figcaption>
+        </figure>
+        <figure class="oh-fig oh-fig--card oh-figure-solo">
+            <Image
+                src={twoRigs}
+                alt="A dark room at night with two lit gaming monitors, an RGB tower and two pale cats sitting by a glass door onto a wet garden."
+                widths={[480, 720, 1024]}
+                sizes="(max-width: 46rem) 90vw, 44rem"
+                loading="lazy"
+            />
+            <figcaption class="figcap">
+                <strong>Two screens, two cats</strong>
+                <span>Rainy evening</span>
+            </figcaption>
+        </figure>
+    </section>
+
+    <section class="oh-sec" id="bricks">
+        <div class="oh-head">
+            <Heading as="h2" class="display sec-title" heading={oh.bricks.title} tone="ink" />
+            <p class="oh-head__text">{oh.bricks.text}</p>
+        </div>
+        <div class="oh-pair">
+            <figure class="oh-fig oh-fig--card">
+                <Image
+                    src={falconBuild}
+                    alt="An open LEGO instruction manual at step 1,379 beside a sofa covered in bagged parts for a large spaceship build."
+                    widths={[480, 720, 1024]}
+                    sizes="(max-width: 52rem) 90vw, 44vw"
+                    loading="lazy"
+                />
+                <figcaption class="figcap">
+                    <strong>Step 1,379</strong>
+                    <span>Somewhere near the end</span>
+                </figcaption>
+            </figure>
+            <figure class="oh-fig oh-fig--card">
+                <Image
+                    src={puzzles}
+                    alt="Two 1,000-piece jigsaw puzzle boxes, Fantasy Village and Dreamy Day, lying on a cream sheepskin rug."
+                    widths={[480, 720, 1024]}
+                    sizes="(max-width: 52rem) 90vw, 44vw"
+                    loading="lazy"
+                />
+                <figcaption class="figcap">
+                    <strong>Two thousand pieces</strong>
+                    <span>Queued</span>
+                </figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section class="oh-sec split-narrow oh-sec--aside" id="traveling">
+        <div>
+            <p class="label">{oh.traveling.label}</p>
+            <Heading class="oh-aside__title" heading={oh.traveling.title} tone="ink" />
+            <p class="text oh-aside__text">{oh.traveling.text}</p>
+        </div>
+        <figure class="oh-fig oh-fig--landscape">
+            <Image
+                src={windowCoffee}
+                alt="A mug of black coffee and over-ear headphones on a wooden sill, looking through rain-flecked glass at a green hillside at dusk."
+                widths={[480, 720, 1024, 1440]}
+                sizes="(max-width: 52rem) 90vw, 52vw"
+                loading="lazy"
+            />
+            <figcaption class="figcap">
+                <strong>A window worth the drive</strong>
+                <span>Hill country</span>
+            </figcaption>
+        </figure>
+    </section>
+
+    <section class="oh-sec split oh-sec--aside" id="stargazing">
+        <figure class="oh-fig oh-fig--landscape">
+            <Image
+                src={telescope}
+                alt="Setting up a large reflector telescope on a tripod in a sitting room lit pink, aligning the finder by hand."
+                widths={[480, 720, 1024, 1440]}
+                sizes="(max-width: 52rem) 90vw, 52vw"
+                loading="lazy"
+            />
+            <figcaption class="figcap">
+                <strong>Reflector, on the tripod</strong>
+                <em>Setting up</em>
+            </figcaption>
+        </figure>
+        <div>
+            <p class="label">{oh.stargazing.label}</p>
+            <Heading class="oh-aside__title" heading={oh.stargazing.title} tone="ink" />
+            <p class="text oh-aside__text">{oh.stargazing.text}</p>
+            <p class="oh-aside__coda">{oh.stargazing.coda}</p>
+        </div>
+    </section>
+</Layout>

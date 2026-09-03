@@ -1,0 +1,186 @@
+// The work index: three owned systems argued one at a time, then the inventory
+// of everything else, then the process.
+
+.owned {
+    align-items: center;
+    padding-block: clamp(1.5rem, 1.1591rem + 1.5vw, 2.5rem);
+}
+
+.owned + .owned {
+    border-top: 1px solid var(--rule);
+}
+
+.owned__plate {
+    padding: clamp(0.75rem, 0.5227rem + 1vw, 1.25rem);
+
+    &:hover {
+        opacity: 0.82;
+    }
+}
+
+.owned__plate--tall {
+    aspect-ratio: 4 / 5;
+}
+
+.owned__plate--wide {
+    aspect-ratio: 16 / 10;
+}
+
+.owned__title {
+    margin: 0.75rem 0 0;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: clamp(1.5rem, 1.2727rem + 1vw, 2.125rem);
+    line-height: 1.15;
+
+    a {
+        color: var(--ink);
+
+        &:hover {
+            color: var(--accent);
+        }
+    }
+}
+
+.owned__text {
+    margin: 1rem 0 0;
+    font-size: var(--fs-prose);
+    line-height: 1.8;
+    color: var(--body);
+    text-wrap: pretty;
+}
+
+// A two-row fact table under the description: term left, value right, each row
+// opened by a hairline. Narrower than `.def` because it is inside a column
+// rather than across the page.
+.owned__facts {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 1.5rem;
+    margin: 1.5rem 0 0;
+
+    dt,
+    dd {
+        padding-block: 0.5rem;
+        border-top: 1px solid var(--rule);
+    }
+
+    dt {
+        font-size: var(--fs-micro);
+        font-weight: 600;
+        letter-spacing: var(--tracking-micro);
+        text-transform: uppercase;
+        color: var(--muted);
+    }
+
+    dd {
+        margin: 0;
+        font-size: var(--fs-meta);
+        color: var(--ink);
+    }
+}
+
+.owned__more {
+    margin-top: 1.5rem;
+}
+
+// ---- The plated entries above the inventory ---------------------------------
+// The extended entries that have a page with screens sit above the list rather
+// than inside it, because a row cannot hold a picture. The column count follows
+// the number of them: `--plated` is set from the page so that adding a written
+// page cannot leave one plate stranded on a row of its own.
+
+.plated {
+    display: grid;
+    grid-template-columns: repeat(var(--plated, 2), minmax(0, 1fr));
+    gap: var(--gap);
+    max-width: calc(var(--plated, 2) * 23rem);
+    margin-inline: auto;
+    padding-bottom: clamp(1.5rem, 1.1591rem + 1.5vw, 2.5rem);
+
+    @media (max-width: 52rem) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 46rem;
+    }
+
+    @media (max-width: 40rem) {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 24rem;
+    }
+}
+
+.plated__link {
+    display: block;
+    color: var(--muted);
+
+    &:hover {
+        color: var(--accent);
+    }
+}
+
+.plated__plate {
+    aspect-ratio: 4 / 5;
+    padding: clamp(0.75rem, 0.5227rem + 1vw, 1.25rem);
+}
+
+.plated__caption {
+    display: block;
+    margin-top: 0.875rem;
+    text-align: center;
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tiny);
+    text-transform: uppercase;
+    color: inherit;
+}
+
+// ---- Process ----------------------------------------------------------------
+// Five moves, numbered in roman because the plates are.
+
+.process {
+    max-width: 60rem;
+    margin-inline: auto;
+}
+
+.process__step {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 13rem) minmax(0, 1fr);
+    gap: 0.5rem 1.5rem;
+    align-items: baseline;
+    padding-block: 1.0625rem;
+    border-top: 1px solid var(--rule);
+
+    &:last-child {
+        border-bottom: 1px solid var(--rule);
+    }
+
+    @media (max-width: 44rem) {
+        grid-template-columns: 3rem minmax(0, 1fr);
+    }
+}
+
+.process__numeral {
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: var(--fs-numeral);
+    color: var(--accent);
+}
+
+.process__title {
+    font-size: var(--fs-body);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+}
+
+.process__text {
+    font-size: var(--fs-text);
+    line-height: 1.75;
+    color: var(--body);
+
+    @media (max-width: 44rem) {
+        grid-column: 2;
+    }
+}

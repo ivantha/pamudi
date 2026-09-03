@@ -1,0 +1,39 @@
+---
+import { getEntry } from "astro:content"
+import Heading from "@/components/Heading.astro"
+import Markup from "@/components/Markup.astro"
+import { roman } from "@/lib/roman"
+
+/**
+ * "How it runs": the five moves, numbered in Roman like the plates.
+ *
+ * Its own component because it closes the work index and is the thing the
+ * profile page's "How she works" section links to; keeping it in one place is
+ * what stops the two drifting into slightly different lists.
+ */
+interface Props {
+    id?: string
+}
+
+const { id }: Props = Astro.props
+const site = await getEntry("site", "site")!
+const process = site.data.process
+---
+
+<section class="sec rule-top" id={id}>
+    <div class="sec-head">
+        <Heading as="h2" class="display sec-title" heading={process.title} tone="ink" />
+        <p class="sec-note" style="max-width: 48ch">{process.lede}</p>
+    </div>
+    <ol class="process">
+        {
+            process.steps.map((step, i) => (
+                <li class="process__step">
+                    <span class="process__numeral">{roman(i + 1)}</span>
+                    <span class="process__title">{step.title}</span>
+                    <Markup class="process__text" text={step.text} />
+                </li>
+            ))
+        }
+    </ol>
+</section>

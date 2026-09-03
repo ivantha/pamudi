@@ -1,71 +1,123 @@
-# Website-only editorial copy: the framing text the Website v2 design added
-# around the career record. Website only by construction — no Typst file reads
-# this file, so nothing here can reach the PDF or cost it its two-page guard.
+# Website-only editorial copy: the framing text the design adds around the
+# career record. Website only by construction — no Typst file reads this file,
+# so nothing here can reach the PDF or cost it its two-page guard.
 #
 # ⚠ PROVENANCE, and the one thing to know before editing. Every string in this
-# file was transcribed verbatim from `Website v2.dc.html` in the Claude Design
-# project (imported 2026-09-02). Unlike the rest of `data/`, it is NOT traceable
-# to the archived career record at
-# ~/Documents/archives/pamudi-cv-data-2026-09-02/ — it is new writing that came
-# with the design. It is therefore PENDING PAMUDI'S SIGN-OFF: it says nothing
-# the sourced data does not already support, but the phrasing is not yet hers.
-# See CLAUDE.md, "Whose site this is". Do not extend this file with invented
-# copy; strings only enter it from a design she has approved, or from her.
+# file was transcribed verbatim from the "Plinth" artboards in the Claude Design
+# project (imported 2026-09-03), which replaced the Website v2 / Grid copy that
+# was here before. Unlike the rest of `data/`, it is NOT traceable to the
+# archived career record at ~/Documents/archives/pamudi-cv-data-2026-09-02/ —
+# it is writing that came with the design. It is therefore PENDING PAMUDI'S
+# SIGN-OFF: it says nothing the sourced data does not already support, but the
+# phrasing is not yet hers. See CLAUDE.md, "Whose site this is". Do not extend
+# this file with invented copy; strings only enter it from a design she has
+# approved, or from her.
 #
 # Counts that are derivable are derived in the page instead (the inventory
-# total, her start year), so they cannot drift from the data they describe.
+# total, the year span in the eyebrows), so they cannot drift from the data
+# they describe.
 
 home:
-  # The hero lede. `personal.yaml`'s `intro` still outranks this when she writes
-  # one; this outranks the `summary` fallback. src/pages/index.astro, in order.
+  # The hero headline. `accent` is the phrase set in italic brass.
+  headline:
+    before: An engineer’s rigour,
+    accent: a painter’s eye
+    after: .
   lede: >-
-    Design systems built and owned end to end, then specified for the framework
-    that has to consume them: Flutter, React, Kendo UI, Ant Design.
-    Accessibility from the first token. Implementation done in the codebase
-    rather than handed over the wall.
+    Senior UI/UX engineering for products where the data is dense and the
+    interface still has to be beautiful. Design systems owned from the first
+    token through to the implemented styling, with the same eye for value, edge
+    and restraint that the paintings get.
+  actions:
+    - label: See the work
+      to: /work
+      style: solid
+    - label: Profile and CV
+      to: /profile
+      style: ghost
 
-  # The band under the four headline figures in `personal.yaml`. These four are
-  # second-order: each is a count drawn from the experience bullets rather than
-  # a headline claim, which is why they are set small and in one line.
-  figures:
-    # `value` is rendered in accent, `label` follows it inline.
-    - value: "10"
-      label: style guides written inside the Figma files
-    - value: "4"
-      label: target frameworks specified
-    - value: "4"
-      label: client products shipped as frontend code
+  # Plate I: the fox, under the headline. The three cells of the caption read
+  # left, centre, right.
+  plate:
+    title: Fox · digital
+    note: Her own hand
 
-# The four cards under "Practice". Each compresses one experience bullet into a
-# claim plus its evidence; the bullets themselves stay in experience.yaml.
-practice:
-  - label: Design system ownership
-    title: Tokens, components, the whole library
-    text: >-
-      Three systems owned from scratch, every component, screen and prototype.
-      Six more extended across banking, manufacturing, mining-site tooling,
-      biometric identity and warehouse management.
-  - label: Design-to-code
-    title: Specified for the stack that consumes it
-    text: >-
-      Flutter-ready components on the ag-tech app; React with Ant Design, Kendo
-      UI and Material UI elsewhere. Styling implemented directly, measured on
-      rework and UI defects avoided.
-  - label: Accessibility
-    title: WCAG at token level, not at review
-    text: >-
-      Colour-contrast and content-sizing standards embedded into the ag-tech,
-      photo-ID and banking systems from the first token, plus a dedicated
-      research pass for a consumer delivery platform.
-  - label: AI-assisted delivery
-    title: Direction set earlier, handoffs removed
-    text: >-
-      Wireframing and testing before production commitment, and design changes
-      implemented without dedicated frontend support. Cursor, Claude,
-      Visily.ai, Builder.ai and Figma AI.
+  # Three screens, chosen for what each one argues rather than for the product
+  # it belongs to — which is why the third is a screen name and not a product
+  # name, and why it points at the inventory rather than at a case.
+  picks:
+    title:
+      before: Selected
+      accent: screens
+    items:
+      - system: Precision agriculture app
+        title: Precision agriculture app
+        text: >-
+          Six substrate and climate channels charted on one dark canvas, tuned
+          so a grower reads the room in a glance and not a legend.
+        more: Read the case →
+      - system: Photo-ID compliance app
+        title: Photo-ID compliance app
+        text: >-
+          Document template picked first, in a calm iPad interface that drives
+          the crop, the rules tested and the printed sheet downstream.
+        more: Read the case →
+      - system: Warehouse management platform
+        title: Batch pick, on the floor
+        text: >-
+          A single-hand scanning flow in a warm, high-contrast palette:
+          quantities, targets and the scan field where a gloved thumb can reach
+          them.
+        more: In the work index →
+        to: /work#inventory
+    note_before: Ten further systems extended and contributed to, with the process behind them, are
+    note_link: in the work index
 
-# "How it runs" — the dark band. Five steps, in order.
+  # The two teasers that close the page.
+  plates:
+    title:
+      before: Sketches and
+      accent: paintings
+    text: >-
+      Watercolour, graphite and digital, kept up alongside the product work. The
+      section takes its name from her own label on the file.
+    more: The full set of plates →
+  profile:
+    label: Profile
+    text: >-
+      Building and owning design systems across a dozen client products, with
+      accessibility built in from the first token and the styling implemented in
+      the codebase rather than waiting on a handoff.
+    more: Profile, capabilities and CV →
+
+# ── The work index ────────────────────────────────────────────────────────
+work:
+  eyebrow: The work
+  headline:
+    before: Three owned,
+    accent: ten extended
+    after: .
+  lede: >-
+    Three design systems taken from nothing to a specified, implemented library.
+    Ten more extended or contributed to inside product teams that already had
+    one. Client names are held back; each is described by its domain.
+  inventory:
+    title: Extended and contributed
+    note: >-
+      Six systems extended across banking, manufacturing, mining-site tooling,
+      biometric identity and warehouse management, and four further engagements.
+    # The design's line here reads "Plated entries open a page. The rest are
+    # listed for record only." Every product in the inventory does have a page,
+    # which is a rule this repo keeps (CLAUDE.md, and src/pages/work/[slug].astro):
+    # an unwritten product should have a URL carrying its sourced record rather
+    # than a 404. So the sentence says what is true instead.
+    aside: Plated entries carry a case; the rest carry the sourced record.
+
+# "How it runs" — five moves, numbered in Roman like the plates.
 process:
+  title:
+    before: How it
+    accent: runs
   lede: >-
     The same five moves on every product, whether the system is new or
     inherited.
@@ -85,21 +137,156 @@ process:
     - title: Build and transfer
       text: Styling implemented directly, style guide left in-file for onboarding.
 
-# Page ledes. Each sits beside its page title, in the right-hand column.
-pages:
-  systems: >-
-    Product names are anonymised with domain descriptors; the client column
-    describes the industry context. Scope says what the engagement was, the last
-    column what the design was specified against.
-  about: >-
-    The full record: roles and what each one covered, the earlier project work,
-    degrees and training, and eight years of community work that the two-page CV
-    has no room for.
+# ── Plates ────────────────────────────────────────────────────────────────
+plates:
+  eyebrow: Plates · Her own hand
+  headline:
+    before: Sketches and
+    accent: paintings
+    after: ""
+  lede_before: >-
+    Watercolour, graphite and digital, kept up alongside the product work.
+    Drawing is where the eye for value, edge and restraint gets its practice;
+    the systems work borrows from it constantly. The rest of the weekend is
+  lede_link: on the off-hours page
+  # Several pieces are studies after characters someone else owns. Saying so is
+  # part of publishing them.
+  attribution: >-
+    Where a piece is drawn after a film or comics character, the character
+    belongs to its owner; the drawing is hers.
+  identity:
+    title: Identity and event design
+    note: >-
+      Design lead across twelve student conferences, and the in-house design
+      function at Zone24x7 across four departments before the move into product.
 
-# The CV page's contents list, describing the PDF section by section. Ordered as
-# the document is; the page lays them out in two columns reading down.
+# ── Off hours ─────────────────────────────────────────────────────────────
+off_hours:
+  eyebrow: Off hours
+  headline:
+    before: Away from the
+    accent: screen
+    after: ""
+  lede_before: >-
+    Weekends, mostly. A keyboard, two cats, a telescope, a thousand-piece box on
+    the floor, and six years of teaching that never quite counted as work. The
+    drawings live
+  lede_link: on the plates page
+  lede_after: "; everything else is here."
+  teaching:
+    title:
+      before: Teaching and
+      accent: mentoring
+    text_before: >-
+      Six years of it, mostly unpaid and mostly on weekends: mentorship cycles,
+      undergraduate workshops, judging panels and the odd Adobe XD session. The
+      habit of explaining the work is what turned into owning the system. The
+      full record sits
+    text_link: on the profile
+  music:
+    label: Music
+    title: Sings, and plays keyboard
+    text: >-
+      Once with the UCSC Music Circle, and still the thing the evening turns
+      into when the laptop closes. A guitar leans against the wall behind the
+      chair.
+  cats:
+    title:
+      before: Two
+      accent: cats
+      after: ", one iPad"
+    text_before: >-
+      They supervise. The second photograph is also the proof of authorship for
+      the green bird on
+    text_link: the plates page
+    text_after: ": same drawing, same hand, same cat asleep behind it."
+  games:
+    label: Games
+    title:
+      before: Playing under the handle
+      accent: Pamsdemic
+    text: >-
+      A wide rotation rather than one title, and whatever the co-op night calls
+      for. Two rigs in one dark room and two cats at the glass door, which is
+      the household in a single frame.
+  bricks:
+    title:
+      before: Bricks and
+      accent: pieces
+    text: >-
+      Step 1,379 of a 7,541-piece build, and two thousand jigsaw pieces waiting
+      on the shelf. Both are the same pleasure as a component library: sort,
+      stage, assemble, do not skip the manual.
+  traveling:
+    label: Traveling
+    title:
+      before: Hill country, in the
+      accent: rain
+    text: >-
+      Rain on the glass, coffee going cold, headphones on the tray. The point of
+      the trip, more or less.
+  stargazing:
+    label: Stargazing
+    title:
+      before: Carried into the middle of the
+      accent: sitting room
+    text: >-
+      Because that is the direction the doorway faces. Aligning the finder takes
+      longer than the looking does.
+    coda: >-
+      Reading is on the list too, and has no photograph. Consider that a gap in
+      the record rather than in the habit.
+
+# ── Profile ───────────────────────────────────────────────────────────────
+profile:
+  eyebrow: Profile
+  headline:
+    before: Senior UI/UX Engineer, and the
+    accent: system’s owner
+    after: .
+  teaching:
+    title:
+      before: Teaching and
+      accent: mentoring
+    text_before: >-
+      Six years of it, mostly unpaid and mostly on weekends: mentorship cycles,
+      undergraduate workshops, judging panels and the odd Adobe XD session. The
+      habit of explaining the work is what turned into owning the system. The
+      photographs are
+    text_link: on the off-hours page
+  # The one fact on the Details list that is not derived from `personal.yaml`.
+  # It arrived with the design rather than from the career record, which is why
+  # it sits in this file with the rest of the pending-sign-off copy.
+  languages: English · Sinhala
+  how:
+    label: How she works
+    title: In the requirements phase, and in the codebase
+    text_before: >-
+      Consulted before scope hardens, sole owner of the Figma source of truth,
+      and present through implementation. The five moves behind every product
+      are
+    text_link: set out on the work page
+
+# ── Contact ───────────────────────────────────────────────────────────────
+contact:
+  eyebrow_suffix: GMT+5:30
+  headline:
+    before: Start a
+    accent: conversation
+    after: ""
+  enquiry:
+    label: What to send
+    title: A paragraph is enough to start.
+    text: The product, the stack it will ship on, and when you need it.
+
+# ── The CV page ───────────────────────────────────────────────────────────
+# The design has no CV artboard: it offers the document by email instead. The
+# page is kept because the PDF is a real deliverable that the build produces on
+# every push, and the Profile and Contact pages link to it rather than only
+# asking for an email.
 cv:
   eyebrow: Two pages · PDF
+  title: Curriculum vitae
   contents:
     - Profile and the four headline figures
     - Two roles at Zone24x7, 2018 to present
@@ -108,6 +295,17 @@ cv:
     - Degrees and professional training
     - Mentoring, speaking, judging and events
 
-# The line above the footer's invitation.
+# The line above the footer's invitation. `default` is the site-wide one; the
+# other two are the design's variants on the pages that make a different offer.
 footer:
   standfirst: Open to design system and product work
+  standfirst_off_hours: Mentoring, workshops and judging panels welcome
+  standfirst_plates: Commissions and collaborations welcome
+
+# ── Not found ─────────────────────────────────────────────────────────────
+not_found:
+  headline:
+    before: Nothing
+    accent: here
+    after: .
+  lede: The page you asked for does not exist.

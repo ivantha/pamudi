@@ -1,0 +1,36 @@
+---
+import type { Heading } from "@/content.config"
+
+/**
+ * A display heading with one phrase set in italic brass.
+ *
+ * Every title on the site goes through here, which is what keeps the accent a
+ * single decision rather than a `<span>` typed out forty times. The accent may
+ * be empty — a product whose name is one word takes the heading in ink.
+ *
+ * The space before the accent is added here rather than being carried as
+ * trailing whitespace in the YAML, where it would be invisible and would not
+ * survive a reformat. The markup below is deliberately unbroken: a newline
+ * between the `<span>` and `{after}` is rendered as a space, which is how a
+ * full stop ends up floating away from the word it belongs to.
+ */
+interface Props {
+    heading: Heading
+    /** The element to render. Any heading level, or a `p` inside a section. */
+    as?: "h1" | "h2" | "h3" | "p" | "span"
+    /** `bright` is the brass accent; `ink` italicises without colouring. */
+    tone?: "bright" | "ink"
+    class?: string
+}
+
+const { heading, as: Tag = "p", tone = "bright", class: className }: Props = Astro.props
+const { before, accent, after } = heading
+
+const lead = before && accent ? `${before} ` : before
+---
+
+<Tag class={className}
+    >{lead}{
+        accent && <span class={tone === "bright" ? "accent-word" : "italic"}>{accent}</span>
+    }{after}</Tag
+>

@@ -2,41 +2,50 @@
 import { getEntry } from "astro:content"
 import { href } from "@/lib/url"
 
+/**
+ * Four links, the name, two links. The bar is symmetrical because the name is
+ * the centre of the sheet rather than a logo pinned to a corner, and the two
+ * halves are separate `<nav>` elements so the order a screen reader announces
+ * matches the order the eye reads.
+ */
 const personal = await getEntry("personal", "personal")!
-const { name, role, contact } = personal.data
+const { name } = personal.data
 const path = Astro.url.pathname.replace(/\/$/, "")
 
-const NAV = [
-    { label: "Work", path: "/" },
-    { label: "Systems", path: "/systems" },
-    { label: "About", path: "/about" },
-    { label: "CV", path: "/cv" },
+const LEFT = [
+    { label: "Home", path: "/" },
+    { label: "Work", path: "/work" },
+    { label: "Plates", path: "/plates" },
+    { label: "Off hours", path: "/off-hours" },
+]
+
+const RIGHT = [
+    { label: "Profile", path: "/profile" },
+    { label: "Contact", path: "/contact", accent: true },
 ]
 
 /**
  * True when `target` is the section being rendered.
  *
- * Case studies live under `/work/` and system detail pages under `/systems/`,
- * so both mark their parent rather than leaving the nav blank. The home page is
- * matched exactly first, because every path starts with the base.
+ * Case pages live under `/work/`, so they mark Work rather than leaving the bar
+ * blank. The home page is matched exactly first, because every path starts with
+ * the base. The CV page has no bar entry of its own and marks Profile, which is
+ * the page that offers it.
  */
 const isCurrent = (target: string) => {
     const t = href(target).replace(/\/$/, "")
-    if (target === "/") return path === t || path.startsWith(`${t}/work`)
+    if (target === "/") return path === t
+    if (target === "/profile") return path === t || path === href("/cv").replace(/\/$/, "")
     return path === t || path.startsWith(`${t}/`)
 }
 ---
 
-<header class="site-header pad grid">
-    <a class="site-header__mark" href={href("/")}>
-        <span class="site-header__name">{name}</span>
-        <span class="site-header__role">{role}</span>
-    </a>
-    <nav class="site-header__nav" aria-label="Primary">
+<header class="masthead">
+    <nav class="masthead__nav" aria-label="Primary">
         {
-            NAV.map((item) => (
+            LEFT.map((item) => (
                 <a
-                    class="site-header__link"
+                    class="masthead__link"
                     href={href(item.path)}
                     aria-current={isCurrent(item.path) ? "page" : undefined}
                 >
@@ -44,6 +53,19 @@ const isCurrent = (target: string) => {
                 </a>
             ))
         }
-        <a class="site-header__contact" href={`mailto:${contact.email}`}>Contact</a>
+    </nav>
+    <a class="masthead__mark" href={href("/")}>{name}</a>
+    <nav class="masthead__nav masthead__nav--end" aria-label="Profile and contact">
+        {
+            RIGHT.map((item) => (
+                <a
+                    class:list={["masthead__link", item.accent && "masthead__link--accent"]}
+                    href={href(item.path)}
+                    aria-current={isCurrent(item.path) ? "page" : undefined}
+                >
+                    {item.label}
+                </a>
+            ))
+        }
     </nav>
 </header>

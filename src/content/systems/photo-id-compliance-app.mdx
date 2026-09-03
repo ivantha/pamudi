@@ -14,238 +14,129 @@
 #     ("EZIOS"). They are not paraphrased upward.
 #   - Everything else describes what is visibly in the screens beside it.
 # There are no outcomes, no metrics and no adoption claims here, because no
-# source carries any. This file is Pamudi's to correct and to extend; it is not
-# hers yet, so treat it the way data/site.yaml is treated.
+# source carries any.
+#
+# ⚠ The prose was rewritten on 2026-09-03 from the "Plinth" artboards in the
+# Claude Design project, replacing the longer MDX body this file used to carry
+# (it is in git, along with eleven further screens the design does not use).
+# Same two kinds of claim and no third. Treat it the way data/site.yaml is
+# treated: pending her sign-off.
 system: Photo-ID compliance app
-facts:
-  - label: Platform
-    value: iPad, at the point of capture
+plate: 3
+kind: owned
+eyebrow: Biometric photo-ID provider · Regulated identity documents
+title:
+  before: Photo-ID
+  accent: compliance
+  after: " app"
+standfirst: >-
+  AI image detection evaluates each capture against passport-photo compliance
+  rules and surfaces the optimal compliant shot at the point of capture. One
+  design system carried across an iPad app, an unattended kiosk and the web
+  back-office, print pipeline included.
+meta:
   - label: Role
-    value: Senior UI/UX Engineer, Zone24x7
-  - label: Recorded
-    value: "2025"
-cover: ../../assets/systems/photo-id/capture.png
-coverAlt: Photo capture screen with a live camera preview, a passport-type selector, and red warnings reading "Eyes are closed" and "Head is tilted".
-coverCaption: The compliance check runs while the photographer is still framing the shot, so the failures are named before the shutter rather than after the sale.
+    value: Sole designer, system owner
+  - label: Scope
+    value: Design system, three surfaces
+  - label: Stack
+    value: Figma, specified for React
+  - label: Surfaces
+    value: iPad · kiosk · web
+index:
+  summary: >-
+    AI image detection evaluates each capture against passport-photo compliance
+    rules and surfaces the optimal compliant shot at the point of capture. One
+    system carried across iPad, kiosk and web, with the print pipeline included.
+  facts:
+    - label: Role
+      value: Sole designer · system owner
+    - label: Surfaces
+      value: iPad · kiosk · web
+  shape: wide
+  src: ../../assets/systems/photo-id/capture.png
+  alt: Photo capture screen with a live camera preview, a passport-type selector, and red warnings reading "Eyes are closed" and "Head is tilted".
+figures:
+  - layout: full
+    number: Figure 1
+    title: Capture and evaluation
+    note: Compliance read at the moment of capture
+    tall: true
+    src: ../../assets/systems/photo-id/capture.png
+    alt: Photo capture screen with a live camera preview, a passport-type selector, and red warnings reading "Eyes are closed" and "Head is tilted".
+  - layout: pair
+    number: Figures 2 and 3
+    title: Selection and output
+    items:
+      - number: Figure 2
+        title: Template selection
+        note: Chosen first
+        src: ../../assets/systems/photo-id/type-selection.png
+        alt: Template picker headed "Select the Template Type", with tiles pairing a country flag and a passport name, each followed by an info icon.
+        text: >-
+          Document type is the first decision and sets everything downstream:
+          the rules tested, the crop, the print sheet. Long authority names were
+          specified to truncate, not to reflow the grid.
+      - number: Figure 3
+        title: Print sheet
+        note: Output
+        src: ../../assets/systems/photo-id/print.png
+        alt: "Print screen in three columns: the captured files on the left, a preview canvas in the middle, and Preview Photo, Print Photo and Print Results actions on the right."
+        text: >-
+          Captures on the left, the sheet in the middle, actions on the right —
+          the same three-column frame the kiosk uses without an attendant to
+          explain it.
+  - layout: full
+    ground: white
+    number: Figure 4
+    title: Colour tokens
+    note: Status pairs fixed at definition time
+    src: ../../assets/systems/photo-id/ds-colour.png
+    alt: "Twelve colour swatches in two rows: blue Primary, green Success, orange Warning, red Danger, black and white, then a six-step grey ramp."
+argument:
+  - label: The problem
+    lead: Rejection arrived weeks after the photograph.
+    paragraphs:
+      - >-
+        Passport and visa photographs fail on rules an operator cannot see: head
+        height in frame, eye line, background uniformity, shadow, expression.
+        Each authority states them differently. The cost of a miss is not a
+        retake, it is a rejected application weeks later.
+      - >-
+        The people taking the photographs were not photographers. They were
+        retail staff, and the same person had to serve a queue, pick the right
+        document template, and get the crop right.
+  - label: The approach
+    lead: Show the rule, not the error code.
+    paragraphs:
+      - >-
+        Detection runs live and the interface reports it as plain guidance
+        against the selected document type, so the operator corrects the subject
+        rather than interpreting a failure. The optimal compliant frame is
+        chosen from the burst and presented for confirmation.
+      - >-
+        Template selection comes first and drives everything downstream: crop,
+        print sheet, and the rules being tested. The same tokens and components
+        dress an iPad in a shop, a kiosk with no attendant, and a back-office in
+        the browser.
+shipped:
+  - term: One system, three surfaces
+    text: >-
+      A single token set and component library dressing touch, kiosk and desktop
+      without a fork.
+  - term: Capture and guidance flow
+    text: >-
+      Live compliance feedback, best-frame selection and confirmation, specified
+      state by state.
+  - term: Print pipeline
+    text: >-
+      Sheet layouts, cut marks and template-driven output for each supported
+      document type.
+  - term: Accessibility at token level
+    text: >-
+      WCAG contrast pairs, content sizing and touch targets fixed in the system,
+      not per screen.
+related:
+  - Precision agriculture app
+  - Freight logistics cockpit
 ---
-
-import Figure from "@/components/Figure.astro"
-import landing from "../../assets/systems/photo-id/landing.png"
-import typeSelection from "../../assets/systems/photo-id/type-selection.png"
-import editTemplate from "../../assets/systems/photo-id/edit-template.png"
-import editPhoto from "../../assets/systems/photo-id/edit-photo.png"
-import dsBoard from "../../assets/systems/photo-id/ds-board.png"
-import dsColour from "../../assets/systems/photo-id/ds-colour.png"
-import dsTypography from "../../assets/systems/photo-id/ds-typography.png"
-import dsButton from "../../assets/systems/photo-id/ds-button.png"
-import dsIcons from "../../assets/systems/photo-id/ds-icons.png"
-import print from "../../assets/systems/photo-id/print.png"
-import save from "../../assets/systems/photo-id/save.png"
-import saveFocused from "../../assets/systems/photo-id/save-autofocused.png"
-import saveTyping from "../../assets/systems/photo-id/save-typing.png"
-import saveTyped from "../../assets/systems/photo-id/save-typed.png"
-import saveRetyped from "../../assets/systems/photo-id/save-retyped.png"
-
-## The brief
-
-A passport photograph is rejected for reasons a photographer cannot reliably see at the
-moment of capture: a tilted head, a closed eye, a background that fails one country's
-specification while passing another's. The application puts an AI image check between
-the camera and the customer, evaluates each shot against the selected document's
-requirements, and surfaces the compliant one.
-
-It runs on an iPad in a working studio, in a photographer's hands, between a customer
-sitting down and a customer leaving. Nothing in it can wait for a second look. The
-compliance app is one of three products in the same suite: a self-service kiosk lets a
-customer capture unassisted, and a web back-office sits behind both.
-
-## The system
-
-There was no system to inherit. Design started at the foundations and had to arrive as
-something an implementation team could build without interpretation.
-
-<div class="spec">
-  <div class="spec__item">
-    <h3>Owned end to end</h3>
-    <p>
-      Led the creation and maintenance of the Figma design system from scratch: every component,
-      every screen, every prototype.
-    </p>
-  </div>
-  <div class="spec__item">
-    <h3>Full UI/UX lifecycle</h3>
-    <p>
-      From system creation through UX insight during requirements discussions to implementation
-      support during the build.
-    </p>
-  </div>
-  <div class="spec__item">
-    <h3>Accessibility from the first token</h3>
-    <p>
-      Compliant colour contrast and content sizing embedded at token level rather than retrofitted
-      at review.
-    </p>
-  </div>
-  <div class="spec__item">
-    <h3>An embedded style guide</h3>
-    <p>
-      A self-contained style guide inside the Figma file, so a new developer onboards from the
-      design source itself.
-    </p>
-  </div>
-</div>
-
-<Figure
-  src={landing}
-  alt="The application's empty state in three columns: a capture card on the left, a transparent working canvas in the middle, and a list of country passport specifications on the right."
-  caption="Three columns hold for the whole session: what you captured, what you are working on, and what it has to comply with. The middle canvas is a transparency checkerboard, not a grey box; the working artefact is a cut-out, and the empty state says so."
-/>
-
-## The library itself
-
-Three sheets, at the scale they were drawn at. The board on the left is the whole system;
-it is not meant to be read here and does not need to be. What it shows is how much of the
-product was specified before a screen was drawn, and that every control on the pages
-further down came off it.
-
-<div class="figure-grid figure-grid--three">
-  <Figure
-    width="half"
-    src={dsBoard}
-    alt="A design-system board for a passport-photo app: type scale, colour swatches, buttons, fields, menus, keyboards, date pickers, alerts and data tables, laid out on one tall sheet."
-    caption="The whole component board: around two hundred drawn states, type ramp at the top, data tables at the foot."
-  />
-  <Figure
-    width="half"
-    src={dsTypography}
-    alt="Eleven named text styles stacked in a column, each specimen labelled with its weight and point size, from Heading 1 bold 28 down to Info medium 10."
-    caption="The type ramp: eleven styles named for what each one does, not for its size."
-  />
-  <Figure
-    width="half"
-    src={dsButton}
-    alt="A button component set: four fill treatments in three sizes, each drawn as icon-plus-label, icon-only and label-only, in enabled and disabled states."
-    caption="One button, drawn 72 ways: four fills, three sizes, three label types, both states."
-  />
-</div>
-
-The button set is the argument the rest of the library repeats. Every configuration a
-developer could reach for is drawn rather than described, which is what makes the build
-assembly instead of interpretation.
-
-Foundations are platform-native by choice. This is an iPad application a photographer
-picks up between customers, so the palette is the iOS system set under semantic names
-rather than a bespoke one competing with the device it runs on.
-
-<Figure
-  src={dsColour}
-  plate
-  alt="Twelve colour swatches in two rows: blue Primary, green Success, orange Warning, red Danger, black and white, then a six-step grey ramp."
-  caption="Colour as roles rather than values: four semantic, black and white, and a six-step neutral ramp."
-/>
-
-<Figure
-  src={dsIcons}
-  plate
-  alt="A ten-column grid of about sixty blue line icons: globe, printer, camera, chevrons, wifi, lock, plus checkbox and radio states drawn as component groups."
-  caption="The icon set at a single stroke weight, with checkbox and radio kept as component groups rather than loose glyphs."
-/>
-
-## Choosing the specification first
-
-The document type is picked before the photograph, because it is what every later check
-is run against. Each country sits behind its own flag with the specification one tap
-away, and selecting a template is deliberately a separate target from asking what the
-template requires.
-
-The template picker also carries a content case rather than only ideal names: a
-64-character label, wrapping to three lines and truncating, sits in the grid beside the
-short ones.
-
-<div class="figure-grid">
-  <Figure
-    width="half"
-    src={typeSelection}
-    alt="Template picker headed 'Select the Template Type', with five tiles pairing a country flag and a passport name, each followed by an info icon."
-    caption="Template selection, including the deliberate 64-character name testing wrap and truncation."
-  />
-  <Figure
-    width="half"
-    src={editTemplate}
-    alt="Three-column editor: a list of captured JPEG files with their dimensions and file sizes, an editing canvas, and the country template list."
-    caption="The editor keeps every captured file addressable, with its dimensions and byte size on the card rather than behind an inspector."
-  />
-</div>
-
-## Adjusting the shot
-
-Correction is bounded on purpose. The adjustment panel offers zoom, brightness, tilt and
-a colour profile, and nothing else: a compliance photograph that has been retouched is no
-longer a compliance photograph. Each control carries its current value as a number beside
-the slider, and the two that a specification can fail on, brightness and tilt, also get
-plus and minus steppers, so a value can be nudged exactly rather than dragged at.
-
-<Figure
-  src={editPhoto}
-  alt="The adjustment screen: captured files on the left, the photo canvas in the middle, and a panel of Zoom, Brightness, Tilt and Colour Profile controls on the right."
-  caption="Zoom, brightness, tilt, colour profile. Brightness and tilt read 30% and 0 beside their sliders, and step by a fixed amount."
-/>
-
-## Delivering it
-
-The photograph leaves by two routes, and both are on the same screen as the capture list
-so neither is a mode you have to leave the work to reach: printed on the spot, or sent to
-the customer's phone. The read-only table beside the upload states what is actually being
-delivered, down to the physical and pixel size and the expiry date.
-
-<div class="figure-grid">
-  <Figure
-    width="half"
-    src={print}
-    alt="The print screen: captured files on the left, preview canvas in the middle, and a panel offering Preview Photo, Print Photo and Print Results."
-    caption="Printing keeps the file list and the preview in view; nothing about the print step hides the photograph it is about to commit."
-  />
-  <Figure
-    width="half"
-    src={save}
-    alt="The save screen with a mobile-number field, a Cloud Upload button, and a table listing photo code, date, photo type, physical and pixel size, and expiry date."
-    caption="What is being sent, stated in full beside the button that sends it."
-  />
-</div>
-
-## One field, four states
-
-The mobile number is the only free-text entry in the flow, and it is drawn four times: the
-field on focus, mid-entry, complete, and re-entered with the upload still held back. The
-keypad rises over the delivery panel alone, so the capture list and the preview stay on
-screen throughout.
-
-Specifying a single field this closely is what the rest of the library is built on. States
-were written per component rather than left to the build.
-
-<div class="figure-grid">
-  <Figure
-    width="half"
-    src={saveFocused}
-    alt="The mobile-number field focused and empty, with the numeric keypad raised over the lower half of the delivery panel."
-    caption="Focused, empty: the keypad covers the panel, not the work."
-  />
-  <Figure
-    width="half"
-    src={saveTyping}
-    alt="The mobile-number field part-filled with a seven-digit value and the caret still active."
-    caption="Mid-entry, with the caret held."
-  />
-  <Figure
-    width="half"
-    src={saveTyped}
-    alt="The mobile-number field holding a complete number, the numeric keypad still raised."
-    caption="Complete, keypad still up: the number can still be corrected."
-  />
-  <Figure
-    width="half"
-    src={saveRetyped}
-    alt="The mobile-number field re-entered, with the Cloud Upload button greyed out."
-    caption="Re-entered, with upload greyed out: a valid number is not on its own a reason to let the send through."
-  />
-</div>

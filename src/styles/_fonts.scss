@@ -1,14 +1,44 @@
 // Self-hosted, same-origin. See src/assets/fonts/README.txt before touching these.
 //
-// One family, variable on wght alone, so two files (roman and italic) cover
-// every weight the design uses: 400 for prose, 500 for labels, 600 for display.
-// Declared with the real range so the browser interpolates rather than snapping
-// to the nearest named instance.
-//
-// Archivo also ships a wdth axis. It is deliberately not loaded: nothing in this
-// design condenses or extends, and the two-axis file is markedly larger for an
-// axis no rule would move.
+// Two families, four files, no CDN. Bodoni Moda is the display face and carries
+// both a weight and an optical-size axis; Archivo is the text face and carries
+// weight alone.
 
+// The Didone. Loaded with `opsz` as well as `wght` on purpose: this design sets
+// it from 10.5px roman numerals to a 7rem headline, and a Didone drawn for text
+// has hairlines that vanish at display size while a Didone drawn for display
+// has hairlines that vanish at text size. `font-optical-sizing: auto` in
+// _base.scss is what spends the axis; without the two-axis file it is inert.
+@font-face {
+    font-family: "Bodoni Moda Variable";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400 900;
+    src: url("../assets/fonts/bodoni-moda-latin-standard-normal.woff2") format("woff2-variations");
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+        U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// A real italic, not a slant. It has one job and does it on every page: the
+// accented word inside a display heading. On a designer's site a synthesised
+// oblique Didone is exactly the detail the site is arguing against.
+@font-face {
+    font-family: "Bodoni Moda Variable";
+    font-style: italic;
+    font-display: swap;
+    font-weight: 400 900;
+    src: url("../assets/fonts/bodoni-moda-latin-standard-italic.woff2") format("woff2-variations");
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+        U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// The grotesque. 400 for prose, 600 for every uppercase micro-label.
+//
+// Archivo also ships a `wdth` axis. It is deliberately not loaded: nothing in
+// this design condenses or extends, and the two-axis file is markedly larger
+// for an axis no rule would move.
 @font-face {
     font-family: "Archivo Variable";
     font-style: normal;
@@ -20,10 +50,9 @@
         U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-// The italic is a real face rather than a synthesised slant, and it carries one
-// job: the degree names inside the earlier-projects descriptions, which come
-// through `_emphasis_` in the shared YAML. Keep it — a faux-oblique grotesque
-// on a designer's site is the kind of detail the site is arguing against.
+// Archivo's italic carries the `_emphasis_` token from the shared YAML — the
+// conference names in the community record, the degree names in the earlier
+// projects. Bodoni's italic handles display; this one handles prose.
 @font-face {
     font-family: "Archivo Variable";
     font-style: italic;

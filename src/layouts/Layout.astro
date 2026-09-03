@@ -4,6 +4,7 @@ import SiteHeader from "@/components/SiteHeader.astro"
 import SiteFooter from "@/components/SiteFooter.astro"
 import { href } from "@/lib/url"
 import { plainMarkup } from "@/lib/markup"
+import displayFont from "@/assets/fonts/bodoni-moda-latin-standard-normal.woff2"
 import textFont from "@/assets/fonts/archivo-latin-wght-normal.woff2"
 import "@/styles/global.scss"
 
@@ -12,8 +13,12 @@ interface Props {
     title?: string
     /** Meta description; falls back to the site-wide one below. */
     description?: string
-    /** `rule` drops the footer's invitation, for a page that is already an end. */
-    footer?: "full" | "rule"
+    /** How the footer closes. See SiteFooter. */
+    footer?: "full" | "slim" | "rule"
+    /** Which invitation sits above it. */
+    offer?: "default" | "off_hours" | "plates"
+    /** This page's path, so the footer leaves its own link out of the row. */
+    current?: string
 }
 
 const personal = await getEntry("personal", "personal")!
@@ -26,7 +31,13 @@ const { role, location, summary, tagline } = personal.data
 const opener = plainMarkup(summary).split(/(?<=\.)\s/)[0]
 const siteDescription = tagline ?? `${role} in ${location}. ${opener}`
 
-const { title, description = siteDescription, footer = "full" } = Astro.props
+const {
+    title,
+    description = siteDescription,
+    footer = "full",
+    offer = "default",
+    current,
+} = Astro.props
 
 const pageTitle = title
     ? `${title} | ${personal.data.name}`
@@ -44,13 +55,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site)
         <link rel="canonical" href={canonical} />
 
         <!-- Keep in sync with --page in src/styles/_tokens.scss and with manifest.json. -->
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#fbf9f6" />
         <meta name="color-scheme" content="light" />
 
-        <!-- One family carries the whole site, and the sticky header sets it at
-             two weights above the fold on every page, so the roman cannot wait
-             for the stylesheet to be parsed. The italic is not preloaded: it
-             appears once, well down the About page. -->
+        <!-- Two families, and both are above the fold on every page: the sticky
+             header sets the name in Bodoni and the nav in Archivo. The two
+             italics are not preloaded — the display italic appears once, inside
+             the page title, and the text italic well down the Profile page. -->
+        <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
         <link rel="preload" href={textFont} as="font" type="font/woff2" crossorigin />
 
         <link rel="icon" href={href("/favicon.svg")} type="image/svg+xml" />
@@ -65,15 +77,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site)
     </head>
     <body>
         <a class="skip-link" href="#main">Skip to content</a>
-        <!-- The frame: one ruled column holding header, page and footer, so the
-             side rules run the full height and the dark bands can bleed inside
-             them. -->
-        <div class="frame">
+        <!-- One centred measure holds the header, the page and the footer, so
+             the rules that close each section run the same width from the top
+             of the page to the bottom. -->
+        <div class="shell">
             <SiteHeader />
             <main id="main">
                 <slot />
             </main>
-            <SiteFooter variant={footer} />
+            <SiteFooter variant={footer} offer={offer} current={current} />
         </div>
     </body>
 </html>

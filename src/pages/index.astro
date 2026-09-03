@@ -1,276 +1,179 @@
 ---
+import type { ImageMetadata } from "astro"
+import { Image } from "astro:assets"
 import { getCollection, getEntry } from "astro:content"
 import Layout from "@/layouts/Layout.astro"
-import Section from "@/components/Section.astro"
-import WorkItem from "@/components/WorkItem.astro"
-import Markup from "@/components/Markup.astro"
+import Heading from "@/components/Heading.astro"
 import { href } from "@/lib/url"
-import { isWebVisible } from "@/lib/variants"
 import { systemSlug } from "@/lib/slug"
+import { roman } from "@/lib/roman"
+import { careerSpan } from "@/lib/career"
+import { isWebVisible, pickField } from "@/lib/variants"
+
+// Plate I. The painting comes before any product screen on purpose: the page's
+// argument is that the two hands are the same hand.
+import fox from "@/assets/art/fox-digital.jpg"
+import koi from "@/assets/art/koi-watercolour.jpg"
+
+// The three screens the design picks out. Each is already published on its own
+// product's page and was checked frame by frame before it was committed — see
+// the provenance header on the matching file in src/content/systems/. The alt
+// text is here rather than in `data/` because it describes this crop of this
+// image, which is a property of the page and not of the career record.
+import agriRoom from "@/assets/systems/precision-agriculture-app/room-dashboard.png"
+import photoIdType from "@/assets/systems/photo-id/type-selection.png"
+import wmsBatch from "@/assets/systems/warehouse-management-platform/batch-pick-items.png"
+
+const PICK_ART: Record<string, { src: ImageMetadata; alt: string; dark?: boolean }> = {
+    "Precision agriculture app": {
+        src: agriRoom,
+        alt: "Room dashboard on a dark ground: six coloured sensor chips above a six-line chart spanning three days.",
+        dark: true,
+    },
+    "Photo-ID compliance app": {
+        src: photoIdType,
+        alt: 'Template picker headed "Select the Template Type", with tiles pairing a country flag and a passport name.',
+    },
+    "Warehouse management platform": {
+        src: wmsBatch,
+        alt: "Batch Pick item list on a handheld, a SKU header reading 00 of 40 items scanned and a Scan SKU ID field pinned at the foot.",
+    },
+}
 
 const personal = await getEntry("personal", "personal")!
 const site = await getEntry("site", "site")!
-const education = await getEntry("education", "education")!
-const community = await getEntry("community", "community")!
-const { headline, intro, role, location, availability, stats, summary, contact } = personal.data
+const experience = await getCollection("experience")
+const pages = await getCollection("systemPages")
+const { role, location, stats } = personal.data
+const home = site.data.home
 
-// `order` is the editorial sequence; year only breaks ties so that adding a
-// study without setting `order` still lands somewhere sensible.
-const work = (await getCollection("work", ({ data }) => !data.draft)).sort(
-    (a, b) => a.data.order - b.data.order || b.data.year - a.data.year,
-)
+const city = location.split(",")[0].trim()
+const span = careerSpan(experience.filter(isWebVisible).map((e) => e.data.dates))
 
-// Until the case studies exist, the work section carries the three systems she
-// built from scratch and owned end to end. Same file the inventory reads, so
-// the two cannot drift, and it means the page never stands empty.
-const systems = (await getCollection("systems")).filter((s) => isWebVisible(s.data))
-const led = systems.filter((s) => s.data.lead)
+// The website's third figure differs from the CV's. See data/personal.yaml.
+const figures = stats.map((stat) => ({
+    value: pickField(stat, "value") ?? stat.value,
+    label: pickField(stat, "label") ?? stat.label,
+}))
 
-const skills = (await getCollection("skills")).filter((s) => isWebVisible(s.data))
-const experience = (await getCollection("experience")).filter((e) => isWebVisible(e.data))
+// Plate numbers live with the product they belong to, so a card cannot claim a
+// numeral the case page does not print.
+const plateOf = new Map(pages.map((p) => [p.data.system, p.data.plate]))
 
-// The hero lede, in order of provenance: her own `intro` when she writes one,
-// then the design's line, then the Profile paragraph the CV prints. Every rung
-// is real copy — see data/site.yaml and CLAUDE.md, "Whose site this is".
-const lede = intro ?? [site.data.home.lede]
-
-// Derived rather than written down, so neither can drift from the record. The
-// earliest year across every role, not the last entry's — the list is ordered
-// newest-first by seniority, and the freelance work that sorts last began in
-// 2020, well after the career did.
-const startYear = Math.min(
-    ...experience.map((e) => Number(e.data.dates.match(/\b(19|20)\d{2}\b/)?.[0] ?? Infinity)),
-)
-const thisYear = new Date().getFullYear()
-
-const msc = education.data.entries.find((e) => e.degree.startsWith("MSc"))
-
-// The three community rows the home page previews. The full record, and the
-// counts beside it, live on About; these are the most recent of each kind.
-const recent = [...community.data.mentoring, ...community.data.speaking]
-    .filter((row) => isWebVisible(row))
-    .sort((a, b) => b.year.localeCompare(a.year))
-    .slice(0, 3)
-
-const counts = [
-    { value: community.data.mentoring.filter(isWebVisible).length, label: "Mentoring engagements" },
-    { value: community.data.speaking.filter(isWebVisible).length, label: "Talks and workshops" },
-    { value: community.data.events.filter(isWebVisible).length, label: "Event and brand work" },
-]
+const picks = home.picks.items.map((item) => ({
+    ...item,
+    art: PICK_ART[item.system],
+    plate: plateOf.get(item.system),
+    to: item.to ?? `/work/${systemSlug(item.system)}`,
+}))
 ---
 
-<Layout>
-    <section class="hero pad sec sec--ink">
-        <div class="hero__meta">
-            <span>Portfolio</span>
-            <span>{startYear} &mdash; {thisYear}</span>
-            <span>{location}</span>
-            {availability && <span class="hero__meta-accent">{availability}</span>}
-        </div>
-        <h1 class="hero__headline rise">
-            {headline.before}{" "}
-            <span class="hero__accent">{headline.accent}</span>{" "}
-            {headline.after}
-        </h1>
-        <div class="hero__foot grid">
-            <div class="hero__lede rise" style="--i: 1">
-                {lede.map((p) => <Markup as="p" text={p} />)}
-            </div>
-            <dl class="hero__facts facts rise" style="--i: 2">
-                <div class="facts__row">
-                    <dt>Currently</dt>
-                    <dd>{role}, {experience[0]?.data.org}</dd>
-                </div>
-                <div class="facts__row">
-                    <dt>Focus</dt>
-                    <dd>{personal.data.specialisms.join(" · ")}</dd>
-                </div>
-                {
-                    msc && (
-                        <div class="facts__row">
-                            <dt>Education</dt>
-                            <dd>
-                                {msc.degree}, {msc.institute}
-                            </dd>
-                        </div>
-                    )
-                }
-                <div class="facts__row">
-                    <dt>Elsewhere</dt>
-                    <dd class="hero__links">
-                        <a href={`mailto:${contact.email}`}>Email</a>
-                        {
-                            contact.links.filter(isWebVisible).map((l) => (
-                                <a href={l.url} rel="me noopener">
-                                    {l.label}
-                                </a>
-                            ))
-                        }
-                    </dd>
-                </div>
-            </dl>
+<Layout current="/">
+    <section class="hero">
+        <p class="eyebrow">{role} &nbsp;·&nbsp; {city} &nbsp;·&nbsp; {span}</p>
+        <Heading as="h1" class="display hero__title" heading={home.headline} />
+        <p class="hero__lede">{home.lede}</p>
+        <div class="btn-row btn-row--center">
+            {
+                home.actions.map((action) => (
+                    <a class:list={["btn", `btn--${action.style}`]} href={href(action.to)}>
+                        {action.label}
+                    </a>
+                ))
+            }
         </div>
     </section>
 
-    <section class="stats" aria-label="Headline figures">
+    <figure class="hero__plate">
+        <Image
+            src={fox}
+            alt="Digital painting of a red fox lying in long grass, the fur worked in fine strokes."
+            widths={[640, 960, 1280, 1600]}
+            sizes="(max-width: 85rem) 100vw, 1360px"
+            loading="eager"
+            fetchpriority="high"
+        />
+        <figcaption class="figcap figcap--three">
+            <span>Plate {roman(1)}</span>
+            <span>{home.plate.title}</span>
+            <span class="figcap__note">{home.plate.note}</span>
+        </figcaption>
+    </figure>
+
+    <section class="figures" aria-label="Headline figures">
         {
-            stats.map((stat) => (
-                <div class="stats__cell">
-                    <p class="stats__label">{stat.label}</p>
-                    <p class="stats__value">{stat.value}</p>
+            figures.map((figure, i) => (
+                <div class="figures__cell">
+                    <p class:list={["figures__value", i === 1 && "figures__value--accent"]}>
+                        {figure.value}
+                    </p>
+                    <p class="figures__label">{figure.label}</p>
                 </div>
             ))
         }
     </section>
 
-    <!-- Second-order counts: each is drawn from an experience bullet rather
-         than being a headline claim, which is why they run as one line. -->
-    <p class="figures pad">
-        {
-            site.data.home.figures.map((f, i) => (
-                <span class="figures__item">
-                    {i > 0 && <span class="figures__sep" aria-hidden="true" />}
-                    <b>{f.value}</b> {f.label}
-                </span>
-            ))
-        }
-    </p>
-
-    <Section label="Profile">
-        <Markup as="p" class="profile" text={summary} />
-    </Section>
-
-    <Section label="Practice" note="What the work is" body="wide">
-        <div class="practice">
+    <section class="sec sec--lg">
+        <Heading
+            as="h2"
+            class="display sec-title sec-title--lg sec-head"
+            heading={home.picks.title}
+            tone="ink"
+        />
+        <div class="picks">
             {
-                site.data.practice.map((card) => (
-                    <div class="practice__card">
-                        <p class="micro">{card.label}</p>
-                        <h3 class="practice__title">{card.title}</h3>
-                        <Markup as="p" class="text" text={card.text} />
-                    </div>
+                picks.map((pick, i) => (
+                    <a class="pick" href={href(pick.to)}>
+                        <span class:list={["plate", "pick__plate", pick.art.dark && "plate--dark"]}>
+                            <Image
+                                src={pick.art.src}
+                                alt={pick.art.alt}
+                                widths={[320, 480, 640, 900]}
+                                sizes="(max-width: 60rem) 90vw, 28vw"
+                                loading={i === 0 ? "eager" : "lazy"}
+                            />
+                        </span>
+                        <span class="pick__eyebrow">
+                            {pick.plate && <>Plate {roman(pick.plate)} &nbsp;·&nbsp; </>}
+                            {pick.system}
+                        </span>
+                        <span class="display pick__title">{pick.title}</span>
+                        <span class="pick__text">{pick.text}</span>
+                        <span class="pick__more">{pick.more}</span>
+                    </a>
                 ))
             }
         </div>
-    </Section>
-
-    <!-- `selected` and the `process` band below are the two sections on the site
-         that do not come from Section.astro: they carry a count and a dark band
-         it does not do. They still take the h2 it would have emitted. Every
-         other section label on every page is one, the five process steps below
-         are h3s that need a parent, and a label that only looks like a heading
-         leaves the two sections that matter most here out of the outline
-         entirely.
-
-         Note where this sits. A comment directly in the Layout slot is stripped
-         from the build; one nested inside an element ships to every visitor. -->
-    <section class="selected pad">
-        <div class="selected__head grid">
-            <h2 class="label">Selected work</h2>
-            <p class="selected__lede">
-                {
-                    work.length > 0
-                        ? "Case studies, in the order they are worth reading."
-                        : "Three systems owned end to end, from the first token to the shipped screen."
-                }
-            </p>
-            <p class="selected__count micro">
-                {work.length > 0 ? work.length : led.length} / {systems.length}
-            </p>
-        </div>
-        {
-            work.length > 0
-                ? work.map((entry, i) => (
-                      <WorkItem
-                          index={i + 1}
-                          title={entry.data.title}
-                          context={entry.data.context}
-                          description={entry.data.summary}
-                          scope={entry.data.role}
-                          stack={entry.data.tools.join(" · ")}
-                          href={href(`/work/${entry.id}`)}
-                          cover={entry.data.cover}
-                          coverAlt={entry.data.coverAlt}
-                          first={i === 0}
-                          last={i === work.length - 1}
-                      />
-                  ))
-                : led.map((entry, i) => (
-                      <WorkItem
-                          index={i + 1}
-                          title={entry.data.product}
-                          context={entry.data.client}
-                          description={entry.data.description}
-                          scope={entry.data.scope}
-                          stack={entry.data.stack}
-                          href={href(`/systems/${systemSlug(entry.data.product)}`)}
-                          first={i === 0}
-                          last={i === led.length - 1}
-                      />
-                  ))
-        }
-        <p class="selected__more">
-            {systems.length - led.length} further products, with the scope and stack each was specified
-            for, are <a href={href("/systems")}>in the systems inventory</a>.
+        <p class="picks__note">
+            {home.picks.note_before}{" "}
+            <a href={href("/work")}>{home.picks.note_link}</a>.
         </p>
     </section>
 
-    <section class="band process">
-        <div class="grid pad process__head">
-            <h2 class="label process__label">How it runs</h2>
-            <p class="process__lede">{site.data.process.lede}</p>
+    <section class="sec split teaser rule-top-ink">
+        <div class="teaser__body">
+            <Heading as="h2" class="display teaser__title" heading={home.plates.title} tone="ink" />
+            <p class="teaser__text">{home.plates.text}</p>
+            <a class="more teaser__more" href={href("/plates")}>{home.plates.more}</a>
         </div>
-        <ol class="process__steps pad">
-            {
-                site.data.process.steps.map((step, i) => (
-                    <li class="process__step">
-                        <span class="process__num">{String(i + 1).padStart(2, "0")}</span>
-                        <h3 class="process__title">{step.title}</h3>
-                        <Markup as="p" class="process__text" text={step.text} />
-                    </li>
-                ))
-            }
-        </ol>
+        <figure class="teaser__figure">
+            <Image
+                src={koi}
+                alt="Watercolour study of two koi carp turning through pale water."
+                widths={[320, 480, 640, 900]}
+                sizes="(max-width: 52rem) 90vw, 34vw"
+                loading="lazy"
+            />
+            <figcaption class="figcap">
+                <strong>Koi</strong>
+                <span>Watercolour</span>
+            </figcaption>
+        </figure>
     </section>
 
-    <Section label="Toolkit" note="What it is built with">
-        <div class="toolkit">
-            {
-                skills.map((skill) => (
-                    <div class="toolkit__row">
-                        <h3 class="micro micro--ink">{skill.data.category}</h3>
-                        <Markup as="p" class="text" text={skill.data.stack} />
-                    </div>
-                ))
-            }
-        </div>
-    </Section>
-
-    <Section label="Beyond the desk" rule="none">
-        <div class="counts">
-            {
-                counts.map((c) => (
-                    <div>
-                        <p class="micro">{c.label}</p>
-                        <p class="counts__value">{c.value}</p>
-                    </div>
-                ))
-            }
-        </div>
-        <div class="dated-list">
-            {
-                recent.map((row) => (
-                    <div class="dated">
-                        <span class="dated__year">{row.year}</span>
-                        <Markup as="p" text={row.text} />
-                    </div>
-                ))
-            }
-        </div>
-        <p class="selected__more">
-            The full record of speaking, mentoring, events and judging is <a href={href("/about")}
-                >on the About page</a
-            >.
-        </p>
-    </Section>
+    <section class="sec sec--lg statement rule-top">
+        <p class="eyebrow">{home.profile.label}</p>
+        <p class="statement__text">{home.profile.text}</p>
+        <a class="more statement__more" href={href("/profile")}>{home.profile.more}</a>
+    </section>
 </Layout>

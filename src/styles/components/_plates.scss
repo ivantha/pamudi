@@ -1,0 +1,110 @@
+// The plates page. Her own paintings and drawings, then the identity work.
+//
+// The gallery is a CSS column flow rather than a grid, on purpose: the pieces
+// are 1:1, 3:4, 4:5, 16:9 and everything between, and a grid would either crop
+// them to a common cell or leave holes. A painting cropped to fit a layout is a
+// painting damaged to fit a layout.
+
+.gallery {
+    columns: 3;
+    column-gap: var(--gap);
+    padding-block: clamp(2rem, 1.5455rem + 2vw, 3.5rem);
+
+    @media (max-width: 60rem) {
+        columns: 2;
+    }
+
+    @media (max-width: 34rem) {
+        columns: 1;
+    }
+}
+
+.gallery__item {
+    margin: 0 0 var(--gap);
+    break-inside: avoid;
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+}
+
+// The line under the gallery. Fan studies are drawn after characters someone
+// else owns, and saying so is part of publishing them.
+.gallery__note {
+    margin: 0 auto clamp(2rem, 1.5455rem + 2vw, 3.5rem);
+    max-width: 60ch;
+    text-align: center;
+    font-size: var(--fs-small);
+    line-height: 1.75;
+    color: var(--muted);
+    text-wrap: pretty;
+}
+
+// ---- Identity work ----------------------------------------------------------
+// Five marks on square plates. Contained rather than cropped, because a
+// wordmark cropped at the edge is a wordmark ruined.
+
+.marks {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(0.75rem, 0.4318rem + 1.4vw, 2rem);
+
+    @media (max-width: 64rem) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @media (max-width: 36rem) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.marks__item {
+    margin: 0;
+}
+
+.marks__plate {
+    aspect-ratio: 1 / 1;
+    padding: 1rem;
+}
+
+.marks__caption {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tiny);
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+// ---- A sheet from a style guide ---------------------------------------------
+// Two wide boards from the one identity in this set that is a whole system
+// rather than a mark.
+
+.sheets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-lg);
+    padding-block: clamp(2rem, 1.5455rem + 2vw, 3.5rem);
+
+    @media (max-width: 52rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.sheets__item {
+    margin: 0;
+}
+
+.sheets__plate {
+    display: block;
+    padding: clamp(0.5rem, 0.3182rem + 0.8vw, 1rem);
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+}

@@ -1,68 +1,67 @@
-// The CV page. The sheets are shown as images from the same Typst compile as
-// the download, so the page and the file cannot be different documents — see
-// CLAUDE.md. A browser's PDF chrome inside an <object> is off-brand here and
-// renders as a grey box on iOS.
+// The CV page shows the two sheets as images rather than embedding the PDF: a
+// browser's PDF chrome inside an `<object>` is off-brand on a designer's site
+// and renders as a grey box on iOS. The renders come out of the same Typst
+// compile as the download, so the page and the file cannot be different
+// documents.
+//
+// The PDF is still the Cormorant-and-green document the site wore before this
+// direction. That divergence is visible here and is a decision for Pamudi, not
+// a tidy-up — see CLAUDE.md.
 
 .cv-contents {
-    list-style: none;
-    margin: 0;
-    padding: 0;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    // Equal-height rows, not `auto`. The list reads down its columns, so both
-    // have to end on the same line for the container's closing rule below to
-    // land under each of them — which is also why that rule is on the container
-    // rather than on a last-child, a position column flow cannot select.
-    grid-template-rows: repeat(var(--rows, 3), minmax(0, 1fr));
     grid-auto-flow: column;
-    column-gap: 2.5rem;
-    border-bottom: 1px solid var(--rule);
+    grid-template-rows: repeat(var(--rows, 3), auto);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gap-lg);
+    max-width: 64rem;
+    margin-inline: auto;
 
     li {
         display: grid;
-        grid-template-columns: 2.5rem 1fr;
-        column-gap: 1rem;
+        grid-template-columns: 2.5rem minmax(0, 1fr);
+        gap: 1.25rem;
         align-items: baseline;
-        padding-block: 0.875rem;
+        padding-block: 0.8125rem;
         border-top: 1px solid var(--rule);
-        font-size: var(--fs-body);
+        font-size: var(--fs-text);
         color: var(--ink);
+    }
+
+    @media (max-width: 52rem) {
+        grid-auto-flow: row;
+        grid-template-rows: none;
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 
 .cv-contents__num {
-    font-size: var(--fs-nav);
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: var(--fs-numeral);
     color: var(--accent);
 }
 
-@media (max-width: 48rem) {
-    .cv-contents {
-        grid-template-columns: minmax(0, 1fr);
-        grid-template-rows: none;
-        grid-auto-flow: row;
-    }
-
-    .cv-contents li:last-child {
-        border-bottom: 1px solid var(--rule);
-    }
+.cv-note {
+    margin: clamp(1.25rem, 1.0227rem + 1vw, 1.75rem) auto 0;
+    max-width: 64ch;
+    text-align: center;
+    font-size: var(--fs-text);
+    color: var(--muted);
 }
 
-// The sheets sit on the panel ground so the white paper reads as paper rather
-// than as the page continuing.
 .cv-spread {
-    background: var(--panel);
-    padding-block: var(--section-y);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3rem;
+    display: grid;
+    gap: var(--gap-lg);
+    padding-block: clamp(2rem, 1.5455rem + 2vw, 3.5rem);
+    border-top: 1px solid var(--rule-strong);
 }
 
 .cv-sheet {
     margin: 0;
     max-width: 54rem;
+    margin-inline: auto;
     width: 100%;
 
     img {
@@ -70,15 +69,15 @@
         width: 100%;
         height: auto;
         border: 1px solid var(--rule);
-        box-shadow: 0 2px 28px rgb(13 13 13 / 10%);
     }
 }
 
 .cv-sheet__folio {
     margin-top: 0.875rem;
+    text-align: center;
     font-size: var(--fs-micro);
     font-weight: 600;
-    letter-spacing: var(--tracking-micro);
+    letter-spacing: var(--tracking-nav);
     text-transform: uppercase;
     color: var(--muted);
 }

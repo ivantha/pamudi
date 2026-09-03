@@ -1,0 +1,86 @@
+---
+import { getEntry } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Heading from "@/components/Heading.astro"
+import { href } from "@/lib/url"
+import { loadPrivate } from "@/lib/private"
+import { isWebVisible } from "@/lib/variants"
+
+const site = await getEntry("site", "site")!
+const personal = await getEntry("personal", "personal")!
+const contact = site.data.contact
+const { location } = personal.data
+const { email, links } = personal.data.contact
+
+// The phone number is NOT in this repo. It lives in the gitignored
+// data/private.yaml, so a local build renders the row and CI renders the page
+// without it — the same arrangement the CV's masthead uses. This repo is
+// public; do not "fix" a missing row by committing the number.
+const { phone } = await loadPrivate()
+
+const lines = [
+    { label: "Email", value: email, to: `mailto:${email}` },
+    phone && { label: "Phone", value: phone, to: `tel:${phone.replace(/\s+/g, "")}` },
+    { label: "Location", value: location },
+].filter(Boolean) as { label: string; value: string; to?: string }[]
+---
+
+<Layout
+    title="Contact"
+    description={`Design system and product work enquiries for ${personal.data.name}, ${personal.data.role} in ${location}.`}
+    footer="slim"
+    current="/contact"
+>
+    <section class="intro rule-bottom-ink" style="--intro-measure: 24ch">
+        <p class="eyebrow">
+            Contact &nbsp;·&nbsp; {location} &nbsp;·&nbsp; {contact.eyebrow_suffix}
+        </p>
+        <Heading as="h1" class="display intro__title" heading={contact.headline} />
+    </section>
+
+    <section class="lines" style={`--lines: ${lines.length}`} aria-label="Direct lines">
+        {
+            lines.map((line) => {
+                const Tag = line.to ? "a" : "div"
+                return (
+                    <Tag class="lines__cell" href={line.to}>
+                        <p class="label">{line.label}</p>
+                        <p class="lines__value">{line.value}</p>
+                    </Tag>
+                )
+            })
+        }
+    </section>
+
+    <section class="split-even enquiry">
+        <div>
+            <p class="label">{contact.enquiry.label}</p>
+            <p class="enquiry__title">{contact.enquiry.title}</p>
+            <p class="text enquiry__text">{contact.enquiry.text}</p>
+            <div class="btn-row">
+                <a
+                    class="btn btn--solid"
+                    href={`mailto:${email}?subject=${encodeURIComponent("Design system enquiry")}`}
+                >
+                    Write an email
+                </a>
+                <a class="btn btn--ghost" href={href("/cv")}>The two-page CV</a>
+            </div>
+        </div>
+        <div>
+            <p class="label">Elsewhere</p>
+            <ul class="elsewhere">
+                {
+                    links.filter(isWebVisible).map((link) => (
+                        <li class="elsewhere__row">
+                            <a class="elsewhere__link" href={link.url} rel="me noopener">
+                                <span class="elsewhere__name">{link.label}</span>
+                                <span class="elsewhere__handle">{link.display ?? link.url}</span>
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+    </section>
+</Layout>

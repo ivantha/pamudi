@@ -1,34 +1,35 @@
 ---
+import { getEntry } from "astro:content"
 import Layout from "@/layouts/Layout.astro"
+import Heading from "@/components/Heading.astro"
 import { href } from "@/lib/url"
 
+const site = await getEntry("site", "site")!
+const notFound = site.data.not_found
+
 const LINKS = [
-    { label: "The work", path: "/" },
-    { label: "The systems inventory", path: "/systems" },
-    { label: "The full record", path: "/about" },
+    { label: "The work", path: "/work" },
+    { label: "The plates", path: "/plates" },
+    { label: "The profile", path: "/profile" },
 ]
 ---
 
 <Layout title="Not found" description="That page does not exist." footer="rule">
-    <section class="notfound grid pad">
-        <div class="notfound__main">
-            <p class="eyebrow notfound__eyebrow">Error 404</p>
-            <h1 class="notfound__title">Nothing <span class="notfound__accent">here</span>.</h1>
-        </div>
-        <div class="notfound__aside">
-            <p class="notfound__lede">The page you asked for does not exist.</p>
-            <nav class="notfound__links" aria-label="Elsewhere on this site">
-                {
-                    LINKS.map((link) => (
-                        <a class="notfound__link" href={href(link.path)}>
-                            <span>{link.label}</span>
-                            <span class="notfound__arrow" aria-hidden="true">
-                                &rarr;
-                            </span>
-                        </a>
-                    ))
-                }
-            </nav>
-        </div>
+    <section class="notfound">
+        <p class="eyebrow">Error 404</p>
+        <Heading as="h1" class="display notfound__title" heading={notFound.headline} />
+        <p class="notfound__lede">{notFound.lede}</p>
+        <nav class="notfound__links" aria-label="Elsewhere on this site">
+            {
+                LINKS.map((link) => (
+                    <a class="notfound__link" href={href(link.path)}>
+                        <span class="display notfound__name">{link.label}</span>
+                        <span class="micro" aria-hidden="true">
+                            &rarr;
+                        </span>
+                    </a>
+                ))
+            }
+        </nav>
     </section>
 </Layout>

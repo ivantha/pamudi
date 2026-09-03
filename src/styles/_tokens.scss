@@ -1,107 +1,99 @@
 // The site's single theme. One value per role — see CLAUDE.md.
 //
-// Direction "Grid": a twelve-column editorial ruling, drawn in hairlines on
-// white, with the ink reversed out only where the page needs a full stop — the
-// process band and the footer. There is one typeface, Archivo, worked hard: a
-// tight grotesque at display weights and sizes, uppercase and letterspaced at
-// label sizes, tabular for every numeral. There is no ornament and no second
-// family; what carries the design is the grid, the rules, and the rust.
+// Direction "Plinth": a centred editorial sheet on warm paper, ruled in
+// hairlines, with a Didone doing every piece of display work and a grotesque
+// doing everything else. Bodoni Moda carries the name, the headlines, the
+// figures and the roman numerals; Archivo carries running text and the
+// uppercase micro-labels the page is ruled with. The only colour beyond ink
+// and paper is brass, and it appears twice per screen at most.
 //
 // Two rule weights do the structural work and they are not interchangeable:
 // `--rule` is a hairline between rows inside a group, `--rule-strong` is ink
 // and closes a section. Getting those the wrong way round is what makes the
-// page stop reading as a ruled sheet.
+// page stop reading as a plate in a book.
 //
 // Contrast is checked, not eyeballed: every pair below is recorded in
-// scripts/check-contrast.mjs and `pnpm lint` fails if one regresses. Both
-// surfaces are covered, because the bands are reversed out on ink.
+// scripts/check-contrast.mjs and `pnpm lint` fails if one regresses.
 
 :root {
-    // ---- Colour: the paper side --------------------------------------------
-    --page: #ffffff; // the sheet itself
-    --panel: #f4f4f2; // L* 95.6 — row hover, the CV lightbox, figure grounds
-    --ink: #0d0d0d; //          19.44:1 on page — headings and display
-    --body: #4a4a48; //           8.88:1 on page — running text
-    --muted: #6b6b64; //           5.37:1 on page — labels, meta, captions
-    --accent: #b8401f; //           5.54:1 on page — links and section labels
-    --rule: #e2e2de; // hairline between rows in a group; never text
-    --rule-strong: #0d0d0d; // ink rule closing a section; never text
+    // ---- Colour -------------------------------------------------------------
+    --page: #fbf9f6; // warm paper, the whole site's ground
+    --panel: #f3efe8; //          the plate a screenshot or a badge sits on
+    --ink: #1b1815; //          16.82:1 on page — display and headings
+    --body: #55504a; //           7.59:1 on page — running text, quiet nav
+    --muted: #6f6558; //           5.43:1 on page — labels, meta, captions
+    --accent: #7a5a1e; //           6.04:1 on page — links, rail labels, small brass
+    --rule: #e6e0d7; // hairline between rows in a group; never text
+    --rule-strong: #1b1815; // ink rule closing a section; never text
+    --edge: #d8d1c5; // the outline on a ghost button; never text
 
-    // `--accent-bright` is 4.44:1 on page and 4.37:1 on dark: it clears the 3:1
-    // large-text floor on both and nothing else. It is for display type (the
-    // hero accent word, the headline figures, the 404), for 2px rules, and for
-    // hover on display-sized links. Never set body copy or a label in it —
-    // `--accent` on paper, `--accent-on-dark` on ink.
-    --accent-bright: #d2492a;
+    // `--accent-bright` is 3.80:1 on page: it clears the 3:1 large-text floor
+    // and nothing else. It is for the italic word inside a display heading, for
+    // one figure in the headline row, and for the underline under the current
+    // nav item. Never set a label, a caption or a paragraph in it — that is
+    // `--accent`, which is the same brass four steps darker.
+    --accent-bright: #9c7a3c;
 
-    // ---- Colour: the ink side ----------------------------------------------
-    // "How it runs", the detail-page status bar and the footer are full-bleed
-    // dark. This is a second palette, not a filter over the first: the paper
-    // `--muted` measures 2.13:1 on `--dark` and must never appear there.
-    --dark: #0d0d0d;
-    --dark-rule: #33332f;
-    --on-dark: #f4f4f2; //          17.65:1 on dark — headings
-    --on-dark-soft: #c9c9c2; //          11.68:1 on dark — link text in the contact list
-    --on-dark-body: #a3a39c; //           7.66:1 on dark — running text in the band
-    --on-dark-muted: #8f8f88; //           5.97:1 on dark — labels and the colophon
-    --accent-on-dark: #e2683c; //           5.81:1 on dark — the accent at label sizes
+    // The one dark ground on the site, and it is not a band: it is the plate
+    // colour the precision-agriculture screens were drawn on, used so those
+    // screenshots sit on their own background rather than on paper.
+    --plate-dark: #0c1526;
 
     // ---- Type ---------------------------------------------------------------
-    // One family, variable on weight. The design uses 400/500/600 and means the
-    // difference between them; 600 is the display weight, 500 is a label, 400
-    // is prose.
+    // Two families with no overlap in what they do. `--display` is only ever
+    // set at 400 or 500 — a Didone bolded is a Didone spoiled.
+    --display: "Bodoni Moda Variable", Didot, "Bodoni 72", Georgia, "Times New Roman", serif;
     --font: "Archivo Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
     // UI text is fixed. These are already at the floor of what is worth
-    // setting: shrinking them on a phone would only cost legibility.
-    --fs-micro: 0.625rem; // 10px — uppercase micro labels, the colophon
-    --fs-nav: 0.6875rem; // 11px — nav, section labels, ordinal numerals
-    --fs-meta: 0.75rem; // 12px — date columns, group subtitles
-    --fs-small: 0.8125rem; // 13px — stack lines, captions, footer contact
+    // setting; shrinking them on a phone would only cost legibility.
+    --fs-micro: 0.625rem; // 10px — uppercase micro labels and captions
+    --fs-nav: 0.65625rem; // 10.5px — nav, buttons, footer links, figcaptions
+    --fs-small: 0.8125rem; // 13px — asides under a section
+    --fs-meta: 0.84375rem; // 13.5px — values in the work page's fact lists
     --fs-text: 0.875rem; // 14px — descriptions inside rows and cards
-    --fs-body: 0.9375rem; // 15px — running text, the header name
-    --fs-body-lg: 1rem; // 16px — page ledes
+    --fs-prose: 0.90625rem; // 14.5px — running prose in a case argument
+    --fs-body: 0.9375rem; // 15px — body default, row titles
+    --fs-numeral: 1.125rem; // 18px — the Bodoni roman numerals in a process list
 
-    // Display sizes are fluid, 360px → 1680px, and named for the one thing each
+    // Display sizes are fluid, 360px → 1360px, and named for the one thing each
     // sets. An abstract step scale would be shorter but would not survive the
-    // next edit: this design uses twelve display sizes and means all of them.
-    --fs-lede-sm: clamp(0.9375rem, 0.8807rem + 0.25vw, 1.0625rem); // section openers
-    --fs-lede: clamp(1rem, 0.8864rem + 0.5vw, 1.125rem); // detail-page standfirst
-    --fs-title-sm: clamp(1.0625rem, 0.9773rem + 0.38vw, 1.25rem); // earlier projects, 404 links
-    --fs-title: clamp(1.125rem, 0.983rem + 0.63vw, 1.4375rem); // writing, education
-    --fs-title-md: clamp(1.25rem, 1.0511rem + 0.88vw, 1.5rem); // role headings
-    --fs-title-lg: clamp(1.3125rem, 1.0852rem + 1vw, 1.625rem); // inventory rows, prev/next
-    --fs-title-xl: clamp(1.375rem, 1.0625rem + 1.39vw, 1.8125rem); // selected-work rows
-    --fs-profile: clamp(1.25rem, 0.9375rem + 1.39vw, 1.625rem); // the Profile paragraph
-    --fs-band-lede: clamp(1.5rem, 1.0455rem + 2.02vw, 2.125rem); // "How it runs"
-    --fs-stat-sm: clamp(1.75rem, 1.4375rem + 1.39vw, 2.125rem); // case-study metrics
-    --fs-stat-md: clamp(2rem, 1.3182rem + 3.03vw, 3rem); // beyond-the-desk counts
-    --fs-stat: clamp(2.5rem, 1.4773rem + 4.55vw, 4.5rem); // the headline figures
+    // next edit: this design uses eleven display sizes and means all of them.
+    --fs-lede: clamp(0.9375rem, 0.8807rem + 0.25vw, 1.0625rem); // page ledes
+    --fs-lede-lg: clamp(1rem, 0.9432rem + 0.25vw, 1.125rem); // the hero lede
+    --fs-degree: clamp(1.0625rem, 0.9489rem + 0.5vw, 1.3125rem); // degrees, contact tiles
+    --fs-role: clamp(1.125rem, 0.9545rem + 0.75vw, 1.5rem); // role and card headings
+    --fs-lead-in: clamp(1.25rem, 1.0227rem + 1vw, 1.75rem); // "The problem", "The approach"
+    --fs-statement: clamp(1.375rem, 1.0909rem + 1.25vw, 2rem); // the Profile statement
+    --fs-section: clamp(1.375rem, 1.0341rem + 1.5vw, 2.125rem); // section titles
+    --fs-section-lg: clamp(1.5rem, 0.9318rem + 2.5vw, 2.5rem); // "Selected screens"
+    --fs-figure: clamp(1.875rem, 1.2386rem + 2.8vw, 3rem); // the headline figures
+    --fs-title: clamp(1.875rem, 0.7386rem + 5vw, 3.75rem); // extended-work titles
+    --fs-page-title: clamp(2rem, 0.5795rem + 6.25vw, 4.5rem); // inner page titles
+    --fs-cta: clamp(2.25rem, 0.4091rem + 8.1vw, 5.25rem); // the footer invitation
+    --fs-hero: clamp(2.5rem, -0.2273rem + 12vw, 7rem); // the home headline
 
-    --fs-cta: clamp(2.375rem, 1.4659rem + 4.04vw, 4.75rem); // the footer invitation
-    --fs-page-title: clamp(2.75rem, 1.9545rem + 3.54vw, 5.5rem); // inner page titles
-    --fs-detail-title: clamp(2.5rem, 1.9318rem + 2.53vw, 4.75rem); // system and case titles
-    --fs-hero: clamp(2.75rem, 1.6136rem + 5.05vw, 6.5rem); // the home headline
-    --fs-404: clamp(3.25rem, 2.1136rem + 5.05vw, 7.25rem); // the 404 headline
-
-    // Tracking is part of the voice here: the uppercase labels are the only
-    // texture the page has, so their letterspacing is a token, not a guess.
-    --tracking-eyebrow: 0.14em; // section labels and page eyebrows
-    --tracking-micro: 0.12em; // micro labels inside rows
-    --tracking-nav: 0.08em; // the nav, where the gap does the separating
-    --tracking-title: -0.028em; // row titles
-    --tracking-display: -0.042em; // page titles and figures
+    // Tracking is part of the voice: the uppercase micro-labels are the only
+    // texture the page has besides the rules, so their letterspacing is a
+    // token rather than a guess.
+    --tracking-eyebrow: 0.3em; // the line above a page title
+    --tracking-label: 0.24em; // a section's rail label
+    --tracking-nav: 0.18em; // nav, figcaptions, plate numbers
+    --tracking-micro: 0.16em; // buttons, footer links, meta rows
+    --tracking-tiny: 0.14em; // the smallest captions, inside a grid cell
+    --tracking-display: -0.02em; // page titles and the hero
 
     // ---- Space --------------------------------------------------------------
-    --frame-max: 105rem; // 1680px — the ruled frame the whole site sits in
-    --pad-x: clamp(1.25rem, 0.2955rem + 4.24vw, 2.5rem); // 20 → 40
-    --col-gap: clamp(1rem, 0.4886rem + 2.27vw, 2rem); // 16 → 32
-    --section-y: clamp(2.5rem, 1.9886rem + 2.27vw, 3.5rem); // between ruled sections
-    --band-y: clamp(3rem, 2.1477rem + 3.79vw, 4.5rem); // inside the dark bands
-    --row-y: clamp(1.25rem, 1.0795rem + 0.76vw, 1.625rem); // inside an inventory row
-    --header-h: 4rem; // 64px — the sticky header, and the scroll offset
+    --shell-max: 85rem; // 1360px — the measure the whole site sits in
+    --pad-x: clamp(1.25rem, 0.1rem + 4vw, 4rem); // 20 → 64
+    --gap: clamp(1.25rem, 0.6818rem + 2.5vw, 2.5rem); // between cells in a grid
+    --gap-lg: clamp(1.5rem, 0.3636rem + 5vw, 4rem); // between the halves of a split
+    --section-y: clamp(2rem, 1.3182rem + 3vw, 3.5rem); // a ruled section
+    --section-y-lg: clamp(2.5rem, 1.5909rem + 4vw, 4rem); // one that opens a page
+    --head-y: clamp(2rem, 0.8636rem + 5vw, 4rem); // above a page title
+    --header-h: 3.75rem; // the sticky header, and the scroll offset
 
     // ---- Motion -------------------------------------------------------------
     --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
-    --dur: 260ms;
+    --dur: 300ms;
 }

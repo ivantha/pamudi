@@ -1,0 +1,116 @@
+// Contact. Three direct lines across the top, then what to send and where else
+// she is. There is no form: this site is static on GitHub Pages, and a
+// third-party form widget on a designer's page is a worse answer than an
+// address.
+
+.lines {
+    display: grid;
+    grid-template-columns: repeat(var(--lines, 3), minmax(0, 1fr));
+    border-bottom: 1px solid var(--rule);
+
+    @media (max-width: 52rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.lines__cell {
+    display: block;
+    padding: clamp(1.5rem, 1.1591rem + 1.5vw, 2.5rem) clamp(1rem, 0.7727rem + 1vw, 2rem);
+    border-right: 1px solid var(--rule);
+    color: var(--ink);
+
+    &:last-child {
+        border-right: 0;
+    }
+
+    @media (max-width: 52rem) {
+        border-right: 0;
+
+        & + & {
+            border-top: 1px solid var(--rule);
+        }
+    }
+}
+
+a.lines__cell:hover {
+    background: var(--panel);
+    color: var(--ink);
+}
+
+.lines__value {
+    margin: 0.875rem 0 0;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: var(--fs-degree);
+    line-height: 1.3;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+}
+
+.enquiry {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: var(--gap-lg);
+    padding-block: var(--section-y);
+
+    @media (max-width: 52rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.enquiry__title {
+    margin: 1.25rem 0 0;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: clamp(1.25rem, 1.0227rem + 1vw, 1.75rem);
+    line-height: 1.25;
+    color: var(--ink);
+    text-wrap: balance;
+}
+
+.enquiry__text {
+    margin: 0.875rem 0 0;
+    max-width: 52ch;
+}
+
+.elsewhere {
+    margin: 1.25rem 0 0;
+}
+
+.elsewhere__row {
+    border-top: 1px solid var(--rule);
+
+    &:last-child {
+        border-bottom: 1px solid var(--rule);
+    }
+}
+
+.elsewhere__link {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem 1rem;
+    align-items: baseline;
+    padding-block: 0.9375rem;
+    color: var(--ink);
+
+    &:hover {
+        color: var(--accent);
+    }
+
+    @media (max-width: 26rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.elsewhere__name {
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: clamp(1rem, 0.8864rem + 0.5vw, 1.25rem);
+}
+
+.elsewhere__handle {
+    font-size: var(--fs-small);
+    color: var(--muted);
+}

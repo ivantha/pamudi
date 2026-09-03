@@ -21,32 +21,11 @@ body {
     font-weight: 400;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-}
 
-// Every numeral on this site sits in a column with another numeral above or
-// below it — years, ordinals, counts, figures. Tabular is the default, not an
-// opt-in, and the exceptions would be the thing worth marking.
-body {
+    // Every numeral on this site sits in a column with another numeral above or
+    // below it — years, plate numbers, counts, figures. Tabular is the default,
+    // and an exception would be the thing worth marking.
     font-variant-numeric: tabular-nums;
-}
-
-// ---- The frame --------------------------------------------------------------
-// One ruled column down the middle of the viewport, holding the header, the
-// page and the footer. The side rules are what make the sections read as
-// drawn rather than merely padded, so they run the full height — which is why
-// the frame is a flex column with the footer inside it.
-
-.frame {
-    max-width: var(--frame-max);
-    margin-inline: auto;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    border-inline: 1px solid var(--rule);
-}
-
-main {
-    flex: 1;
 }
 
 ::selection {
@@ -59,235 +38,39 @@ main {
     outline-offset: 3px;
 }
 
-// Inside the dark bands the rust outline all but disappears; on ink the ring is
-// drawn in the page colour instead.
-.band :focus-visible,
-.site-footer :focus-visible,
-.status-bar :focus-visible {
-    outline-color: var(--on-dark);
-}
-
 a {
     color: var(--accent);
     text-decoration: none;
-    transition: color var(--dur) var(--ease);
+    transition:
+        color var(--dur) var(--ease),
+        opacity var(--dur) var(--ease),
+        background-color var(--dur) var(--ease),
+        border-color var(--dur) var(--ease);
 
     &:hover {
         color: var(--ink);
     }
 }
 
-// ---- Layout primitives ------------------------------------------------------
+// ---- The sheet --------------------------------------------------------------
+// One centred measure holding the header, the page and the footer. Unlike the
+// direction it replaced there is no drawn frame: the page is held by its own
+// rules and by the white space either side of it.
 
-// Horizontal padding inside the frame. Everything sits on this, including the
-// full-bleed dark bands — the bleed is the background, not the text.
-.pad {
+.shell {
+    max-width: var(--shell-max);
+    margin-inline: auto;
     padding-inline: var(--pad-x);
 }
 
-// The twelve-column grid. It halves to six on a tablet and collapses to one on
-// a phone; components restate their spans at those two widths rather than
-// relying on a span wider than the track count, which silently overflows.
-.grid {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: var(--col-gap);
-
-    @media (max-width: 64rem) {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-    }
-
-    @media (max-width: 40rem) {
-        grid-template-columns: minmax(0, 1fr);
-        row-gap: 1.5rem;
-    }
-}
-
-// A ruled section: vertical rhythm plus the hairline that closes it. `--ink`
-// closes a group of sections, `--hair` separates two inside one.
-.sec {
-    padding-block: var(--section-y);
-    border-bottom: 1px solid var(--rule);
-}
-
-.sec--ink {
-    border-bottom-color: var(--rule-strong);
-}
-
-.sec--open {
-    border-bottom: 0;
-}
-
-// A full-bleed dark band. The page's only full stops.
-.band {
-    background: var(--dark);
-    color: var(--on-dark);
-    padding-block: var(--band-y);
-}
-
-// ---- Type primitives --------------------------------------------------------
-
-// The uppercase micro-label the whole design is ruled with. Three sizes, one
-// voice: `eyebrow` above a page title, `label` beside a section, `micro` inside
-// a row.
-.eyebrow {
-    margin: 0;
-    font-size: var(--fs-micro);
-    font-weight: 600;
-    letter-spacing: var(--tracking-eyebrow);
-    text-transform: uppercase;
-    color: var(--muted);
-}
-
-.label {
-    margin: 0;
-    font-size: var(--fs-nav);
-    font-weight: 600;
-    letter-spacing: var(--tracking-eyebrow);
-    text-transform: uppercase;
-    color: var(--accent);
-}
-
-.micro {
-    margin: 0;
-    font-size: var(--fs-micro);
-    font-weight: 600;
-    letter-spacing: var(--tracking-micro);
-    text-transform: uppercase;
-    color: var(--muted);
-}
-
-.micro--ink {
-    color: var(--ink);
-}
-
-// Running text inside a row or a card.
-.text {
-    margin: 0;
-    font-size: var(--fs-text);
-    line-height: 1.75;
-    color: var(--body);
-    text-wrap: pretty;
-}
-
-// The opening paragraph of a section, one step up from `.text`.
-.lede {
-    margin: 0;
-    font-size: var(--fs-body-lg);
-    line-height: 1.65;
-    color: var(--body);
-    text-wrap: pretty;
-}
-
-// The Profile paragraph. The one place on the site where display sizing carries
-// running prose, which is why it is a shared class rather than a page-local
-// rule: the home page and the About page print the same string.
-.profile {
-    margin: 0;
-    font-size: var(--fs-profile);
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: -0.012em;
-    color: var(--ink);
-    text-wrap: pretty;
-}
-
-// A dated line: a tabular year in a fixed column, the entry beside it. Used
-// down the About page and in the home page's community section.
-.dated-list {
+body > .shell {
     display: flex;
     flex-direction: column;
+    min-height: 100svh;
 }
 
-.dated {
-    display: grid;
-    grid-template-columns: 4rem 1fr;
-    column-gap: 1.25rem;
-    align-items: baseline;
-    padding-block: 0.75rem;
-    border-top: 1px solid var(--rule);
-
-    p {
-        margin: 0;
-        font-size: var(--fs-text);
-        line-height: 1.7;
-        color: var(--body);
-    }
-
-    strong {
-        font-weight: 600;
-        color: var(--ink);
-    }
-
-    @media (max-width: 30rem) {
-        grid-template-columns: 1fr;
-        row-gap: 0.25rem;
-    }
-}
-
-.dated__year {
-    font-size: var(--fs-meta);
-    font-weight: 500;
-    color: var(--muted);
-}
-
-// A definition list drawn as ruled rows: a fixed label column, the value
-// beside it. The hero's facts, the detail pages' metadata, the footer's
-// contacts.
-.facts {
-    margin: 0;
-}
-
-.facts__row {
-    display: grid;
-    grid-template-columns: var(--facts-label, 5.5rem) 1fr;
-    column-gap: 1.25rem;
-    align-items: baseline;
-    padding-block: 0.6875rem;
-    border-top: 1px solid var(--rule);
-
-    &:last-child {
-        border-bottom: 1px solid var(--rule);
-    }
-
-    dt {
-        font-size: var(--fs-micro);
-        font-weight: 600;
-        letter-spacing: var(--tracking-micro);
-        text-transform: uppercase;
-        color: var(--muted);
-    }
-
-    dd {
-        margin: 0;
-        font-size: var(--fs-text);
-        color: var(--ink);
-    }
-
-    @media (max-width: 30rem) {
-        grid-template-columns: 1fr;
-        row-gap: 0.25rem;
-    }
-}
-
-// ---- Entrance ---------------------------------------------------------------
-// One orchestrated load, staggered by --i. Cheaper and calmer than scattering
-// micro-interactions across the page, and it costs no JavaScript.
-
-@keyframes rise {
-    from {
-        opacity: 0;
-        transform: translateY(0.625rem);
-    }
-    to {
-        opacity: 1;
-        transform: none;
-    }
-}
-
-.rise {
-    animation: rise 600ms var(--ease) backwards;
-    animation-delay: calc(var(--i, 0) * 80ms);
+main {
+    flex: 1;
 }
 
 // Off-screen until focused. The header is sticky, so the link has to sit above
@@ -310,4 +93,527 @@ a {
     &:focus-visible {
         transform: none;
     }
+}
+
+// ---- Rules ------------------------------------------------------------------
+// `--rule-strong` closes a group of sections; `--rule` separates two rows
+// inside one. Swapping them is what stops the page reading as a ruled sheet.
+
+.sec {
+    padding-block: var(--section-y);
+}
+
+.sec--lg {
+    padding-block: var(--section-y-lg);
+}
+
+.rule-top {
+    border-top: 1px solid var(--rule);
+}
+
+.rule-top-ink {
+    border-top: 1px solid var(--rule-strong);
+}
+
+.rule-bottom {
+    border-bottom: 1px solid var(--rule);
+}
+
+.rule-bottom-ink {
+    border-bottom: 1px solid var(--rule-strong);
+}
+
+// ---- Layout primitives ------------------------------------------------------
+// Every multi-column block on the site is one of these four, and every one
+// collapses to a single column at 52rem. A grid that only states its wide case
+// is the failure mode this section exists to prevent.
+
+.split,
+.split-even,
+.split-narrow {
+    display: grid;
+    gap: var(--gap-lg);
+}
+
+// Image-led: seven parts to five.
+.split {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+}
+
+.split-even {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+// Text-led: five parts to seven, for the sections that lead with the words.
+.split-narrow {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+}
+
+// The collapse sits AFTER the three track definitions, not nested inside the
+// shared block above them. Nested, it compiles to a media query positioned
+// where the shared rule is — and the per-class `grid-template-columns` that
+// follow have the same specificity and simply win, at every width. A two-column
+// split on a phone is what that looks like.
+@media (max-width: 52rem) {
+    .split,
+    .split-even,
+    .split-narrow {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+// Puts the second child first at full width, and restores source order once
+// the grid has collapsed — otherwise a picture ends up above the heading that
+// introduces it.
+.split--flip > :first-child {
+    order: 2;
+
+    @media (max-width: 52rem) {
+        order: 0;
+    }
+}
+
+.cols {
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+
+    @media (max-width: 64rem) {
+        grid-template-columns: repeat(var(--cols-md, 2), minmax(0, 1fr));
+    }
+
+    @media (max-width: 40rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.measure {
+    max-width: var(--measure, 60rem);
+    margin-inline: auto;
+}
+
+// ---- Type primitives --------------------------------------------------------
+
+// The Didone. Never bolder than 500 — a Didone bolded is a Didone spoiled.
+.display {
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    color: var(--ink);
+}
+
+// The italic word inside a display heading, in brass. Large text only: see the
+// note on `--accent-bright` in _tokens.scss.
+.accent-word {
+    font-style: italic;
+    color: var(--accent-bright);
+}
+
+// The same italic without the colour, for a heading that emphasises rather
+// than accents.
+.italic {
+    font-style: italic;
+}
+
+// Three uppercase micro-labels, one voice, distinguished only by tracking and
+// colour: `eyebrow` above a page title, `label` opening a section, `micro`
+// inside a row or a caption.
+.eyebrow,
+.label,
+.micro {
+    margin: 0;
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.eyebrow {
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--muted);
+}
+
+.label {
+    letter-spacing: var(--tracking-label);
+    color: var(--accent);
+}
+
+.micro {
+    letter-spacing: var(--tracking-micro);
+    color: var(--muted);
+}
+
+.micro--ink {
+    color: var(--ink);
+}
+
+// A section's centred heading, with the paragraph that introduces it.
+.sec-head {
+    text-align: center;
+    padding-bottom: clamp(1.25rem, 0.6818rem + 2.5vw, 2rem);
+}
+
+.sec-title {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: var(--fs-section);
+    line-height: 1.15;
+    color: var(--ink);
+}
+
+.sec-title--lg {
+    font-size: var(--fs-section-lg);
+}
+
+.sec-note {
+    margin: 0.875rem auto 0;
+    max-width: 56ch;
+    font-size: var(--fs-text);
+    line-height: 1.75;
+    color: var(--body);
+    text-wrap: pretty;
+}
+
+// Running text, in the three sizes the design actually uses.
+.text {
+    margin: 0;
+    font-size: var(--fs-text);
+    line-height: 1.75;
+    color: var(--body);
+    text-wrap: pretty;
+}
+
+.prose {
+    margin: 0;
+    font-size: var(--fs-prose);
+    line-height: 1.85;
+    color: var(--body);
+    text-wrap: pretty;
+}
+
+.lede {
+    margin: 0;
+    font-size: var(--fs-lede);
+    line-height: 1.8;
+    color: var(--body);
+    text-wrap: pretty;
+}
+
+// The line that opens a two-column argument: "The problem", "What changed".
+.lead-in {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: var(--fs-lead-in);
+    line-height: 1.3;
+    color: var(--ink);
+    text-wrap: pretty;
+}
+
+// ---- Buttons ----------------------------------------------------------------
+// Two, and there is never a third: ink for the action, an outline for the
+// alternative beside it.
+
+.btn {
+    display: inline-block;
+    padding: 0.8125rem 1.375rem;
+    font-size: var(--fs-nav);
+    font-weight: 600;
+    letter-spacing: var(--tracking-micro);
+    text-transform: uppercase;
+}
+
+.btn--solid {
+    background: var(--ink);
+    color: var(--page);
+
+    &:hover {
+        background: var(--accent);
+        color: var(--page);
+    }
+}
+
+.btn--ghost {
+    border: 1px solid var(--edge);
+    color: var(--ink);
+
+    &:hover {
+        border-color: var(--ink);
+        color: var(--ink);
+    }
+}
+
+.btn-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: clamp(1.5rem, 1.1591rem + 1.5vw, 2.25rem);
+}
+
+.btn-row--center {
+    justify-content: center;
+}
+
+// A text link set at label size, with the arrow the design puts after it.
+.more {
+    display: inline-block;
+    font-size: var(--fs-nav);
+    font-weight: 600;
+    letter-spacing: var(--tracking-micro);
+    text-transform: uppercase;
+}
+
+// ---- Plates and captions ----------------------------------------------------
+// A "plate" is the ground a picture sits on. Screens exported from Figma come
+// out cropped flush to their content and often with a transparent background,
+// so on paper the outermost pixel touches the text; the plate is what gives
+// them an edge to sit inside.
+
+.plate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    padding: clamp(0.5rem, 0.2727rem + 1vw, 1rem);
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+}
+
+// For screens drawn on a dark canvas: the precision-agriculture app is a
+// dark-first product, and putting it on paper would misreport it.
+.plate--dark {
+    background: var(--plate-dark);
+    border-color: var(--rule-strong);
+}
+
+// For a colour or component board, where a white swatch would vanish on the
+// panel ground.
+.plate--white {
+    background: #ffffff;
+    padding: clamp(1rem, 0.4318rem + 2.5vw, 2.25rem);
+}
+
+.plate--pad {
+    padding: clamp(0.75rem, 0.5227rem + 1vw, 1.25rem);
+}
+
+// Two caption shapes and no more: `figcap` is a name on the left and a
+// qualifier on the right; `figcap--three` centres the name between a plate
+// number and a note.
+.figcap {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.875rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-micro);
+    text-transform: uppercase;
+    color: var(--muted);
+
+    strong {
+        font-weight: 600;
+        color: var(--ink);
+    }
+
+    em {
+        font-style: normal;
+        color: var(--accent);
+    }
+
+    @media (max-width: 30rem) {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+}
+
+.figcap--open {
+    padding-top: 0;
+    border-top: 0;
+}
+
+.figcap--three {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 0;
+    border-top: 0;
+    font-size: var(--fs-nav);
+    letter-spacing: var(--tracking-nav);
+
+    > :nth-child(2) {
+        text-align: center;
+        color: var(--ink);
+    }
+
+    > :nth-child(3) {
+        text-align: right;
+    }
+
+    // The right-hand cell says who made the thing rather than what it is, and
+    // takes the brass to say so. `--accent`, not `--accent-bright`: this is a
+    // 10.5px label and the brighter brass is a large-text colour only.
+    .figcap__note {
+        color: var(--accent);
+    }
+
+    @media (max-width: 40rem) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.25rem;
+
+        > :nth-child(2),
+        > :nth-child(3) {
+            text-align: left;
+        }
+    }
+}
+
+// The caption above a detail list, closed by an ink rule rather than a hairline
+// because what follows it is a table rather than more picture.
+.figcap--head {
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 1rem;
+    border-top: 0;
+    border-bottom: 1px solid var(--rule-strong);
+    font-size: var(--fs-nav);
+    letter-spacing: var(--tracking-nav);
+}
+
+// ---- Ruled lists ------------------------------------------------------------
+
+// A definition list drawn as ruled rows: a fixed term column, the value beside
+// it. Used for the capability list, the hero facts and the case metadata.
+.defs {
+    display: grid;
+    grid-template-columns: repeat(var(--def-cols, 2), minmax(0, 1fr));
+    column-gap: var(--gap-lg);
+    margin: 0;
+
+    @media (max-width: 52rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.def {
+    display: grid;
+    grid-template-columns: var(--def-term, 7.5rem) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: baseline;
+    padding-block: 0.8125rem;
+    border-top: 1px solid var(--rule);
+
+    dt {
+        font-size: var(--fs-micro);
+        font-weight: 600;
+        letter-spacing: var(--tracking-micro);
+        text-transform: uppercase;
+        color: var(--muted);
+    }
+
+    dd {
+        margin: 0;
+        font-size: var(--fs-text);
+        line-height: 1.7;
+        color: var(--ink);
+    }
+
+    @media (max-width: 30rem) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.25rem;
+    }
+}
+
+// Closes the last row of each column. The list is a two-column grid, so the
+// bottom edge has to be drawn on the final row of *both* columns.
+.def--last {
+    border-bottom: 1px solid var(--rule);
+}
+
+// A dated line: a tabular year in a fixed column, the entry beside it.
+.dated {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-block: 0.6875rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-text);
+    line-height: 1.7;
+    color: var(--body);
+
+    strong {
+        font-weight: 600;
+        color: var(--ink);
+    }
+
+    em {
+        font-style: italic;
+        color: var(--body);
+    }
+
+    @media (max-width: 30rem) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.25rem;
+    }
+}
+
+.dated__year {
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tiny);
+    color: var(--muted);
+    padding-top: 0.25rem;
+}
+
+.dated--plain {
+    display: block;
+}
+
+.dated--last {
+    border-bottom: 1px solid var(--rule);
+}
+
+// A term-and-explanation row, wider than `.def`: what shipped, what a figure
+// shows.
+.spec {
+    display: grid;
+    grid-template-columns: minmax(0, var(--spec-term, 16rem)) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: baseline;
+    padding-block: 1rem;
+    border-top: 1px solid var(--rule);
+
+    dt,
+    > :first-child {
+        font-size: var(--fs-body);
+        font-weight: 600;
+        color: var(--ink);
+    }
+
+    dd,
+    > :last-child {
+        margin: 0;
+        font-size: var(--fs-text);
+        line-height: 1.75;
+        color: var(--body);
+    }
+
+    @media (max-width: 44rem) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.375rem;
+    }
+}
+
+.spec--last {
+    border-bottom: 1px solid var(--rule);
 }

@@ -1,0 +1,166 @@
+// Blocks that appear on more than one page: the centred opening of every inner
+// page, the headline figure strip, and the two-column inventory of rows.
+
+// ---- The opening ------------------------------------------------------------
+// Every page except the home page and the case pages opens with one of these,
+// which is what makes them read as sheets of one document rather than as
+// separate designs. The ink rule under it is the page's first full stop.
+
+.intro {
+    text-align: center;
+    padding-block: var(--head-y) clamp(1.5rem, 1.1591rem + 1.5vw, 2.5rem);
+}
+
+.intro__title {
+    margin: clamp(1.25rem, 0.9091rem + 1.5vw, 2rem) auto 0;
+    max-width: var(--intro-measure, 26ch);
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: var(--fs-page-title);
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+    color: var(--ink);
+    text-wrap: balance;
+}
+
+.intro__lede {
+    margin: clamp(1.25rem, 0.9091rem + 1.5vw, 2rem) auto 0;
+    max-width: 60ch;
+    font-size: var(--fs-lede);
+    line-height: 1.8;
+    color: var(--body);
+    text-wrap: pretty;
+}
+
+// The jump list under the Off-hours opening. Anchors, not pages, so they are
+// set in brass rather than in ink.
+.intro__jump {
+    display: flex;
+    gap: 0.75rem 1.25rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: clamp(1.5rem, 1.2727rem + 1vw, 2rem);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-micro);
+    text-transform: uppercase;
+}
+
+// ---- Headline figures -------------------------------------------------------
+// Four counts, ruled apart, each a numeral in the display face over its label.
+// One of the four is set in brass; which one is a decision in the data, not
+// here.
+
+.figures {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-bottom: 1px solid var(--rule);
+
+    @media (max-width: 44rem) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.figures__cell {
+    padding: clamp(1.25rem, 0.9091rem + 1.5vw, 2rem) 1rem;
+    text-align: center;
+    border-right: 1px solid var(--rule);
+
+    &:last-child {
+        border-right: 0;
+    }
+
+    // On two columns the right-hand rule falls in the wrong place, so it is
+    // redrawn per row and the second row gains a rule above it.
+    @media (max-width: 44rem) {
+        &:nth-child(2n) {
+            border-right: 0;
+        }
+
+        &:nth-child(n + 3) {
+            border-top: 1px solid var(--rule);
+        }
+    }
+}
+
+.figures__value {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: var(--fs-figure);
+    line-height: 1;
+    color: var(--ink);
+}
+
+.figures__value--accent {
+    color: var(--accent-bright);
+}
+
+.figures__label {
+    margin: 0.75rem 0 0;
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-nav);
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+// ---- The inventory ----------------------------------------------------------
+// Two columns of ruled rows reading down, each row a product and its scope.
+// The rule is drawn on the row rather than between them, so the two columns
+// stay level whatever the row heights.
+
+.rows {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gap-lg);
+
+    @media (max-width: 52rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.375rem 1.25rem;
+    align-items: baseline;
+    padding-block: 0.9375rem;
+    border-top: 1px solid var(--rule);
+
+    @media (max-width: 34rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+// Closes the foot of each column. Which rows are last depends on the count, so
+// it is set from the page rather than guessed at here.
+.row--last {
+    border-bottom: 1px solid var(--rule);
+}
+
+.row__name {
+    font-size: var(--fs-body);
+    color: var(--ink);
+}
+
+a.row__name:hover {
+    color: var(--accent);
+}
+
+.row__scope {
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tiny);
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.rows__note {
+    margin: clamp(1.25rem, 1.0227rem + 1vw, 1.75rem) 0 0;
+    text-align: center;
+    font-size: var(--fs-text);
+    color: var(--muted);
+}

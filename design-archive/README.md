@@ -15,7 +15,7 @@ floor, not a clearance.
 
 Folders are named for the `product` in `data/systems.yaml` they belong to, not
 for the Figma page they came from, so the archive lines up with the site and
-with `/systems/<slug>`. Web and mobile modules of one product are split.
+with `/work/<slug>`. Web and mobile modules of one product are split.
 
 | Folder                           |  Frames |
 | -------------------------------- | ------: |

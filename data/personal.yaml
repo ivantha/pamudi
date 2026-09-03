@@ -34,21 +34,27 @@ eyebrow: Curriculum Vitae
 #   - …
 # availability: …
 
-# The hero headline, and the last placeholder left on the page. `accent` is the
-# single word that takes the accent colour. Pamudi writes the real line; this
-# one is a layout stand-in and makes no claim about her career.
-headline:
-  before: Interfaces that
-  accent: earn
-  after: their complexity.
+# The hero headline used to live here as a layout stand-in. It is gone: the
+# Plinth design supplies a real headline for every page, and those sit in
+# data/site.yaml with the rest of the design's copy and its pending-sign-off
+# note. Nothing on the site is a placeholder any more.
 
-# ── CV masthead ──────────────────────────────────────────────────────────
+# ── Headline figures ─────────────────────────────────────────────────────
 specialisms:
   - Design systems
   - Accessibility
   - AI-assisted delivery
   - Design-to-code
 
+# Four counts, printed in the CV masthead and set across the home page.
+#
+# The third differs between the two, and the `_web` suffix is how: cv.typ reads
+# `value` and `label` directly through `stats-tuples` in cv/common/loaders.typ,
+# never through `field()`, so an override here is invisible to the PDF by
+# construction — the same arrangement as `dates_web` in education.yaml. The CV
+# masthead keeps the years because a recruiter scanning a PDF wants the span;
+# the site prints the style guides because the page beside it is about the work
+# rather than about the length of service.
 stats:
   - value: "24"
     label: Products designed
@@ -56,6 +62,8 @@ stats:
     label: Systems from scratch
   - value: "8"
     label: Years in industry
+    value_web: "10"
+    label_web: Style guides in-file
   - value: "8"
     label: Product teams guided
 

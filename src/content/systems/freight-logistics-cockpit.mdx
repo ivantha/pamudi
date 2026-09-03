@@ -13,107 +13,119 @@
 #     ("EFL Cockpit"). They are not paraphrased upward.
 #   - Everything else describes what is visibly in the screens beside it.
 # No outcomes, no metrics, no adoption claims: no source carries any.
+#
+# ⚠ The prose was rewritten on 2026-09-03 from the "Plinth" artboards in the
+# Claude Design project, replacing the longer MDX body this file used to carry
+# (it is in git). Treat it the way data/site.yaml is treated: pending sign-off.
+#
+# Figure 2 borrows a screen from the warehouse management platform, and that is
+# deliberate rather than a mix-up: the design uses it to show the handheld end
+# of the same floor. The caption names what it shows and the plate links to the
+# product it belongs to, so nothing here claims it is this client's screen.
 system: Freight logistics cockpit
-facts:
-  - label: Platform
-    value: Wall-mounted tablet, 1024×768
+plate: 4
+kind: owned
+eyebrow: Freight forwarding and 3PL · Global distribution network
+title:
+  before: Freight logistics
+  accent: cockpit
+standfirst: >-
+  Warehouse location detection for a global logistics operator working across
+  approximately thirty-nine countries. Rack, aisle and bay states held in one
+  dense view that floor staff and planners read from the same source.
+meta:
   - label: Role
-    value: Senior UI/UX Engineer, Zone24x7
-  - label: Recorded
-    value: "2025"
-cover: ../../assets/systems/freight-logistics-cockpit/racks.png
-coverAlt: A grid of rack cards, each labelled A07-01-01 and marked Empty, one highlighted in amber, above a dark footer paging through 01 to 32.
-coverCaption: Racks are the whole screen. Thirty-two to a page, one state per card, and the page counter sits in the footer bar rather than floating over the grid.
+    value: Sole designer, system owner
+  - label: Scope
+    value: Design system and screens
+  - label: Stack
+    value: Figma, specified for React
+  - label: Reach
+    value: ≈ 39 countries
+index:
+  summary: >-
+    Warehouse location detection for a global logistics operator's distribution
+    network, spanning approximately thirty-nine countries. Rack, aisle and bay
+    states held in one dense view that warehouse staff read on the floor.
+  facts:
+    - label: Role
+      value: Sole designer · system owner
+    - label: Stack
+      value: Figma, specified for React
+  shape: wide
+  src: ../../assets/systems/freight-logistics-cockpit/racks.png
+  alt: A grid of rack cards, each labelled A07-01-01 and marked Empty, one highlighted in amber, above a dark footer paging through 01 to 32.
+figures:
+  - layout: full
+    number: Figure 1
+    title: Rack detection
+    note: Location state across aisles and bays
+    tall: true
+    src: ../../assets/systems/freight-logistics-cockpit/racks.png
+    alt: A grid of rack cards, each labelled A07-01-01 and marked Empty, one highlighted in amber, above a dark footer paging through 01 to 32.
+  - layout: split-end
+    number: Figure 2
+    title: Batch pick
+    note: Handheld, gloved
+    shot: 16rem
+    src: ../../assets/systems/warehouse-management-platform/batch-pick-items.png
+    alt: "Handheld batch pick screen: a SKU header reading 00 of 40 items scanned, item cards with pick quantities, and a Scan SKU ID field pinned at the foot."
+    notes:
+      - term: Scan, then type
+        text: >-
+          The SKU field holds focus so the scanner drives the screen; quantity
+          is the only thing entered by hand.
+      - term: Count in view
+        text: >-
+          Items scanned against the batch total stays pinned to the group header
+          while the item list scrolls.
+      - term: Exception state
+        text: >-
+          A short pick tints the whole task, not one row, so the state survives
+          a glance from a moving forklift aisle.
+argument:
+  - label: The problem
+    lead: The building was known; the pallet was not.
+    paragraphs:
+      - >-
+        Location detection produced far more state than any screen had been
+        designed to hold: every rack, aisle and bay, in every facility, changing
+        continuously. Planners wanted the network view. Floor staff wanted the
+        one aisle in front of them.
+      - >-
+        Existing tooling answered neither well. Wide tables scrolled sideways
+        past the point of use, and per-site views hid the exceptions that
+        actually needed a decision.
+  - label: The approach
+    lead: One grid, two reading distances.
+    paragraphs:
+      - >-
+        The rack grid is the primary object, and it is built to be scanned
+        rather than read: occupancy and exception states legible at a glance,
+        identifiers legible on approach. Filters narrow the same grid instead of
+        switching to a different layout.
+      - >-
+        Because the operator runs in dozens of countries, the type scale, number
+        formatting and label lengths were specified for translation and for
+        longer location codes from the outset, and the components were written
+        against React for the build team.
+shipped:
+  - term: Location grid component
+    text: >-
+      Rack, aisle and bay states as one scannable object, with exception
+      treatment defined per state.
+  - term: Design system and specs
+    text: >-
+      Tokens, components and interaction specs written against React for the
+      implementing team.
+  - term: Internationalisation rules
+    text: >-
+      Type scale, numeral and label allowances set for multi-country deployment.
+  - term: Style guide in-file
+    text: >-
+      Kept inside the Figma source of truth so the team could onboard without a
+      walkthrough.
+related:
+  - Precision agriculture app
+  - Photo-ID compliance app
 ---
-
-import Figure from "@/components/Figure.astro"
-import cameraDisconnected from "../../assets/systems/freight-logistics-cockpit/camera-disconnected.png"
-import warehouseModules from "../../assets/systems/freight-logistics-cockpit/warehouse-modules.png"
-import bay from "../../assets/systems/freight-logistics-cockpit/bay.png"
-import racksCollapsed from "../../assets/systems/freight-logistics-cockpit/racks-collapsed.png"
-
-## The brief
-
-A global freight forwarder runs distribution centres in roughly thirty-nine countries.
-This application detects where a load actually is inside one of them, and says so on a
-screen mounted where the work happens rather than in a report someone reads later.
-
-It is a fixed-position tablet in a warehouse, read at a distance by someone who is
-holding something else. That constraint sets the type size, the colour coding and the
-decision to give the running status its own permanent bar rather than a toast that
-disappears while you are looking away.
-
-## The system
-
-There was no system to inherit. Design started at the foundations and had to arrive as
-something an implementation team could build without interpretation.
-
-<div class="spec">
-  <div class="spec__item">
-    <h3>Owned end to end</h3>
-    <p>
-      Led the creation and maintenance of the complete Figma design system from scratch for the
-      cockpit application.
-    </p>
-  </div>
-  <div class="spec__item">
-    <h3>UX direction for the team</h3>
-    <p>
-      Guided the project team through the UI/UX process, providing direction during design and
-      support through implementation.
-    </p>
-  </div>
-  <div class="spec__item">
-    <h3>One of three owned outright</h3>
-    <p>
-      One of the three systems in the inventory she built from scratch and owned for its whole
-      lifecycle.
-    </p>
-  </div>
-</div>
-
-## Navigation that stays put
-
-The application has four destinations and no more: Home, Warehouse, Settings, License.
-They live in a rail that expands to labels and collapses to icons, and the collapsed
-state is the working default because the grid it sits beside is the actual content.
-
-<div class="figure-grid">
-  <Figure
-    width="half"
-    src={warehouseModules}
-    alt="Warehouse section showing three large tiles labelled Racks, Bay and Transactions, with the navigation rail expanded to icons and labels on the left."
-    caption="Warehouse splits into three targets, drawn as tiles big enough to hit without looking."
-  />
-  <Figure
-    width="half"
-    src={racksCollapsed}
-    alt="The rack grid with the navigation rail collapsed into the top bar, giving the grid the full width of the screen."
-    caption="Collapsed, the rail gives the grid back its width. Same screen, same grid, one fewer column of chrome."
-  />
-</div>
-
-## Two ways to look at a warehouse
-
-Racks are discrete and countable, so they are drawn as cards with a state each. A bay
-is continuous floor, so it is drawn as a ruled area instead. Using one metaphor for both
-would have made the second one lie.
-
-<Figure
-  src={bay}
-  alt="Bay view showing an empty dotted grid where bay positions are drawn, under the same header and navigation rail as the rack view."
-  caption="The bay in its empty state: a dotted grid rather than a list, because floor space is not a set of rows."
-/>
-
-## The failure state is a screen, not a blank
-
-The application depends on a camera feed it does not control. When that feed drops, the
-panel does not sit empty and it does not show a spinner that never resolves. It names
-the fault, and puts the one action that fixes it in the middle of the space the video
-would have filled.
-
-<Figure
-  src={cameraDisconnected}
-  alt="The cockpit with an empty video panel reading 'Video stream is not connected, please go to settings to connect' above an amber Go To Settings button, and a struck-through camera icon in the header."
-  caption="The header icon turns red, the panel says what happened, and the fix is one target away. Designing this state at the same time as the working one is why it is this specific rather than generic."
-/>

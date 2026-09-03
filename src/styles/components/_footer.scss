@@ -1,37 +1,45 @@
-// The footer is the page's full stop: reversed out on ink, with the invitation
-// set at display size and the contact list ruled beside it.
+// The footer is the largest type on most pages, and that is the point: the
+// page ends on an invitation set at display size rather than on a form.
+//
+// Three variants. `full` is the invitation plus the address and the link row;
+// `slim` drops the invitation for a page that has just made the same offer
+// above it (Contact); `rule` is the link row alone, for a detail page whose
+// job is to send you somewhere else next.
 
-.site-footer {
-    background: var(--dark);
-    color: var(--on-dark);
+.footer {
+    text-align: center;
+    border-top: 1px solid var(--rule-strong);
 }
 
-.site-footer__top {
-    padding-block: calc(var(--band-y) * 1.2) 0;
-    align-items: end;
-    row-gap: 3rem;
+.footer--full,
+.footer--slim {
+    padding-block: clamp(2rem, 0.8636rem + 5vw, 5.5rem) clamp(1.5rem, 1.3864rem + 0.5vw, 2rem);
 }
 
-.site-footer__invite {
-    grid-column: span 7;
+.footer--rule {
+    padding-block: clamp(2rem, 1.5455rem + 2vw, 3rem);
 }
 
-.site-footer__standfirst {
-    margin: 0 0 1.5rem;
-    font-size: var(--fs-nav);
+.footer__standfirst {
+    margin: 0;
+    font-size: var(--fs-micro);
     font-weight: 600;
-    letter-spacing: var(--tracking-eyebrow);
+    letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--on-dark-muted);
+    color: var(--muted);
 }
 
-.site-footer__cta {
+.footer__cta {
     display: inline-block;
+    margin-top: 1.5rem;
+    max-width: 26ch;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
     font-size: var(--fs-cta);
-    font-weight: 600;
-    line-height: 0.95;
+    line-height: 1.02;
     letter-spacing: var(--tracking-display);
-    color: var(--on-dark);
+    color: var(--ink);
     text-wrap: balance;
 
     &:hover {
@@ -39,67 +47,43 @@
     }
 }
 
-.site-footer__contact {
-    grid-column: 9 / span 4;
-
-    .facts__row {
-        --facts-label: 4.75rem;
-        border-top-color: var(--dark-rule);
-
-        &:last-child {
-            border-bottom-color: var(--dark-rule);
-        }
-
-        dt {
-            color: var(--on-dark-muted);
-        }
-
-        dd {
-            font-size: var(--fs-small);
-            color: var(--on-dark-soft);
-        }
-    }
-
-    a {
-        color: var(--on-dark-soft);
-
-        &:hover {
-            color: var(--accent-bright);
-        }
-    }
+.footer__email {
+    margin: 1.5rem 0 0;
+    font-size: var(--fs-text);
+    color: var(--muted);
 }
 
-.site-footer__colophon {
+// The colophon row. It is a single flex line that wraps, so the copyright
+// simply falls to a second row on a phone rather than needing its own layout.
+.footer__links {
     display: flex;
-    justify-content: space-between;
-    gap: 1.5rem;
+    justify-content: center;
+    gap: 0.75rem 1.75rem;
     flex-wrap: wrap;
-    padding-block: 1.125rem 2rem;
-    font-size: var(--fs-micro);
+    font-size: var(--fs-nav);
     font-weight: 600;
     letter-spacing: var(--tracking-micro);
     text-transform: uppercase;
-    color: var(--on-dark-muted);
+    color: var(--muted);
 
-    p {
-        margin: 0;
+    a {
+        color: var(--body);
+
+        &:hover {
+            color: var(--ink);
+        }
     }
 }
 
-// The invitation carries the space above the colophon; without it the rule has
-// to sit off the top of the block instead.
-.site-footer--full .site-footer__colophon {
-    margin-top: 4rem;
-    border-top: 1px solid var(--dark-rule);
+.footer--full .footer__links,
+.footer--slim .footer__links {
+    margin-top: clamp(2rem, 1.5455rem + 2vw, 3.5rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
 }
 
-.site-footer--rule .site-footer__colophon {
-    padding-block: 2rem;
-}
-
-@media (max-width: 64rem) {
-    .site-footer__invite,
-    .site-footer__contact {
-        grid-column: 1 / -1;
-    }
+// On a detail page the first link is the invitation, so it takes the accent
+// the display CTA would otherwise have carried.
+.footer__links a.footer__invite {
+    color: var(--accent);
 }

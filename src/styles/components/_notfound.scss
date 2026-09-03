@@ -1,93 +1,58 @@
-// The 404. The one page that is allowed to be mostly empty, so it centres in
-// whatever height is left between the header and the colophon.
+// The 404. It is a page that is already an ending, so it takes the footer
+// without the invitation and puts the ways out on the page itself.
 
 .notfound {
-    flex: 1;
-    align-content: center;
-    padding-block: calc(var(--section-y) * 2);
-    row-gap: 3rem;
-}
-
-.notfound__main {
-    grid-column: span 6;
-}
-
-.notfound__eyebrow {
-    color: var(--accent);
+    text-align: center;
+    padding-block: clamp(3rem, 1.8636rem + 5vw, 6rem) var(--section-y);
 }
 
 .notfound__title {
-    margin: 1.5rem 0 0;
-    font-size: var(--fs-404);
-    font-weight: 600;
-    line-height: 0.88;
-    letter-spacing: -0.045em;
+    margin: clamp(1.25rem, 0.9091rem + 1.5vw, 2rem) auto 0;
+    max-width: 16ch;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: var(--fs-page-title);
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
     color: var(--ink);
 }
 
-.notfound__accent {
-    color: var(--accent-bright);
-}
-
-.notfound__aside {
-    grid-column: 8 / span 5;
-}
-
 .notfound__lede {
-    margin: 0;
+    margin: clamp(1.25rem, 0.9091rem + 1.5vw, 2rem) auto 0;
+    max-width: 44ch;
     font-size: var(--fs-lede);
-    line-height: 1.65;
+    line-height: 1.8;
     color: var(--body);
 }
 
 .notfound__links {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
+    max-width: 34rem;
+    margin: clamp(1.75rem, 1.5227rem + 1vw, 2.5rem) auto 0;
+    text-align: left;
 }
 
 .notfound__link {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
     align-items: baseline;
-    gap: 1.5rem;
-    padding-block: 1rem;
+    padding-block: 0.9375rem;
     border-top: 1px solid var(--rule);
     color: var(--ink);
-    font-size: var(--fs-title-sm);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-
-    &:first-child {
-        border-top-color: var(--rule-strong);
-    }
 
     &:last-child {
         border-bottom: 1px solid var(--rule);
     }
 
     &:hover {
-        color: var(--accent-bright);
+        color: var(--accent);
     }
 }
 
-.notfound__arrow {
-    font-size: var(--fs-nav);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-}
-
-// The 404 is a flex item of `main`, and `main` is a flex item of the frame; the
-// chain has to be declared or `align-content: center` has no height to work in.
-body:has(.notfound) main {
-    display: flex;
-    flex-direction: column;
-}
-
-@media (max-width: 64rem) {
-    .notfound__main,
-    .notfound__aside {
-        grid-column: 1 / -1;
-    }
+.notfound__name {
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: clamp(1rem, 0.8864rem + 0.5vw, 1.25rem);
 }

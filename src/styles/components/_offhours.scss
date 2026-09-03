@@ -1,0 +1,149 @@
+// Off hours. Seven sections, each one either a pair of pictures or a picture
+// beside a paragraph, separated by ink rules so the page reads as chapters
+// rather than as a scroll.
+
+.oh-sec {
+    padding-block: var(--section-y);
+    border-top: 1px solid var(--rule-strong);
+}
+
+// The first section sits directly under the opening rule and needs no second
+// one.
+.oh-sec--first {
+    border-top: 0;
+}
+
+.oh-sec--aside {
+    align-items: end;
+}
+
+.oh-head {
+    text-align: center;
+    margin-bottom: clamp(1.5rem, 1.1591rem + 1.5vw, 2.5rem);
+}
+
+.oh-head__text {
+    margin: 1rem auto 0;
+    max-width: 54ch;
+    font-size: var(--fs-body);
+    line-height: 1.8;
+    color: var(--body);
+    text-wrap: pretty;
+}
+
+.oh-aside__title {
+    margin: 1.25rem 0 0;
+    font-family: var(--display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: clamp(1.25rem, 1.0227rem + 1vw, 1.75rem);
+    line-height: 1.25;
+    color: var(--ink);
+}
+
+.oh-aside__text {
+    margin: 0.875rem 0 0;
+}
+
+// The last paragraph on the page, which admits a gap in the record rather than
+// filling it.
+.oh-aside__coda {
+    margin: 1.25rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-text);
+    line-height: 1.8;
+    color: var(--muted);
+    text-wrap: pretty;
+}
+
+.oh-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap);
+
+    @media (max-width: 52rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.oh-pair--narrow {
+    max-width: 52rem;
+    margin-inline: auto;
+}
+
+.oh-pair--cats {
+    max-width: 56rem;
+    margin-inline: auto;
+}
+
+.oh-pair--stacked {
+    margin-top: var(--gap);
+}
+
+.oh-fig {
+    margin: 0;
+
+    img {
+        display: block;
+        width: 100%;
+        object-fit: cover;
+    }
+}
+
+.oh-fig--wide img {
+    aspect-ratio: 16 / 9;
+}
+
+.oh-fig--tall img {
+    aspect-ratio: 3 / 4;
+}
+
+.oh-fig--panorama img {
+    aspect-ratio: 21 / 9;
+}
+
+.oh-fig--card img {
+    aspect-ratio: 4 / 3;
+}
+
+.oh-fig--landscape img {
+    aspect-ratio: 16 / 10;
+}
+
+// Two of the teaching pictures are speaker cards rather than photographs, so
+// they are contained on a plate rather than cropped to a shape.
+.oh-fig__plate {
+    display: block;
+    padding: clamp(0.5rem, 0.3182rem + 0.8vw, 1rem);
+
+    img {
+        aspect-ratio: 4 / 3;
+        object-fit: contain;
+    }
+}
+
+.oh-fig--protege img {
+    object-position: 50% 45%;
+}
+
+.oh-fig--keyboard img {
+    object-position: 60% 50%;
+}
+
+.oh-games__head {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem var(--gap-lg);
+    align-items: baseline;
+    margin-bottom: clamp(1.5rem, 1.1591rem + 1.5vw, 2.5rem);
+
+    @media (max-width: 52rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.oh-figure-solo {
+    max-width: 44rem;
+    margin: var(--gap) auto 0;
+}

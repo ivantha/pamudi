@@ -1,0 +1,348 @@
+---
+import type { GetStaticPaths } from "astro"
+import type { CollectionEntry } from "astro:content"
+import { Image } from "astro:assets"
+import { getCollection } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Heading from "@/components/Heading.astro"
+import Markup from "@/components/Markup.astro"
+import { href } from "@/lib/url"
+import { systemSlug } from "@/lib/slug"
+import { roman } from "@/lib/roman"
+import { spell } from "@/lib/words"
+import { isWebVisible } from "@/lib/variants"
+
+/**
+ * A page for every product in the inventory, written or not.
+ *
+ * The slug is derived from `product` by `systemSlug` rather than stored: the
+ * inventory is shared with the Typst CV, and a `slug:` key only the website
+ * read would be the same drift risk as a `group:` key. Renaming a product
+ * therefore changes its URL, which is the right trade for a site with fourteen
+ * of these and no inbound links to protect.
+ *
+ * A product with no file in `src/content/systems/` renders the sourced record
+ * and stops there. That is the resting state, not a stub to be filled with
+ * plausible-sounding prose — see CLAUDE.md, "Whose site this is".
+ */
+export const getStaticPaths: GetStaticPaths = async () => {
+    const systems = (await getCollection("systems")).filter(isWebVisible)
+    const pages = await getCollection("systemPages")
+
+    // A file naming a product the inventory does not have is a typo that would
+    // otherwise ship as a page nobody can reach.
+    const products = new Set(systems.map((s) => s.data.product))
+    for (const page of pages) {
+        if (!products.has(page.data.system)) {
+            throw new Error(
+                `src/content/systems/${page.id} names "${page.data.system}", which is not a product in data/systems.yaml.`,
+            )
+        }
+    }
+
+    const byProduct = new Map(pages.map((p) => [p.data.system, p]))
+
+    return systems.map((system) => ({
+        params: { slug: systemSlug(system.data.product) },
+        props: { system, page: byProduct.get(system.data.product) ?? null },
+    }))
+}
+
+interface Props {
+    system: CollectionEntry<"systems">
+    page: CollectionEntry<"systemPages"> | null
+}
+
+const { system, page } = Astro.props as Props
+const data = page?.data
+const inventory = (await getCollection("systems")).filter(isWebVisible)
+const pages = await getCollection("systemPages")
+
+const product = system.data.product
+const owned = inventory.filter((s) => s.data.lead)
+const ownedIndex = owned.findIndex((s) => s.data.product === product)
+
+// The right-hand cell of the bar above the title.
+const standing = data?.plate
+    ? data.kind === "owned"
+        ? `Plate ${roman(data.plate)} · Case ${spell(ownedIndex + 1)} of ${spell(owned.length)}`
+        : `Plate ${roman(data.plate)} · Extended work`
+    : system.data.scope
+
+const backTo = data?.kind === "owned" ? "/work" : "/work#inventory"
+
+// Where to send the reader next. A written page names its own two in the
+// frontmatter, so a case points somewhere it actually relates to. Without a
+// file the two nearest written pages in the same band stand in — a product that
+// was extended should not close on two systems owned from scratch.
+const related = (
+    data?.related.length
+        ? data.related
+        : inventory
+              .filter(
+                  (s) =>
+                      s.data.product !== product &&
+                      s.data.lead === system.data.lead &&
+                      pages.some((p) => p.data.system === s.data.product),
+              )
+              .slice(0, 2)
+              .map((s) => s.data.product)
+).flatMap((name) => {
+    const other = pages.find((p) => p.data.system === name)
+    const entry = inventory.find((s) => s.data.product === name)
+    return other?.data.index && entry ? [{ page: other.data, entry }] : []
+})
+
+const relatedTitle = data ? (data.kind === "owned" ? "cases" : "extended work") : "work"
+const metaCols = data ? data.meta.length : 3
+
+// Without a file the strip is assembled from the inventory row itself.
+const meta = data?.meta ?? [
+    { label: "Scope", value: system.data.scope },
+    { label: "Stack", value: system.data.stack },
+    { label: "Context", value: system.data.client ?? "—" },
+]
+---
+
+<Layout
+    title={product}
+    description={data?.standfirst ?? system.data.description ?? product}
+    footer="rule"
+    current="/work"
+>
+    <div class="case-bar">
+        <a href={href(backTo)}>&larr; All work</a>
+        <span>{standing}</span>
+    </div>
+
+    <section class="case-head">
+        <p class="eyebrow">{data?.eyebrow ?? system.data.client}</p>
+        {
+            data ? (
+                <Heading
+                    as="h1"
+                    class:list={[
+                        "display",
+                        "case-head__title",
+                        data.kind === "extended" && "case-head__title--long",
+                    ]}
+                    heading={data.title}
+                />
+            ) : (
+                <h1 class="display case-head__title case-head__title--long">{product}</h1>
+            )
+        }
+        {
+            data ? (
+                <p class="case-head__lede">{data.standfirst}</p>
+            ) : (
+                system.data.description && (
+                    <Markup as="p" class="case-head__lede" text={system.data.description} />
+                )
+            )
+        }
+    </section>
+
+    <dl class="case-meta" style={`--meta-cols: ${metaCols}`}>
+        {
+            meta.map((cell) => (
+                <div class="case-meta__cell">
+                    <dt class="case-meta__term">{cell.label}</dt>
+                    <dd class="case-meta__value">{cell.value}</dd>
+                </div>
+            ))
+        }
+    </dl>
+
+    {
+        data?.figures.map((fig) =>
+            fig.layout === "pair" ? (
+                <section class="fig-pair">
+                    {fig.items.map((item) => (
+                        <figure class="fig-pair__item">
+                            <span
+                                class:list={[
+                                    "plate",
+                                    fig.ground === "dark" && "plate--dark",
+                                    fig.ground === "white" && "plate--white",
+                                ]}
+                            >
+                                <Image
+                                    src={item.src}
+                                    alt={item.alt}
+                                    widths={[480, 720, 1024]}
+                                    sizes="(max-width: 52rem) 90vw, 44vw"
+                                    loading="lazy"
+                                />
+                            </span>
+                            <figcaption class="figcap figcap--open">
+                                <strong>
+                                    {item.number} &nbsp;·&nbsp; {item.title}
+                                </strong>
+                                {item.note && <span>{item.note}</span>}
+                            </figcaption>
+                            <p class="fig-pair__text">{item.text}</p>
+                        </figure>
+                    ))}
+                </section>
+            ) : fig.layout === "full" ? (
+                <figure class="fig">
+                    <span
+                        class:list={[
+                            "plate",
+                            "fig__wide",
+                            fig.ground === "dark" && "plate--dark",
+                            fig.ground === "white" && "plate--white",
+                        ]}
+                    >
+                        <Image
+                            src={fig.src!}
+                            alt={fig.alt!}
+                            widths={[640, 960, 1360, 1920]}
+                            sizes="(max-width: 85rem) 96vw, 1300px"
+                            loading="lazy"
+                        />
+                    </span>
+                    <figcaption class="figcap figcap--three">
+                        <span>{fig.number}</span>
+                        <span>{fig.title}</span>
+                        <span>{fig.note}</span>
+                    </figcaption>
+                </figure>
+            ) : (
+                <figure
+                    class:list={[
+                        "fig",
+                        "fig--split",
+                        fig.layout === "split-end" && "fig--split-end",
+                    ]}
+                    style={fig.shot ? `--shot: ${fig.shot}` : undefined}
+                >
+                    <span
+                        class:list={["plate", fig.ground === "dark" && "plate--dark"]}
+                        style="padding: clamp(1rem, 0.5rem + 1.6vw, 2rem)"
+                    >
+                        <Image
+                            class="fig__shot"
+                            src={fig.src!}
+                            alt={fig.alt!}
+                            widths={[320, 480, 720]}
+                            sizes="(max-width: 56rem) 70vw, 22rem"
+                            loading="lazy"
+                        />
+                    </span>
+                    <div>
+                        <figcaption class="figcap figcap--head">
+                            <strong>
+                                {fig.number} &nbsp;·&nbsp; {fig.title}
+                            </strong>
+                            {fig.note && <span>{fig.note}</span>}
+                        </figcaption>
+                        <dl class="fig__notes">
+                            {fig.notes.map((note) => (
+                                <div class="fig__note">
+                                    <dt>{note.term}</dt>
+                                    <dd>{note.text}</dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
+                </figure>
+            ),
+        )
+    }
+
+    {
+        data?.argument && (
+            <section class="sec split-even argument rule-top-ink">
+                {data.argument.map((side) => (
+                    <div>
+                        <p class="label">{side.label}</p>
+                        <p class="lead-in argument__lead">{side.lead}</p>
+                        {side.paragraphs.map((text) => (
+                            <p class="prose argument__text">{text}</p>
+                        ))}
+                    </div>
+                ))}
+            </section>
+        )
+    }
+
+    {
+        data && data.shipped.length > 0 && (
+            <section class="sec rule-top-ink">
+                <Heading
+                    as="h2"
+                    class="display sec-title sec-head"
+                    heading={{ before: "What", accent: "shipped", after: "" }}
+                    tone="ink"
+                />
+                <dl class="measure">
+                    {data.shipped.map((item, i) => (
+                        <div class:list={["spec", i === data.shipped.length - 1 && "spec--last"]}>
+                            <dt>{item.term}</dt>
+                            <dd>{item.text}</dd>
+                        </div>
+                    ))}
+                </dl>
+            </section>
+        )
+    }
+
+    {
+        !data && (
+            <section class="sec rule-top-ink">
+                <p class="sec-note" style="max-width: 62ch">
+                    This product has no written page. What is above is the sourced record from the
+                    inventory, and it is the resting state rather than a page waiting to be filled:
+                    the site does not invent scope. The full inventory is{" "}
+                    <a href={href("/work#inventory")}>on the work index</a>.
+                </p>
+            </section>
+        )
+    }
+
+    {
+        related.length > 0 && (
+            <nav class="sec rule-top-ink" aria-label={`Other ${relatedTitle}`}>
+                <div class="other__head">
+                    <Heading
+                        as="h2"
+                        class="display sec-title"
+                        heading={{ before: "Other", accent: relatedTitle, after: "" }}
+                        tone="ink"
+                    />
+                    <a class="more" href={href("/work")}>
+                        All work &rarr;
+                    </a>
+                </div>
+                <div class="other__grid">
+                    {related.map(({ page: other, entry }) => (
+                        <a class="other__link" href={href(`/work/${systemSlug(other.system)}`)}>
+                            <span
+                                class:list={[
+                                    "plate",
+                                    "other__plate",
+                                    other.index!.ground === "dark" && "plate--dark",
+                                ]}
+                            >
+                                <Image
+                                    src={other.index!.src}
+                                    alt={other.index!.alt}
+                                    widths={[320, 480, 720]}
+                                    sizes="(max-width: 52rem) 90vw, 44vw"
+                                    loading="lazy"
+                                />
+                            </span>
+                            <span class="other__eyebrow">
+                                {other.plate && <>Plate {roman(other.plate)} &nbsp;·&nbsp; </>}
+                                {entry.data.client}
+                            </span>
+                            <span class="other__title">{other.system}</span>
+                        </a>
+                    ))}
+                </div>
+            </nav>
+        )
+    }
+</Layout>

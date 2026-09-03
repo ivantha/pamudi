@@ -1,0 +1,286 @@
+---
+import type { ImageMetadata } from "astro"
+import { Image } from "astro:assets"
+import { getEntry } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Heading from "@/components/Heading.astro"
+import { href } from "@/lib/url"
+import { systemSlug } from "@/lib/slug"
+
+// ── The plates ────────────────────────────────────────────────────────────
+//
+// All fifteen are Pamudi's own, out of the "Sketches & Paintings" and "Digital
+// Drawings" rows of her Figma file. Eight were published in September 2026 and
+// checked then; the other seven arrived with this design and were looked at one
+// by one before being committed. None carries a third party's name, a client
+// mark, or anyone else's face.
+//
+// Five are studies after characters someone else owns. They are titled by what
+// they show rather than by the character, and the line under the gallery says
+// whose the character is — see `plates.attribution` in data/site.yaml. That is
+// the condition on publishing them, not decoration.
+//
+// The section takes its name from her own label on the Figma page, so the
+// category is hers rather than an invention.
+import fox from "@/assets/art/fox-digital.jpg"
+import koi from "@/assets/art/koi-watercolour.jpg"
+import pennywise from "@/assets/art/study-pennywise-graphite.jpg"
+import nightCubs from "@/assets/art/night-cubs-digital.jpg"
+import portrait from "@/assets/art/portrait-graphite.jpg"
+import macaw from "@/assets/art/macaw-digital.jpg"
+import navi from "@/assets/art/study-navi-digital.jpg"
+import treeFrog from "@/assets/art/tree-frog-watercolour.jpg"
+import tigerCub from "@/assets/art/tiger-cub-digital.jpg"
+import colourStudy from "@/assets/art/colour-study.jpg"
+import venom from "@/assets/art/study-venom-graphite.jpg"
+import kimono from "@/assets/art/kimono-digital.jpg"
+import owl from "@/assets/art/owl-digital.jpg"
+import dune from "@/assets/art/study-dune-digital.jpg"
+import inProgress from "@/assets/art/portrait-in-progress.jpg"
+
+// ── Identity work ─────────────────────────────────────────────────────────
+// Five pieces of IEEE student-conference identity, published September 2026.
+// A sixth was dropped: it is clean and probably hers, but data/community.yaml
+// carries no credit for that event and publishing it would assert one.
+import congressEmblem from "@/assets/event-design/congress-2017-emblem.png"
+import congressLinework from "@/assets/event-design/congress-2017-linework.png"
+import slsywcBadge from "@/assets/event-design/slsywc-2017-badge.jpg"
+import ss12Logo from "@/assets/event-design/ss12-logo.png"
+import ss12Tracks from "@/assets/event-design/ss12-tracks.jpg"
+
+// Her own project rather than a client's, which is why the wordmark is on the
+// sheets rather than painted out of them. The page is under /work.
+import in2oceanGuide from "@/assets/systems/in2ocean/style-guide.png"
+import in2oceanBadges from "@/assets/systems/in2ocean/badges.png"
+
+interface Plate {
+    src: ImageMetadata
+    alt: string
+    name: string
+    medium: string
+}
+
+const PLATES: Plate[] = [
+    {
+        src: fox,
+        alt: "Digital painting of a red fox lying in long grass, the fur worked in fine strokes.",
+        name: "Fox",
+        medium: "Digital",
+    },
+    {
+        src: koi,
+        alt: "Watercolour study of two koi carp turning through pale water.",
+        name: "Koi",
+        medium: "Watercolour",
+    },
+    {
+        src: pennywise,
+        alt: "Graphite drawing of a grinning clown face with a high forehead and swept-back hair, after a film character.",
+        name: "Clown, after film",
+        medium: "Graphite",
+    },
+    {
+        src: nightCubs,
+        alt: "Digital painting in near-darkness: three lion cubs huddled together in blue moonlit undergrowth, bare trees behind.",
+        name: "Cubs at night",
+        medium: "Digital",
+    },
+    {
+        src: portrait,
+        alt: "Graphite portrait study of a young woman, the shading built up in soft pencil.",
+        name: "Portrait",
+        medium: "Graphite",
+    },
+    {
+        src: macaw,
+        alt: "Digital painting of a macaw, the plumage laid in as blocks of saturated colour.",
+        name: "Macaw",
+        medium: "Digital",
+    },
+    {
+        src: navi,
+        alt: "Digital portrait of a blue-skinned figure with yellow eyes, braided hair and beaded jewellery on a black ground, after a film character.",
+        name: "Blue portrait, after film",
+        medium: "Digital",
+    },
+    {
+        src: treeFrog,
+        alt: "Watercolour study of a tree frog gripping a stem, its skin worked wet-in-wet.",
+        name: "Tree frog",
+        medium: "Watercolour",
+    },
+    {
+        src: tigerCub,
+        alt: "Digital painting of a tiger cub, the face picked out against a dark ground.",
+        name: "Tiger cub",
+        medium: "Digital",
+    },
+    {
+        src: colourStudy,
+        alt: "A colour study on paper, bands of mixed pigment tested against one another.",
+        name: "Colour study",
+        medium: "Mixed",
+    },
+    {
+        src: venom,
+        alt: "Graphite drawing of a face half transformed into a fanged creature of black tendrils, after a comics character.",
+        name: "Transformation, after comics",
+        medium: "Graphite",
+    },
+    {
+        src: kimono,
+        alt: "Digital illustration of a woman in a dark floral kimono looking back over her shoulder against a blue sky with painted clouds.",
+        name: "Kimono",
+        medium: "Digital",
+    },
+    {
+        src: owl,
+        alt: "Digital painting of an owl, the facial disc drawn as concentric strokes.",
+        name: "Owl",
+        medium: "Digital",
+    },
+    {
+        src: dune,
+        alt: "Digital ink-and-wash portrait of a figure in a desert stillsuit with a nose tube, seen in profile against blue, after a film character.",
+        name: "Stillsuit, after film",
+        medium: "Ink and wash",
+    },
+    {
+        src: inProgress,
+        alt: "A portrait of a woman with an afro and orange blossoms being painted in Procreate on an iPad, stylus in hand.",
+        name: "Portrait, in progress",
+        medium: "iPad",
+    },
+]
+
+const MARKS = [
+    {
+        src: congressEmblem,
+        alt: "Emblem for the IEEE SLSYW Congress 2017: a circular badge built from linework.",
+        caption: "Congress · emblem",
+    },
+    {
+        src: congressLinework,
+        alt: "Linework artwork for the congress identity, drawn as a single-weight outline.",
+        caption: "Congress · linework",
+    },
+    {
+        src: slsywcBadge,
+        alt: "Delegate badge design for the congress, the emblem over the wearer's details.",
+        caption: "Delegate badge",
+    },
+    {
+        src: ss12Logo,
+        alt: "Logo for IEEE SS12, Age of Innovation.",
+        caption: "SS12 · logo",
+    },
+    {
+        src: ss12Tracks,
+        alt: "Track artwork for IEEE SS12, one illustrated key visual per conference track.",
+        caption: "SS12 · tracks",
+    },
+]
+
+const SHEETS = [
+    {
+        src: in2oceanGuide,
+        alt: "The IN2Ocean light-theme style guide board: colour palette, type scale specimens, buttons in several states, form fields, cards, list rows, navigation bars and illustration examples laid out down one tall sheet.",
+        name: "IN2Ocean",
+        medium: "Style guide",
+    },
+    {
+        src: in2oceanBadges,
+        alt: "A Badges screen reading 5 of 7 earned, listing Ahoy!, Newbie, Pick Up, Buster, Survivor, Warrior and Master, each with a colour illustration of sea life or volunteers and a sentence explaining what earned it.",
+        name: "IN2Ocean",
+        medium: "Badge set",
+    },
+]
+
+const site = await getEntry("site", "site")!
+const plates = site.data.plates
+---
+
+<Layout
+    title="Plates"
+    description="Watercolour, graphite and digital work kept up alongside the product design, and the identity work behind twelve student conferences."
+    offer="plates"
+    current="/plates"
+>
+    <section class="intro rule-bottom-ink" style="--intro-measure: 24ch">
+        <p class="eyebrow">{plates.eyebrow}</p>
+        <Heading as="h1" class="display intro__title" heading={plates.headline} />
+        <p class="intro__lede">
+            {plates.lede_before}{" "}
+            <a href={href("/off-hours")}>{plates.lede_link}</a>.
+        </p>
+    </section>
+
+    <div class="gallery">
+        {
+            PLATES.map((plate, i) => (
+                <figure class="gallery__item">
+                    <Image
+                        src={plate.src}
+                        alt={plate.alt}
+                        widths={[320, 480, 640, 900]}
+                        sizes="(max-width: 34rem) 92vw, (max-width: 60rem) 44vw, 29vw"
+                        loading={i < 3 ? "eager" : "lazy"}
+                    />
+                    <figcaption class="figcap">
+                        <strong>{plate.name}</strong>
+                        <span>{plate.medium}</span>
+                    </figcaption>
+                </figure>
+            ))
+        }
+    </div>
+
+    <p class="gallery__note">{plates.attribution}</p>
+
+    <section class="sec rule-top-ink" id="identity">
+        <div class="sec-head">
+            <h2 class="sec-title">{plates.identity.title}</h2>
+            <p class="sec-note" style="max-width: 52ch">{plates.identity.note}</p>
+        </div>
+        <div class="marks">
+            {
+                MARKS.map((mark) => (
+                    <figure class="marks__item">
+                        <span class="plate marks__plate">
+                            <Image
+                                src={mark.src}
+                                alt={mark.alt}
+                                widths={[240, 360, 480]}
+                                sizes="(max-width: 36rem) 44vw, (max-width: 64rem) 30vw, 17vw"
+                                loading="lazy"
+                            />
+                        </span>
+                        <figcaption class="marks__caption">{mark.caption}</figcaption>
+                    </figure>
+                ))
+            }
+        </div>
+    </section>
+
+    <section class="sheets rule-top">
+        {
+            SHEETS.map((sheet) => (
+                <figure class="sheets__item">
+                    <a class="plate sheets__plate" href={href(`/work/${systemSlug("IN2Ocean")}`)}>
+                        <Image
+                            src={sheet.src}
+                            alt={sheet.alt}
+                            widths={[480, 720, 1024]}
+                            sizes="(max-width: 52rem) 90vw, 44vw"
+                            loading="lazy"
+                        />
+                    </a>
+                    <figcaption class="figcap">
+                        <strong>{sheet.name}</strong>
+                        <span>{sheet.medium}</span>
+                    </figcaption>
+                </figure>
+            ))
+        }
+    </section>
+</Layout>
