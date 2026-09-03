@@ -100,7 +100,8 @@ work:
   lede: >-
     Three design systems taken from nothing to a specified, implemented library.
     Ten more extended or contributed to inside product teams that already had
-    one. Client names are held back; each is described by its domain.
+    one. Client names are held back on the product work; each system is
+    described by its domain.
   inventory:
     title: Extended and contributed
     note: >-
@@ -111,6 +112,18 @@ work:
     # has not changed — but only the written ones are linked from here, so the
     # rest really are listed for the record. See src/pages/work/index.astro.
     aside: Plated entries open a page. The rest are listed for record only.
+  # The one named client on this page, and the one engagement that is brand and
+  # print rather than product. Every clause below restates the
+  # `soda-fresh-freelance` bullet in data/experience.yaml and the record in
+  # kb/career.md; nothing is added beyond them, and there are no outcome or
+  # reach claims because no source carries any.
+  freelance:
+    title: Freelance brand and print
+    note: >-
+      An independent engagement alongside the full-time role since January 2020:
+      marketing collateral, product catalogues, warranty documentation, outdoor
+      banners and user manuals for an Indonesian soda-maker brand.
+    more: See the whole set
 
 # "How it runs" — five moves, numbered in Roman like the plates.
 process:
@@ -135,6 +148,35 @@ process:
         required.
     - title: Build and transfer
       text: Styling implemented directly, style guide left in-file for onboarding.
+
+# ── Sodafresh ─────────────────────────────────────────────────────────────
+# The freelance page at /work/sodafresh. The standfirst and the meta strip are
+# the sourced record and nothing else: kb/career.md gives the legal entity, the
+# start date, the independence from the employer and the list of deliverables.
+# The three section titles name what is visibly in the artwork beneath them.
+sodafresh:
+  eyebrow: Freelance · Since 2020
+  headline:
+    before: Brand and print for
+    accent: a soda maker
+    after: ""
+  standfirst: >-
+    A continuing engagement independent of the full-time role, running since
+    January 2020 and still active. Marketing collateral, product catalogues,
+    warranty documentation, outdoor banners and user manuals, delivered on a
+    rolling basis.
+  meta:
+    - label: Client
+      value: PT Soda Fresh Indonesia
+    - label: Engagement
+      value: Freelance, rolling
+    - label: Work
+      value: Brand and print
+  sections:
+    banners: Roll-up banners
+    campaign: The campaign
+    apparel: Apparel
+    print: Print and point of sale
 
 # ── Plates ────────────────────────────────────────────────────────────────
 plates:

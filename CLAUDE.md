@@ -47,9 +47,20 @@ Pages. Static Pages is the default until something real breaks it.
 ### The pages
 
 `/` (Home), `/work`, `/plates`, `/off-hours`, `/profile`, `/contact` and `/cv`,
-plus `/work/[slug]` for every product in the inventory and a `/404`. The header
-carries six of those, in two groups either side of the name; `/cv` is reached
-from Profile and Contact and marks Profile in the bar.
+plus `/work/[slug]` for every product in the inventory, `/work/sodafresh` for
+the one freelance engagement, and a `/404`. The header carries six of those, in
+two groups either side of the name; `/cv` is reached from Profile and Contact
+and marks Profile in the bar.
+
+**`/work/sodafresh` is a static route, not a `[slug]` page**, and must stay one.
+Sodafresh is brand and print rather than a product, so it is not in
+`data/systems.yaml` — and it must not be added there, because that file is
+shared with the Typst CV's grouped inventory table and feeds the derived
+"thirteen of twenty-four products" count on the work index. The page is
+hand-built in `src/pages/work/sodafresh.astro`, borrowing the case-page classes
+(`case-bar`, `case-head`, `case-meta`, `fig`, `figcap`) without joining the
+collection. Astro prefers the static route, so it wins over `[slug].astro`
+without any special handling.
 
 The home page carries the argument (hero, one painting, the four figures, three
 screens, the two teasers); `/work` is the three owned systems argued one at a
@@ -263,6 +274,18 @@ decision. See the callout at the top of `cv/CLAUDE.md`. Do not add an image,
 name, or metric unless it is confirmed publishable, and do not de-anonymise an
 entry without her.
 
+**One entry is de-anonymised, and it is the exception that shows where the line
+is.** `data/experience.yaml` names **Sodafresh** (PT Soda Fresh Indonesia), on
+Oshan's explicit call of 2026-09-03, in the same commit that published its
+artwork at `/work/sodafresh`. Three things make it unlike the rest: it is an
+independent freelance engagement rather than an employer's client, so no
+employer NDA reaches it; its entire output is public advertising already in the
+world; and it is brand and print rather than a product, so it is not in
+`data/systems.yaml` at all. **The thirteen product engagements stay
+anonymised**, and nothing here loosens that. Do not read this as a precedent for
+the next client; read it as the one case where the reasons were all on the same
+side.
+
 The photo-ID screens are the first images to pass that test, and how they passed
 is the procedure for the next set. Each frame was rendered and looked at before
 it was committed, and each was checked for three things: a client logo or
@@ -293,11 +316,10 @@ participant grid, and a promotional card whose embedded call strip carries five
 attendees in full. Both are `blocked`. Nine more are clean group and workshop
 photographs, dropped because each is a room of identifiable people who did not
 agree to appear here and none shows anything the four published frames do not.
-On the freelance page, **all nine pieces carry the client's wordmark** —
-`data/experience.yaml` anonymises that client to "Indonesian consumer brand", so
-publishing the artwork names it. They are blocked for that reason alone, which
-is a decision for Pamudi rather than a defect: one word from her turns them into
-a portfolio section, and the anonymisation should be lifted in the same commit.
+On the freelance page, **all nine pieces carry the client's wordmark**, and
+`data/experience.yaml` then anonymised that client to "Indonesian consumer
+brand", so publishing the artwork named it. They were blocked for that reason
+alone. **That block was lifted on 2026-09-03; see the Sodafresh entry below.**
 
 What that pass did publish: five pieces of IEEE student-conference identity work
 (`src/assets/event-design/`), four photographs of speaking and mentoring
@@ -483,7 +505,9 @@ shown. Whether to bring the PDF across is a decision for Pamudi, not a tidy-up;
 - `src/assets/systems/<product>/` holds a product's published screens.
   `src/assets/art/`, `src/assets/event-design/` and `src/assets/marketing/` are
   the three sets on `/plates`; `src/assets/community/` and
-  `src/assets/hobbies/` are the two on `/off-hours`. Most of it came out of
+  `src/assets/hobbies/` are the two on `/off-hours`;
+  `src/assets/soda-fresh/` is the freelance set, four of it on `/work` and all
+  eight on `/work/sodafresh`. Most of it came out of
   Pamudi's own Figma file and was checked frame by frame before committing —
   read the header of `src/content/systems/photo-id-compliance-app.mdx` and the
   comments above the picture arrays in `src/pages/plates.astro` and
@@ -506,6 +530,27 @@ shown. Whether to bring the PDF across is a decision for Pamudi, not a tidy-up;
   reason and published anyway, on Oshan's explicit call** — the Mortal Kombat,
   Call of Duty and Need for Speed artwork is three publishers'. Treat borrowed
   entertainment IP as a question for her, not a default yes.
+- **The Sodafresh freelance set, 2026-09-03, and the one lifted anonymisation.**
+  Eight of nine pieces published to `src/assets/soda-fresh/` and shown at
+  `/work/sodafresh`: two roll-up banners, two campaign creatives, a t-shirt back
+  print, three hoodie mockups, a distributor price sheet and a stockist poster.
+  The ninth was dropped because it is **byte-identical** to another, confirmed
+  by MD5 on the exported PNGs rather than assumed from the thumbnail; the
+  manifest had recorded it as a duplicate and was right.
+  **This is the only client on the site that is named**, on Oshan's explicit
+  call. What makes it an exception rather than a precedent: Sodafresh is an
+  independent engagement rather than an employer's client, and its entire output
+  is public advertising, so there was no NDA to weigh. The thirteen products in
+  `data/systems.yaml` are unaffected. Lifting the wordmark objection lifts only
+  the wordmark objection, so all nine were still looked at one by one, and two
+  findings came out of that: **the price sheet, not the banner, is the frame
+  carrying a phone number** (the manifest had it on the wrong one, and it is the
+  client's published business hotline besides), and **two pieces name a third
+  party** — the stockist poster locks up with Good Stuff, a cafe and eco store,
+  and the co-branded roll-up carries Nourishme Organics' mark and WhatsApp
+  number. Both were flagged and **published untouched on Oshan's explicit
+  call**, the same way Gamefest was. Treat a third party's mark as a question
+  for her, not a default yes. Nothing in this set is redacted.
 - **`scripts/fetch-figma.mjs` is how the next batch arrives.** It is the
   manifest for the whole file: fifteen pages, 126 nodes, each with a scale and a
   recorded verdict (`published`, `pending`, `dropped`, `blocked`). `--list`

@@ -398,6 +398,33 @@ const site = defineCollection({
             headline: heading,
             lede: z.string(),
             inventory: z.object({ title: z.string(), note: z.string(), aside: z.string() }),
+            freelance: z.object({
+                title: z.string(),
+                note: z.string(),
+                more: z.string(),
+            }),
+        }),
+        /**
+         * The one freelance engagement with a page of its own.
+         *
+         * It is not in `data/systems.yaml` and must not be added there: that
+         * file is shared with the Typst CV's grouped inventory table and feeds
+         * the derived "thirteen of twenty-four products" count on /work. A
+         * brand-and-print engagement is neither a design system nor a product,
+         * so it gets a hand-built page at /work/sodafresh instead, borrowing the
+         * case-page furniture without joining the collection.
+         */
+        sodafresh: z.object({
+            eyebrow: z.string(),
+            headline: heading,
+            standfirst: z.string(),
+            meta: z.array(z.object({ label: z.string(), value: z.string() })).min(1),
+            sections: z.object({
+                banners: z.string(),
+                campaign: z.string(),
+                apparel: z.string(),
+                print: z.string(),
+            }),
         }),
         process: z.object({
             title: heading,

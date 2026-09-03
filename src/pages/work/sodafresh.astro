@@ -1,0 +1,275 @@
+---
+import { Image } from "astro:assets"
+import { getCollection, getEntry } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Heading from "@/components/Heading.astro"
+import { href } from "@/lib/url"
+
+/**
+ * The one freelance engagement with a page of its own.
+ *
+ * This is a static route rather than an entry in the `systems` collection, and
+ * deliberately so. `data/systems.yaml` is shared with the Typst CV's grouped
+ * inventory table and feeds the derived "thirteen of twenty-four products"
+ * count on the work index; a brand-and-print engagement is neither a design
+ * system nor a product, so putting it there would corrupt both. Astro prefers a
+ * static route over `[slug].astro`, so this page simply borrows the case-page
+ * furniture without joining the collection.
+ *
+ * ── Provenance ─────────────────────────────────────────────────────────────
+ *
+ * The prose here is of two kinds and no third, the same standard the written
+ * system pages hold to: the standfirst and the meta strip restate the sourced
+ * record in `kb/career.md` and the `soda-fresh-freelance` bullet in
+ * `data/experience.yaml`, and every figure caption describes what is visibly in
+ * the artwork beside it. There are no outcomes, no metrics and no adoption
+ * claims, because no source carries any. This page is still Pamudi's to
+ * correct.
+ *
+ * ── Why the client is named ────────────────────────────────────────────────
+ *
+ * Every other client on this site is anonymised to a domain descriptor.
+ * Sodafresh is not, on Oshan's explicit call of 2026-09-03, and the
+ * anonymisation in `data/experience.yaml` was lifted in the same commit. It is
+ * an independent engagement rather than an employer's client, and its entire
+ * output is public advertising, so there was no NDA to weigh. The thirteen
+ * product engagements in `data/systems.yaml` are unaffected.
+ *
+ * ── What the frame-by-frame check found ────────────────────────────────────
+ *
+ * Nine frames were exported from the Figma file's "SodaFresh (Freelance)" page
+ * and looked at one by one. Eight are here. One was dropped: the second
+ * Instagram creative is byte-identical to the first, confirmed by MD5, not
+ * merely similar.
+ *
+ * Two carry a third party's mark and were published on Oshan's explicit call
+ * (2026-09-03) after being flagged. The store poster locks up with Good Stuff,
+ * a café and eco store in Amed; the second roll-up banner is a co-branded
+ * campaign with Nourishme Organics and carries that company's WhatsApp number
+ * in its footer. Both are public advertisements the partners were party to, so
+ * nothing here is being revealed. Treat a third party's mark as a question for
+ * Pamudi rather than a default yes, the way the borrowed game artwork on the
+ * Gamefest banner was.
+ *
+ * Nothing in these images is redacted. The prices on the distributor sheet are
+ * the client's own published retail prices, and the contact block beneath them
+ * is its published business hotline, not a person's line.
+ */
+import bannerDoorSticker from "@/assets/soda-fresh/banner-door-sticker.jpg"
+import bannerNourishme from "@/assets/soda-fresh/banner-nourishme.jpg"
+import instagramCampaign from "@/assets/soda-fresh/instagram-campaign.jpg"
+import campaignStrip from "@/assets/soda-fresh/campaign-strip.jpg"
+import hoodies from "@/assets/soda-fresh/hoodies.png"
+import apparelBack from "@/assets/soda-fresh/apparel-back.png"
+import priceSheet from "@/assets/soda-fresh/price-sheet.jpg"
+import goodStuffPoster from "@/assets/soda-fresh/good-stuff-poster.jpg"
+
+const site = await getEntry("site", "site")!
+const page = site.data.sodafresh
+// The dates come off the career record rather than being typed here, so the
+// page cannot drift from the entry the Profile page renders.
+const experience = await getCollection("experience")
+const role = experience.find((e) => e.id === "soda-fresh-freelance")
+const standing = role?.data.dates ?? "Freelance"
+---
+
+<Layout
+    title="Sodafresh"
+    description="Brand and print design for an Indonesian soda-maker brand: roll-up banners, campaign creative, apparel and a distributor price sheet."
+    footer="rule"
+    current="/work"
+>
+    <div class="case-bar">
+        <a href={href("/work#freelance")}>&larr; All work</a>
+        <span>{standing}</span>
+    </div>
+
+    <section class="case-head">
+        <p class="eyebrow">{page.eyebrow}</p>
+        <Heading as="h1" class="display case-head__title" heading={page.headline} />
+        <p class="case-head__lede">{page.standfirst}</p>
+    </section>
+
+    <dl class="case-meta" style={`--meta-cols: ${page.meta.length}`}>
+        {
+            page.meta.map((cell) => (
+                <div class="case-meta__cell">
+                    <dt class="case-meta__term">{cell.label}</dt>
+                    <dd class="case-meta__value">{cell.value}</dd>
+                </div>
+            ))
+        }
+    </dl>
+
+    <section class="sec rule-top-ink" id="banners">
+        <div class="sec-head">
+            <h2 class="sec-title">{page.sections.banners}</h2>
+        </div>
+        <div class="soda-banners">
+            <figure class="soda-banners__item">
+                <span class="plate soda-banners__plate">
+                    <Image
+                        src={bannerDoorSticker}
+                        alt="Tall roll-up banner: the Sodafresh wordmark and web address stacked over a Home Soda Maker headline set in blue, pink and orange, three ruled claims down the left edge, a CO2 cylinder running the full height of the right, and five soda makers along the foot."
+                        widths={[320, 480, 720, 1100]}
+                        sizes="(max-width: 52rem) 88vw, 42vw"
+                        loading="eager"
+                    />
+                </span>
+                <figcaption class="figcap figcap--open">
+                    <strong>Door sticker edition</strong>
+                    <span>Roll-up</span>
+                </figcaption>
+            </figure>
+            <figure class="soda-banners__item">
+                <span class="plate soda-banners__plate">
+                    <Image
+                        src={bannerNourishme}
+                        alt="The companion co-branded roll-up banner, Nourishme Organics locked up with Sodafresh above the same Home Soda Maker headline, a strawberry drink photograph filling the right half and the range of soda makers along the foot."
+                        widths={[320, 480, 720, 1100]}
+                        sizes="(max-width: 52rem) 88vw, 42vw"
+                        loading="eager"
+                    />
+                </span>
+                <figcaption class="figcap figcap--open">
+                    <strong>Co-branded edition</strong>
+                    <span>Roll-up</span>
+                </figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section class="sec rule-top-ink" id="campaign">
+        <div class="sec-head">
+            <h2 class="sec-title">{page.sections.campaign}</h2>
+        </div>
+
+        <figure class="fig">
+            <span class="plate fig__wide">
+                <Image
+                    src={instagramCampaign}
+                    alt="Landscape campaign creative: Show Us Your Soda Maker set large on the right over a tag-us line and terms, with six boxed soda makers scattered across curved bands of orange, pink and blue on the left."
+                    widths={[640, 960, 1360, 1600]}
+                    sizes="(max-width: 85rem) 96vw, 1300px"
+                    loading="lazy"
+                />
+            </span>
+            <figcaption class="figcap figcap--three">
+                <span>Campaign</span>
+                <span>Show Us Your Soda Maker</span>
+                <span class="figcap__note">Email and social</span>
+            </figcaption>
+        </figure>
+
+        <figure class="fig">
+            <span class="plate fig__wide">
+                <Image
+                    src={campaignStrip}
+                    alt="Three web banner sizes of the same campaign stacked one above another, each running the wordmark and headline on the left, the product cluster through the middle and the tag-us call to action on the right."
+                    widths={[640, 960, 1360, 1600]}
+                    sizes="(max-width: 85rem) 96vw, 1300px"
+                    loading="lazy"
+                />
+            </span>
+            <figcaption class="figcap figcap--three">
+                <span>Campaign</span>
+                <span>Banner sizes</span>
+                <span class="figcap__note">Three ratios, one layout</span>
+            </figcaption>
+        </figure>
+    </section>
+
+    <section class="sec rule-top-ink" id="apparel">
+        <div class="sec-head">
+            <h2 class="sec-title">{page.sections.apparel}</h2>
+        </div>
+
+        <figure class="fig">
+            <span class="plate plate--dark fig__wide">
+                <Image
+                    src={hoodies}
+                    alt="Three hoodie mockups in white, dusty pink and charcoal, each carrying a four-colour stripe band across the chest with the Sodafresh monogram set into it."
+                    widths={[640, 960, 1360, 1600]}
+                    sizes="(max-width: 85rem) 96vw, 1300px"
+                    loading="lazy"
+                />
+            </span>
+            <figcaption class="figcap figcap--three">
+                <span>Merchandise</span>
+                <span>Hoodies, stripe option</span>
+                <span class="figcap__note">Three colourways</span>
+            </figcaption>
+        </figure>
+
+        <figure class="fig">
+            <span class="plate plate--white fig__wide">
+                <Image
+                    src={apparelBack}
+                    alt="Back print artwork on a black t-shirt: The Soda Maker set in distressed capitals beside a bottle silhouette, closed by the Sodafresh wordmark reversed out of a red block."
+                    widths={[480, 720, 960, 1200]}
+                    sizes="(max-width: 85rem) 96vw, 1300px"
+                    loading="lazy"
+                />
+            </span>
+            <figcaption class="figcap figcap--three">
+                <span>Merchandise</span>
+                <span>T-shirt, back print</span>
+                <span class="figcap__note">Distressed lettering</span>
+            </figcaption>
+        </figure>
+    </section>
+
+    <section class="sec rule-top-ink" id="print">
+        <div class="sec-head">
+            <h2 class="sec-title">{page.sections.print}</h2>
+        </div>
+        <div class="fig-pair">
+            <figure class="fig-pair__item">
+                <span class="plate">
+                    <Image
+                        src={priceSheet}
+                        alt="Distributor price sheet: nine bundles in a three-by-three grid, each headed in blue, orange or pink with the pack shot beneath it and the rupiah price on a cut corner, over a footer of cities and contact details."
+                        widths={[320, 480, 720, 840]}
+                        sizes="(max-width: 52rem) 88vw, 42vw"
+                        loading="lazy"
+                    />
+                </span>
+                <figcaption class="figcap figcap--open">
+                    <strong>Distributor price sheet</strong>
+                    <span>Nine bundles</span>
+                </figcaption>
+            </figure>
+            <figure class="fig-pair__item">
+                <span class="plate">
+                    <Image
+                        src={goodStuffPoster}
+                        alt="Store poster locking up Sodafresh with Good Stuff, a café and eco store, over three vertical colour bands, the machine and cylinders framed in a white burst and a CO2 Refill badge in the corner."
+                        widths={[320, 480, 720, 1191]}
+                        sizes="(max-width: 52rem) 88vw, 42vw"
+                        loading="lazy"
+                    />
+                </span>
+                <figcaption class="figcap figcap--open">
+                    <strong>Stockist poster</strong>
+                    <span>Point of sale</span>
+                </figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <nav class="sec rule-top-ink" aria-label="Other work">
+        <div class="other__head">
+            <Heading
+                as="h2"
+                class="display sec-title"
+                heading={{ before: "Other", accent: "work", after: "" }}
+                tone="ink"
+            />
+            <a class="more" href={href("/work")}>All work &rarr;</a>
+        </div>
+        <p class="sec-note" style="max-width: 62ch">
+            The product design sits on <a href={href("/work")}>the work index</a>, and the paintings
+            and identity work are <a href={href("/plates")}>on plates</a>.
+        </p>
+    </nav>
+</Layout>

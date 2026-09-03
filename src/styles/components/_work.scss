@@ -184,3 +184,97 @@
         grid-column: 2;
     }
 }
+
+// ---- Freelance brand and print ----------------------------------------------
+// The one named client on the index, and the one engagement that is collateral
+// rather than product. A four-up contact sheet on the index that opens the page
+// at /work/sodafresh.
+//
+// Modelled on `.marks` in _plates.scss rather than shared with it: this set runs
+// from a square campaign creative to a roll-up banner near 1:2.8, so the plate
+// is taller than the square one a logo wants. Keeping the two separate leaves
+// the plates page untouched.
+
+.collateral {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.75rem, 0.4318rem + 1.4vw, 1.75rem);
+
+    @media (max-width: 64rem) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @media (max-width: 36rem) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.collateral__item {
+    margin: 0;
+}
+
+.collateral__link {
+    display: block;
+    text-decoration: none;
+}
+
+.collateral__plate {
+    aspect-ratio: 4 / 5;
+    padding: clamp(0.5rem, 0.3182rem + 0.8vw, 0.875rem);
+}
+
+.collateral__caption {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tiny);
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+// The link that closes the section, on its own line under the sheet.
+.collateral__more {
+    display: block;
+    margin-top: clamp(1.25rem, 1rem + 1vw, 2rem);
+}
+
+// ---- The Sodafresh page -----------------------------------------------------
+// A roll-up banner is close to 1:2.8. Left to fill its column it runs well past
+// two screens, so the height is capped and the width follows, with the plate
+// centring what is left.
+//
+// This is its own grid rather than `.fig-pair` plus an override, and the reason
+// is the cascade: `.fig-pair__item img` sets `width: 100%` in _case.scss, which
+// global.scss loads *after* this file. An equal-specificity rule here would
+// lose silently and leave the banner stretched to the column, which is the same
+// failure mode the `:where()` wrapping in _reset.scss exists to prevent.
+
+.soda-banners {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap);
+    padding-block: clamp(1.75rem, 1.4091rem + 1.5vw, 3rem);
+
+    @media (max-width: 52rem) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.soda-banners__item {
+    margin: 0;
+}
+
+.soda-banners__plate {
+    display: flex;
+    justify-content: center;
+    padding: clamp(0.5rem, 0.3864rem + 0.5vw, 0.875rem);
+
+    img {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: min(78vh, 880px);
+    }
+}

@@ -109,7 +109,12 @@
 - id: soda-fresh-freelance
   include_in: [web]
   role: Freelance Designer
-  org: Indonesian consumer brand
+  # De-anonymised 2026-09-03 on Oshan's explicit call, in the same commit that
+  # published the artwork at /work/sodafresh. This is an independent engagement
+  # rather than an employer's client, and its entire output is public
+  # advertising, so there was no NDA to weigh. The thirteen product engagements
+  # in data/systems.yaml are unaffected and stay anonymised.
+  org: Sodafresh
   place: remote
   dates: Jan 2020 – Present
   bullets:

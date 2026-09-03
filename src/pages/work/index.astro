@@ -10,10 +10,54 @@ import { roman } from "@/lib/roman"
 import { spell } from "@/lib/words"
 import { isWebVisible } from "@/lib/variants"
 
+// ── The freelance set ─────────────────────────────────────────────────────
+//
+// Four of the eight pieces published at /work/sodafresh, as a contact sheet
+// that opens the page. Sodafresh is the one named client on this site: it is an
+// independent engagement rather than an employer's client and its whole output
+// is public advertising, so the anonymisation in data/experience.yaml was
+// lifted on Oshan's explicit call, 2026-09-03. The thirteen products above are
+// unaffected. Provenance and the frame-by-frame check are recorded in the
+// header of src/pages/work/sodafresh.astro.
+//
+// Alt text lives here rather than in data/: it describes this crop at this
+// size, which is a property of the page and not of the career record.
+import bannerDoorSticker from "@/assets/soda-fresh/banner-door-sticker.jpg"
+import instagramCampaign from "@/assets/soda-fresh/instagram-campaign.jpg"
+import hoodies from "@/assets/soda-fresh/hoodies.png"
+import priceSheet from "@/assets/soda-fresh/price-sheet.jpg"
+
 const site = await getEntry("site", "site")!
 const personal = await getEntry("personal", "personal")!
 const systems = (await getCollection("systems")).filter(isWebVisible)
 const pages = await getCollection("systemPages")
+
+const COLLATERAL = [
+    {
+        src: bannerDoorSticker,
+        alt: "Tall Sodafresh roll-up banner, the wordmark over a Home Soda Maker headline with a CO2 cylinder running its full height.",
+        caption: "Roll-up banner",
+        dark: false,
+    },
+    {
+        src: instagramCampaign,
+        alt: "Landscape campaign creative reading Show Us Your Soda Maker, boxed products scattered over curved bands of orange, pink and blue.",
+        caption: "Campaign",
+        dark: false,
+    },
+    {
+        src: hoodies,
+        alt: "Three hoodie mockups in white, pink and charcoal, each with a four-colour stripe band and the Sodafresh monogram.",
+        caption: "Merchandise",
+        dark: true,
+    },
+    {
+        src: priceSheet,
+        alt: "Distributor price sheet laying nine product bundles out in a three-by-three grid, each with its rupiah price on a cut corner.",
+        caption: "Price sheet",
+        dark: false,
+    },
+]
 
 const work = site.data.work
 const pageOf = new Map(pages.map((p) => [p.data.system, p.data]))
@@ -180,6 +224,44 @@ const isLast = (i: number) => i >= rows.length - 2
                 ))
             }
         </div>
+    </section>
+
+    <section class="sec rule-top-ink" id="freelance">
+        <div class="sec-head">
+            <h2 class="sec-title">{work.freelance.title}</h2>
+            <p class="sec-note" style="max-width: 56ch">{work.freelance.note}</p>
+        </div>
+
+        <div class="collateral">
+            {
+                COLLATERAL.map((piece) => (
+                    <figure class="collateral__item">
+                        <a class="collateral__link" href={href("/work/sodafresh")}>
+                            <span
+                                class:list={[
+                                    "plate",
+                                    "collateral__plate",
+                                    piece.dark && "plate--dark",
+                                ]}
+                            >
+                                <Image
+                                    src={piece.src}
+                                    alt={piece.alt}
+                                    widths={[240, 360, 480]}
+                                    sizes="(max-width: 36rem) 44vw, (max-width: 64rem) 30vw, 22vw"
+                                    loading="lazy"
+                                />
+                            </span>
+                            <figcaption class="collateral__caption">{piece.caption}</figcaption>
+                        </a>
+                    </figure>
+                ))
+            }
+        </div>
+
+        <a class="more collateral__more" href={href("/work/sodafresh")}>
+            {work.freelance.more} &rarr;
+        </a>
     </section>
 
     <Process id="process" />

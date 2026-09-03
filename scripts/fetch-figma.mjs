@@ -1046,73 +1046,92 @@ const PAGES = [
             "experience.yaml role `soda-fresh-freelance`, org given as 'Indonesian consumer brand'",
         mode: "fill",
         nodes: [
-            // Nine pieces of consumer marketing collateral — a price sheet,
+            // Nine pieces of consumer marketing collateral: a price sheet,
             // store posters, roll-up banners, apparel, Instagram creatives.
-            // They are clean of third-party data and they were made to be seen
-            // in public.
             //
-            // They are blocked anyway, and for one reason only: the brand's
-            // wordmark is on every single one, and `data/experience.yaml`
-            // anonymises this client to "Indonesian consumer brand". Publishing
-            // the artwork names the client. That may well be fine — a freelance
-            // brand engagement whose whole output is public advertising is not
-            // an obvious NDA case — but the repo's rule is that de-anonymising
-            // an entry is Pamudi's call and not ours. One word from her turns
-            // all nine into a portfolio section, and the anonymisation in
-            // `experience.yaml` should be lifted in the same commit.
+            // All nine were blocked until 2026-09-03, for one reason only. The
+            // brand's wordmark is on every single one, and `experience.yaml`
+            // then anonymised this client to "Indonesian consumer brand", so
+            // publishing the artwork named the client.
+            //
+            // **Oshan lifted the anonymisation on 2026-09-03**, and
+            // `data/experience.yaml` was de-anonymised in the same commit that
+            // published these. The reasoning is worth keeping, because it is
+            // what makes this an exception rather than a precedent: Sodafresh
+            // is an independent engagement, not an employer's client, and its
+            // entire output is public advertising, so there was no NDA to
+            // weigh. The thirteen product engagements in `data/systems.yaml`
+            // are unaffected and stay anonymised.
+            //
+            // All nine were then looked at frame by frame, because lifting the
+            // wordmark objection lifts only the wordmark objection. Eight are
+            // published at /work/sodafresh. Nothing is redacted.
+            //
+            // Two carry a third party's mark and were published on Oshan's
+            // explicit call after being flagged, the way the borrowed game
+            // artwork on the Gamefest banner was. Treat the next one as a
+            // question for Pamudi rather than a default yes.
             {
                 id: "22:295202",
                 slug: "price-sheet",
-                verdict: "blocked",
-                note: "Distributor price sheet — CARRIES THE BRAND WORDMARK",
+                verdict: "published",
+                asset: "soda-fresh/price-sheet.jpg",
+                note: "Distributor price sheet. Prices are the client's own published retail prices and the footer is its published business hotline, not a person's line",
             },
             {
                 id: "22:295201",
                 slug: "good-stuff-poster",
-                verdict: "blocked",
-                note: "Store poster — CARRIES THE BRAND WORDMARK",
+                verdict: "published",
+                asset: "soda-fresh/good-stuff-poster.jpg",
+                note: "Store poster. THIRD-PARTY MARK: locks up with Good Stuff, a cafe and eco store in Amed. No contact data. Published on Oshan's explicit call, 2026-09-03",
             },
             {
                 id: "22:295200",
                 slug: "apparel-back",
-                verdict: "blocked",
-                note: "T-shirt artwork — CARRIES THE BRAND WORDMARK",
+                verdict: "published",
+                asset: "soda-fresh/apparel-back.png",
+                note: "T-shirt back print. Clean: no people, no third-party marks, no contact data",
             },
             {
                 id: "22:295199",
                 slug: "hoodies",
-                verdict: "blocked",
-                note: "Hoodie mockups — CARRIES THE BRAND MONOGRAM",
+                verdict: "published",
+                asset: "soda-fresh/hoodies.png",
+                note: "Hoodie mockups, three colourways. Clean. Black ground, so it takes plate--dark",
             },
             {
                 id: "22:295203",
                 slug: "banner-door-sticker",
-                verdict: "blocked",
-                note: "Roll-up banner — WORDMARK, plus the company's own phone number",
+                verdict: "published",
+                asset: "soda-fresh/banner-door-sticker.jpg",
+                note: "Roll-up banner. Clean: single wordmark and a public URL. NB the old note put a phone number here; there is none. That was the Nourishme variant below",
             },
             {
                 id: "22:295207",
                 slug: "banner-nourishme",
-                verdict: "blocked",
-                note: "Roll-up banner, co-branded — TWO WORDMARKS",
+                verdict: "published",
+                asset: "soda-fresh/banner-nourishme.jpg",
+                note: "Roll-up banner, co-branded. THIRD-PARTY MARK plus that company's WhatsApp number in the footer: Nourishme Organics, equal top billing. Published untouched on Oshan's explicit call, 2026-09-03",
             },
             {
                 id: "22:295204",
                 slug: "instagram-1",
-                verdict: "blocked",
-                note: "Campaign creative — WORDMARK and social handle",
+                verdict: "published",
+                asset: "soda-fresh/instagram-campaign.jpg",
+                note: "Campaign creative, landscape. Clean: the social handle is the client's own",
             },
             {
                 id: "22:295205",
                 slug: "instagram-2",
-                verdict: "blocked",
-                note: "Campaign creative, duplicate of the above",
+                verdict: "dropped",
+                note: "BYTE-IDENTICAL to instagram-1, confirmed by MD5 on the exported PNGs rather than assumed from the thumbnail. Not merely similar",
             },
             {
                 id: "22:295206",
                 slug: "campaign-strip",
-                verdict: "blocked",
-                note: "Campaign strip — WORDMARK and social handle",
+                verdict: "published",
+                asset: "soda-fresh/campaign-strip.jpg",
+                note: "Three web banner sizes of the same campaign in one frame. Clean",
             },
         ],
     },
