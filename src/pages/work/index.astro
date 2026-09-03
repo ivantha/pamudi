@@ -36,15 +36,21 @@ const eyebrow = `${work.eyebrow} · ${spell(client.length, true)} of ${spell(des
 // row cannot hold a picture.
 const plated = rest.filter((s) => pageOf.get(s.data.product)?.index)
 
-// The right-hand cell of each row: the sourced scope, and the plate number
-// where one exists. "Extended, 4 modules" becomes "Extended" once a plate
-// number follows it, because the modules are stated on the page it opens.
+// Only a product with a written page is a link, and it carries the arrow that
+// says so. The rest are listed for the record. Their page still exists at the
+// same URL and still carries the sourced facts — that rule has not changed —
+// but a row that opens a page saying "nothing more is written here" is a
+// promise the list should not make.
+//
+// The right-hand cell is the sourced scope plus the plate number where one
+// exists. "Extended, 4 modules" becomes "Extended" once a plate number follows
+// it, because the modules are stated on the page it opens.
 const rows = rest.map((s) => {
     const page = pageOf.get(s.data.product)
     const base = s.data.scope.split(",")[0].trim()
     return {
         product: s.data.product,
-        to: `/work/${systemSlug(s.data.product)}`,
+        to: page ? `/work/${systemSlug(s.data.product)}` : null,
         scope: page?.plate ? `${base} · Plate ${roman(page.plate)}` : s.data.scope,
     }
 })
@@ -162,9 +168,13 @@ const isLast = (i: number) => i >= rows.length - 2
             {
                 rows.map((row, i) => (
                     <div class:list={["row", isLast(i) && "row--last"]}>
-                        <a class="row__name" href={href(row.to)}>
-                            {row.product}
-                        </a>
+                        {row.to ? (
+                            <a class="row__name" href={href(row.to)}>
+                                {row.product} &nbsp;&rarr;
+                            </a>
+                        ) : (
+                            <span class="row__name">{row.product}</span>
+                        )}
                         <span class="row__scope">{row.scope}</span>
                     </div>
                 ))

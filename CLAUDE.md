@@ -75,7 +75,12 @@ A product's page is an optional MDX file in `src/content/systems/` whose
 `system:` field must match `product` exactly; the build throws on a file that
 names a product the inventory does not have. With no file, the page renders the
 sourced facts and the two nearest written pages in the same band, and says on
-the page that nothing more is written. **That is the resting state, not a stub
+the page that nothing more is written. **The work index does not link it.** Only
+a written product is a link there, and it carries an arrow that says so; the
+rest are listed for the record. The page still exists at the same URL — that is
+the rule below, and the `/systems/<slug>` redirects depend on it — but a row
+that opens a page saying "nothing more is written here" is a promise the list
+should not make. **That is the resting state, not a stub
 to fill with plausible-sounding prose** — seven of the fourteen are deliberately
 in it. See "Whose site this is".
 
@@ -203,9 +208,7 @@ What that leaves, as of September 2026:
   and says nothing the sourced data does not support, but the phrasing came from
   the design rather than from her, which is why it sits in its own file with the
   provenance in its header. **Do not extend it with invented copy** — strings
-  enter it from a design she has approved, or from her. The one exception on the
-  page is noted in the file itself: the work index's aside, reworded because the
-  design's sentence was not true of a site that gives every product a URL.
+  enter it from a design she has approved, or from her.
 - **The placeholder headline is gone.** `personal.yaml` used to carry a
   layout stand-in for the home page; the design supplies a real headline for
   every page, so the field was removed rather than left sitting there. Nothing

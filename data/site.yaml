@@ -106,12 +106,11 @@ work:
     note: >-
       Six systems extended across banking, manufacturing, mining-site tooling,
       biometric identity and warehouse management, and four further engagements.
-    # The design's line here reads "Plated entries open a page. The rest are
-    # listed for record only." Every product in the inventory does have a page,
-    # which is a rule this repo keeps (CLAUDE.md, and src/pages/work/[slug].astro):
-    # an unwritten product should have a URL carrying its sourced record rather
-    # than a 404. So the sentence says what is true instead.
-    aside: Plated entries carry a case; the rest carry the sourced record.
+    # True of the list, and the list is what it describes. Every product does
+    # still have a page at /work/<slug> carrying its sourced record — that rule
+    # has not changed — but only the written ones are linked from here, so the
+    # rest really are listed for the record. See src/pages/work/index.astro.
+    aside: Plated entries open a page. The rest are listed for record only.
 
 # "How it runs" — five moves, numbered in Roman like the plates.
 process:
