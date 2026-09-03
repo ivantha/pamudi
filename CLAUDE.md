@@ -445,6 +445,17 @@ after}` shape every title in `data/` and `src/content/systems/` uses, so the
   `--rule-strong` is ink and closes a section. `.rule-top`, `.rule-top-ink`,
   `.rule-bottom` and `.rule-bottom-ink` are the four utilities. Swapping them is
   what stops the page reading as a ruled sheet.
+- **`--header-h` is three measured values, and one of them is pinned to a
+  breakpoint.** It is the only consumer of `scroll-padding-top`, so it is what
+  makes an in-page anchor land below the sticky bar rather than under it. The
+  bar is 74px on a desktop, 87 to 90px once it stacks at 56rem, and 122px below
+  26.5rem where the six nav links stop fitting one line. That last number is
+  derived, not chosen: the links stop fitting at 413px and the breakpoint sits
+  11px above so a font swap cannot cross it. **Changing the nav's gap, tracking
+  or labels moves that width**, so re-measure and move the breakpoint with it;
+  the tighter gap for narrow phones is deliberately kept at a different
+  breakpoint (22rem) so the two cannot shift each other. A single fixed value
+  here is what buried every anchored heading on a phone by 49px.
 
 `--accent-bright` (#9c7a3c) is the one colour with a usage rule attached: at
 3.80:1 on paper it clears the large-text floor and nothing else. The italic word
