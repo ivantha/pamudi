@@ -481,15 +481,31 @@ shown. Whether to bring the PDF across is a decision for Pamudi, not a tidy-up;
 - Every image needs real `alt` text, or `alt=""` when decorative. On a
   portfolio, "screenshot" is not alt text.
 - `src/assets/systems/<product>/` holds a product's published screens.
-  `src/assets/art/` and `src/assets/event-design/` are the two sets on
-  `/plates`; `src/assets/community/` and `src/assets/hobbies/` are the two on
-  `/off-hours`. Everything in all five came out of Pamudi's own Figma file and
-  was checked frame by frame before committing — read the header of
-  `src/content/systems/photo-id-compliance-app.mdx` and the comments above the
-  picture arrays in `src/pages/plates.astro` and `src/pages/off-hours.astro`
-  before adding. The alt text lives beside the import in the page, not in
+  `src/assets/art/`, `src/assets/event-design/` and `src/assets/marketing/` are
+  the three sets on `/plates`; `src/assets/community/` and
+  `src/assets/hobbies/` are the two on `/off-hours`. Most of it came out of
+  Pamudi's own Figma file and was checked frame by frame before committing —
+  read the header of `src/content/systems/photo-id-compliance-app.mdx` and the
+  comments above the picture arrays in `src/pages/plates.astro` and
+  `src/pages/off-hours.astro` before adding. Two sets have a different
+  provenance and say so where they are imported: `src/assets/marketing/` came
+  from Oshan over WhatsApp on 2026-09-03, and so did
+  `src/assets/systems/photo-id/capture.jpg`. The alt text lives beside the import in the page, not in
   `data/`: it describes this crop of this image, which is a property of the page
   rather than of the career record.
+- **The Zone24x7 in-house marketing set, 2026-09-03.** Five of seven pieces
+  published: the .NET recruitment advert, the capabilities pull-up banner, the
+  Meet Fred and Meet Wilma washroom posters, and the Club Zone Gamefest banner.
+  Zone24x7 is her employer and is named openly in `data/experience.yaml`, so
+  unlike the freelance artwork these carry no anonymisation to defeat. Two were
+  withheld and the reasons generalise: the **exhibition booth mockup** is
+  nothing but collages of some fifty identifiable colleagues, which is the rule
+  that dropped the nine workshop photographs; the **TAG movie-night poster** is
+  built on Warner Bros/New Line's own poster art, five actors' faces included,
+  with only the event typography hers. **Gamefest was flagged for that second
+  reason and published anyway, on Oshan's explicit call** — the Mortal Kombat,
+  Call of Duty and Need for Speed artwork is three publishers'. Treat borrowed
+  entertainment IP as a question for her, not a default yes.
 - **`scripts/fetch-figma.mjs` is how the next batch arrives.** It is the
   manifest for the whole file: fifteen pages, 126 nodes, each with a scale and a
   recorded verdict (`published`, `pending`, `dropped`, `blocked`). `--list`
