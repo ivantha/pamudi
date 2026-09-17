@@ -265,6 +265,15 @@ What that leaves, as of September 2026:
   names, an employer's internal appraisal detail and her phone number; only
   `kb/README.md` is tracked. A fresh clone will not have it. Recover it from the
   frozen upstream snapshot at `~/Documents/archives/pamudi-cv-data-2026-09-02/`.
+- **That recovery is partial, because the full `kb/` is lost.** It lived only
+  in the original local clone, which was gone by 2026-09-11 with no backup. The
+  clone was remade on 2026-09-17 and `kb/` reseeded from the snapshot: the five
+  record files (`career`, `community`, `education`, `profile`, `skills`) are
+  back, and `kb/INDEX.md` is now the snapshot's README under a note saying so.
+  `projects.md` (the descriptor-to-name mapping and project catalogue),
+  `open-questions.md` and `sources/` are gone. Where this file cites one of
+  them, the fact it records still stands; re-derive the source from
+  `kb/career.md` or ask her, and never rebuild the mapping in a tracked file.
 
 **Client work may be under NDA, and this repo is public.** Client and product
 names are therefore anonymised to domain descriptors in `data/systems.yaml` and

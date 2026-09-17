@@ -46,3 +46,8 @@ It is untracked, so a fresh clone will not have it. The frozen upstream snapshot
 built from lives at `~/Documents/archives/pamudi-cv-data-2026-09-02/`, with a git bundle
 beside it at `~/Documents/archives/pamudi-cv-2026-09-02.bundle`. That snapshot predates
 this directory and is missing the project catalogue, but it is the recovery point.
+
+It is now the only one. The fuller directory existed only in the original local clone,
+which was gone by 2026-09-11 with no backup, so the clone made on 2026-09-17 was reseeded
+from the snapshot: its five record files, plus its README as `INDEX.md`. The project
+catalogue, `open-questions.md` and `sources/` were not recovered.

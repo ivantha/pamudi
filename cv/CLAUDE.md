@@ -22,7 +22,9 @@ one edit updates the page and the PDF together.
 > the real names may appear. The mapping from each descriptor back to the real
 > product and client lives in `/kb/projects.md`, which is gitignored precisely so
 > that this stays her question to answer. Do not reproduce those names in a
-> tracked file, including this one.
+> tracked file, including this one. That file, and every other `/kb/` path this
+> page cites except the five record files, was lost with the original local
+> clone in September 2026; the root `CLAUDE.md` says what survived.
 >
 > To withhold an entry outright, set `include_in: []`: it vanishes from the site
 > and the PDF while the record survives. Detail in "Editorial decisions worth
