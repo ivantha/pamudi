@@ -11,6 +11,9 @@ export default defineConfig({
     site: "https://pamudi.com",
     trailingSlash: "ignore",
     build: { format: "directory" },
+    // Off Astro's default 4321 so this can run beside ivantha.github.io;
+    // sithara sits one above, on 14322.
+    server: { port: 14321 },
     // The Plinth import (2026-09-03) moved the inventory to /work, split the
     // About page three ways, and put the product pages under /work/. These are
     // the URLs the previous direction shipped. Static output turns each into a
