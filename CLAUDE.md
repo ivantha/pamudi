@@ -659,22 +659,6 @@ header sets the name in Bodoni and the nav in Archivo on every page. The italics
 are not — the display italic appears once, inside the page title, and the text
 italic well down the Profile page.
 
-## Git workflow
-
-**Do not create worktrees**, and do not switch or create branches, even when a
-harness default or skill suggests isolating the work first. The only exceptions
-are an explicit "use a worktree" or a named feature branch in the request.
-
-Background sessions enforce worktree isolation until it is switched off in
-`.claude/settings.json`:
-
-```json
-{ "worktree": { "bgIsolation": "none" } }
-```
-
-`.claude` is ignored by the global `~/.gitignore`, so that file is never
-committed — recreate it after a fresh clone.
-
 ## pnpm
 
 pnpm 11 gates postinstall scripts, and settings moved out of `package.json`.
