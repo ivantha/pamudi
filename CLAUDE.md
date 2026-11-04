@@ -661,8 +661,6 @@ italic well down the Profile page.
 
 ## Git workflow
 
-Solo personal repo: **commit directly to `main`**, no PR ceremony.
-
 **Do not create worktrees**, and do not switch or create branches, even when a
 harness default or skill suggests isolating the work first. The only exceptions
 are an explicit "use a worktree" or a named feature branch in the request.

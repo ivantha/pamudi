@@ -455,7 +455,6 @@ Everything else the sources cannot settle is in `/kb/open-questions.md`.
 
 - British spelling in prose; product and client names keep their source spelling
   (`/kb/INDEX.md` documents the normalisations applied).
-- Solo personal repo: commit directly to `main`.
 - `preview-*.png` and `public/cv/*.pdf` are build artefacts and are gitignored.
   **The PDF is no longer committed** — CI rebuilds it on every push and serves it
   at `pamudi.com/cv/cv.pdf`, so a committed copy could only ever be stale. It
