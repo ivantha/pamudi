@@ -142,7 +142,7 @@ Do not "fix" the missing row in CI by committing the number.
 ## The visual system — "Band & Rule"
 
 Ported from the `cv.dc.html` design exploration in the Claude Design project
-"CV D design exploration". Editorial, not corporate. A cool ground, one accent
+"CV D design exploration" (gone with Claude Design since 2026-11-05). Editorial, not corporate. A cool ground, one accent
 hue, hairline rules, and a single filled shape: the masthead band.
 
 ### Colour

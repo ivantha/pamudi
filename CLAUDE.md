@@ -410,6 +410,7 @@ separate sentences instead.
 ## Visual system
 
 **Currently: "Plinth"**, imported from the Claude Design project on 2026-09-03
+(gone with Claude Design since 2026-11-05; this repo is the design record)
 and replacing "Grid" (a twelve-column ruling in Archivo and rust on white),
 which is gone from the repo, as "Website v2" ("Band & Rule", Cormorant Garamond
 
