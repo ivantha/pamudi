@@ -3,12 +3,6 @@
 Guidance for Claude Code working in this repository. `README.md` covers what the
 project is and how to run it; this file covers what is easy to break.
 
-## Working rules
-
-Follow global instructions. Run focused checks of changed behavior and affected dependencies; ordinary web checks need one suitable local browser, with no blanket OS or architecture matrix. Project testing runs locally on the Mac; use UTM only for actual OS-specific needs. Preserve the separate ML worker workflow.
-
-Before work, read the relevant sections of [the project reference](agent_reference.md) for commands, subsystem constraints and procedures. Its detailed rules still apply. Keep this file to essential instructions; update the reference when procedures change.
-
 ### Stack
 
 Astro 5, TypeScript, static output, zero client JS. Product pages are
@@ -71,6 +65,6 @@ component, a page, or a `.typ` file.
 | `private.yaml`    | phone number only. **Gitignored**, never in this repo. Read by `loadPrivate()` for the Contact page                  |
 | `site.yaml`       | every page's headline and framing copy, and the process. **Website only**, and pending her sign-off                  |
 
-## Reference sections
+## Reference
 
-[What this is](agent_reference.md#what-this-is) · [Stack](agent_reference.md#stack) · [The pages](agent_reference.md#the-pages) · [Domain](agent_reference.md#domain) · [Data is the single source of truth](agent_reference.md#data-is-the-single-source-of-truth) · [Which reads are filtered, and which are not](agent_reference.md#which-reads-are-filtered-and-which-are-not) · [The private overlay](agent_reference.md#the-private-overlay) · [Whose site this is](agent_reference.md#whose-site-this-is) · [Writing style](agent_reference.md#writing-style) · [Visual system](agent_reference.md#visual-system) · [Images](agent_reference.md#images) · [Fonts](agent_reference.md#fonts) · [pnpm](agent_reference.md#pnpm)
+[Technical reference](agent_reference.md).
